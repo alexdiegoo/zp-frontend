@@ -15,6 +15,11 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
 
+  /* Appointment type accents — drive the calendar cards (consultation/procedure/return) */
+  --color-appt-consultation: var(--appt-consultation);
+  --color-appt-procedure: var(--appt-procedure);
+  --color-appt-return: var(--appt-return);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -104,6 +109,11 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #25d366;
+
+  /* Appointment type accents — distinct from the green brand so types read apart */
+  --appt-consultation: #2563eb; /* blue   — CONSULTATION */
+  --appt-procedure: #7c3aed; /* violet — PROCEDURE */
+  --appt-return: #15803d; /* green  — RETURN */
 }
 
 .dark {
@@ -142,6 +152,11 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #3de273;
+
+  /* Lightened for contrast against the dark canvas */
+  --appt-consultation: #60a5fa;
+  --appt-procedure: #a78bfa;
+  --appt-return: #4ade80;
 }
 
 @layer base {

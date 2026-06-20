@@ -44,6 +44,26 @@ export function usePatients(params: PatientsParams) {
   });
 }
 
+/**
+ * Lightweight patient lookup for the appointment dialog's combobox. Disabled
+ * until the (trimmed) query reaches 2 characters so we never fire a request for
+ * a single keystroke; its cache key is separate from the table listing.
+ */
+export function usePatientSearch(query: string) {
+  const trimmed = query.trim();
+  const enabled = trimmed.length >= 2;
+
+  const search = new URLSearchParams({ limit: "20" });
+  if (enabled) search.set("q", trimmed);
+
+  return useQuery({
+    queryKey: [...patientKeys.all, "search", trimmed] as const,
+    queryFn: () => getData<PatientsListResponse>(`/api/patients?${search}`),
+    enabled,
+    staleTime: 1000 * 30,
+  });
+}
+
 /** Full profile of a single patient (history + stats). */
 export function usePatient(id: string) {
   return useQuery({

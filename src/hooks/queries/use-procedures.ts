@@ -44,6 +44,27 @@ export function useProcedures(params: ProceduresParams) {
   });
 }
 
+/**
+ * Procedure lookup for the appointment dialog's combobox. Always enabled (the
+ * dialog shows the first page on open as suggestions) and forwards `q` once it
+ * reaches 2 characters. Callers filter out inactive entries client-side via the
+ * `isActive` flag.
+ */
+export function useProcedureSearch(query: string, enabled = true) {
+  const trimmed = query.trim();
+
+  const search = new URLSearchParams({ limit: "20" });
+  if (trimmed.length >= 2) search.set("q", trimmed);
+
+  return useQuery({
+    queryKey: [...procedureKeys.all, "search", trimmed] as const,
+    queryFn: () =>
+      getData<ProceduresListResponse>(`/api/procedures?${search}`),
+    enabled,
+    staleTime: 1000 * 60,
+  });
+}
+
 /** Full detail of a single procedure (catalog entry + price history). */
 export function useProcedure(id: string) {
   return useQuery({

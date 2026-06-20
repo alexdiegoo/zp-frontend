@@ -209,3 +209,72 @@ export type ProcedurePrice = {
 export type ProcedureDetail = Procedure & {
   priceHistory: ProcedurePrice[];
 };
+
+/* ------------------------------------------------------------------ *
+ * Professionals (clinic staff)
+ * ------------------------------------------------------------------ */
+
+/** A professional/collaborator of the clinic (`GET /clinics/:id/professionals`). */
+export type Professional = {
+  id: string;
+  name: string;
+  createdAt?: string;
+};
+
+/* ------------------------------------------------------------------ *
+ * Scheduling — appointments (the calendar)
+ * ------------------------------------------------------------------ */
+
+/** Appointment kind. PROCEDURE additionally carries a charged price in the UI. */
+export type AppointmentType = "CONSULTATION" | "PROCEDURE" | "RETURN";
+
+/** Lifecycle status reported by the backend. */
+export type AppointmentStatus =
+  | "SCHEDULED"
+  | "IN_PROGRESS"
+  | "DONE"
+  | "CANCELLED"
+  | "NO_SHOW";
+
+/**
+ * An appointment as returned by the scheduling endpoints (`AppointmentResponseDto`).
+ * `startAt`/`endAt` are ISO 8601 strings; the calendar positions cards from them.
+ */
+export type Appointment = {
+  id: string;
+  clinicId: number;
+  type: AppointmentType;
+  status: AppointmentStatus;
+  startAt: string;
+  endAt: string;
+  patient: { id: string; name: string; whatsappNumber: string };
+  patientId: string;
+  procedure: { id: string; name: string } | null;
+  procedureId: string | null;
+  professional: { id: string; name: string } | null;
+  professionalId: string | null;
+  parentAppointmentId: string | null;
+  /**
+   * Procedure-record snapshot created with the appointment. `priceCharged` is
+   * seeded from the procedure's catalog price at creation time and is the value
+   * forwarded back when confirming completion (status → DONE).
+   */
+  procedureRecord: {
+    id: string;
+    status: "SCHEDULED" | "DONE" | "CANCELLED";
+    priceCharged: number | null;
+    performedAt: string;
+    notes: string | null;
+    procedureId: string;
+    professionalId: string | null;
+  } | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/**
+ * `GET /clinics/:clinicId/scheduling/appointments` → 200. The backend returns a
+ * bare array (not the `{ data, meta }` envelope) for a date-window listing.
+ */
+export type AppointmentsListResponse = Appointment[];
