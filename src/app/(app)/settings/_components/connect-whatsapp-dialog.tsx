@@ -1,0 +1,213 @@
+"use client";
+
+import { useEffect } from "react";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Smartphone } from "lucide-react";
+import { toast } from "sonner";
+
+import {
+  useConnectWhatsApp,
+  useEvolutionConnection,
+  integrationKeys,
+} from "@/hooks/queries/use-integrations";
+import {
+  connectWhatsAppSchema,
+  type ConnectWhatsAppDto,
+} from "@/lib/validations/integrations";
+import type { ChannelEvolutionConnection } from "@/types/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Muted, P } from "@/components/ui/typography";
+
+/** Evolution reports `open` once the device is successfully paired. */
+function isLinked(status?: string | null) {
+  if (!status) return false;
+  return ["open", "connected", "online"].includes(status.toLowerCase());
+}
+
+/** Normalizes the QR payload (raw base64 or full data URI) into an <img> src. */
+function qrSrc(qrCode: string) {
+  return qrCode.startsWith("data:")
+    ? qrCode
+    : `data:image/png;base64,${qrCode}`;
+}
+
+interface ConnectWhatsAppDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function ConnectWhatsAppDialog({
+  open,
+  onOpenChange,
+}: ConnectWhatsAppDialogProps) {
+  const qc = useQueryClient();
+
+  const form = useForm<ConnectWhatsAppDto>({
+    resolver: zodResolver(connectWhatsAppSchema),
+    mode: "onBlur",
+    defaultValues: { phoneNumber: "" },
+  });
+
+  const connect = useConnectWhatsApp();
+  // Start polling only after a pairing has been initiated.
+  const polling = open && connect.isSuccess;
+  const evolution = useEvolutionConnection(polling);
+
+  const connection: ChannelEvolutionConnection | null =
+    evolution.data ?? connect.data ?? null;
+  const linked = isLinked(connection?.status);
+
+  // Close the dialog once the device is linked.
+  useEffect(() => {
+    if (open && linked) {
+      toast.success("WhatsApp conectado com sucesso!");
+      qc.invalidateQueries({ queryKey: integrationKeys.status() });
+      onOpenChange(false);
+    }
+  }, [open, linked, onOpenChange, qc]);
+
+  function handleOpenChange(next: boolean) {
+    if (!next) {
+      // Reset everything so reopening starts a fresh pairing.
+      form.reset();
+      connect.reset();
+      qc.removeQueries({ queryKey: integrationKeys.evolution() });
+    }
+    onOpenChange(next);
+  }
+
+  function onSubmit(values: ConnectWhatsAppDto) {
+    connect.mutate(values, {
+      onError: (error) => toast.error(error.message),
+    });
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Conectar WhatsApp</DialogTitle>
+          <DialogDescription>
+            Conexão via API não oficial. Informe o número e escaneie o QR Code
+            no WhatsApp do aparelho.
+          </DialogDescription>
+        </DialogHeader>
+
+        {connect.isSuccess ? (
+          <PairingStep connection={connection} loading={evolution.isFetching} />
+        ) : (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              noValidate
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Número do WhatsApp</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="+55 11 99999-9999"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!form.formState.isValid || connect.isPending}
+              >
+                {connect.isPending ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Gerando QR Code…
+                  </>
+                ) : (
+                  "Gerar QR Code"
+                )}
+              </Button>
+            </form>
+          </Form>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function PairingStep({
+  connection,
+  loading,
+}: {
+  connection: ChannelEvolutionConnection | null;
+  loading: boolean;
+}) {
+  const qrCode = connection?.qrCode;
+  const pairingCode = connection?.pairingCode;
+
+  return (
+    <div className="flex flex-col items-center gap-4 py-2">
+      <div className="flex size-56 items-center justify-center overflow-hidden rounded-xl border border-border bg-background">
+        {qrCode ? (
+          <Image
+            src={qrSrc(qrCode)}
+            alt="QR Code para conectar o WhatsApp"
+            width={224}
+            height={224}
+            unoptimized
+            className="size-full object-contain"
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <Loader2 className="size-6 animate-spin" />
+            <Muted>Gerando QR Code…</Muted>
+          </div>
+        )}
+      </div>
+
+      {pairingCode ? (
+        <div className="text-center">
+          <Muted>Ou use o código de pareamento:</Muted>
+          <P className="font-mono text-base font-semibold tracking-widest">
+            {pairingCode}
+          </P>
+        </div>
+      ) : null}
+
+      <div className="flex items-center gap-2 text-muted-foreground">
+        <Smartphone className="size-4" />
+        <Muted>
+          {loading
+            ? "Aguardando leitura do QR Code…"
+            : "Abra o WhatsApp > Aparelhos conectados > Conectar aparelho."}
+        </Muted>
+      </div>
+    </div>
+  );
+}

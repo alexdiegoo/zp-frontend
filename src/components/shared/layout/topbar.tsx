@@ -1,10 +1,12 @@
 import { Bell, ChevronDown } from "lucide-react";
 
-/** Sticky top bar for the authenticated shell: notifications + user menu. */
+import { ClinicSwitcher } from "@/components/shared/clinic/clinic-switcher";
+
+/** Sticky top bar for the authenticated shell: clinic switcher + notifications + user menu. */
 export function Topbar() {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card px-6">
-      <span className="text-base font-medium text-foreground">ZapBlast</span>
+      <ClinicSwitcher />
 
       <div className="flex items-center gap-4">
         <button

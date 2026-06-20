@@ -1,19 +1,14 @@
-import { Sidebar } from "@/components/shared/layout/sidebar";
-import { Topbar } from "@/components/shared/layout/topbar";
+import { ClinicGate } from "@/components/shared/clinic/clinic-gate";
 
-/** Authenticated application shell: fixed sidebar + top bar + content area. */
+/**
+ * Authenticated application shell. The whole app is gated on the user having a
+ * clinic: `ClinicGate` resolves the clinic list and renders either the
+ * "cadastrar clínica" screen or the sidebar + top bar shell around the content.
+ */
 export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex min-h-screen flex-col pl-[220px]">
-        <Topbar />
-        <main className="flex-1">{children}</main>
-      </div>
-    </div>
-  );
+  return <ClinicGate>{children}</ClinicGate>;
 }

@@ -81,9 +81,35 @@ async function request<T>(
   return data as T;
 }
 
+/**
+ * Issues a GET the backend answers with a redirect (e.g. the OAuth start
+ * endpoints, which 302 to the Google/Meta authorization URL) and returns the
+ * `Location` without following it. Used by the BFF to bounce the browser to the
+ * provider's consent screen while still forwarding the session token.
+ */
+async function redirectLocation(path: string): Promise<string> {
+  const token = await getSessionToken();
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    redirect: "manual",
+    cache: "no-store",
+  });
+
+  const location = res.headers.get("location");
+  if (location) return location;
+
+  const body = await res.json().catch(() => null);
+  throw new ApiError(
+    res.status,
+    extractMessage(body) ?? `Expected a redirect but got ${res.status}`,
+    body,
+  );
+}
+
 export const apiClient = {
   get: <T>(path: string, options?: RequestOptions) =>
     request<T>("GET", path, undefined, options),
+  redirectLocation,
   post: <T>(path: string, body?: unknown, options?: RequestOptions) =>
     request<T>("POST", path, body, options),
   patch: <T>(path: string, body?: unknown, options?: RequestOptions) =>
