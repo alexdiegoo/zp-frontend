@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { getData, sendData } from "@/lib/api/http";
 import type { ConnectWhatsAppDto } from "@/lib/validations/integrations";
 import type {
   ChannelEvolutionConnection,
@@ -16,42 +17,6 @@ export const integrationKeys = {
   status: () => [...integrationKeys.all, "status"] as const,
   evolution: () => [...integrationKeys.all, "evolution"] as const,
 };
-
-/** Reads `{ data }` from a BFF Route Handler, surfacing its error message. */
-async function getData<T>(url: string): Promise<T> {
-  const res = await fetch(url);
-  const json = await res.json().catch(() => null);
-  if (!res.ok) {
-    const message =
-      json && typeof json.error === "string"
-        ? json.error
-        : "Algo deu errado. Tente novamente.";
-    throw new Error(message);
-  }
-  return json.data as T;
-}
-
-async function sendJson<T>(
-  url: string,
-  method: "POST" | "DELETE",
-  body?: unknown,
-): Promise<T | null> {
-  const res = await fetch(url, {
-    method,
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (res.status === 204) return null;
-  const json = await res.json().catch(() => null);
-  if (!res.ok) {
-    const message =
-      json && typeof json.error === "string"
-        ? json.error
-        : "Algo deu errado. Tente novamente.";
-    throw new Error(message);
-  }
-  return (json?.data ?? null) as T | null;
-}
 
 /** Aggregate status of every integration for the current clinic. */
 export function useIntegrations() {
@@ -83,7 +48,7 @@ export function useConnectWhatsApp() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (values: ConnectWhatsAppDto) =>
-      sendJson<ChannelEvolutionConnection>(
+      sendData<ChannelEvolutionConnection>(
         "/api/integrations/whatsapp",
         "POST",
         values,
@@ -100,7 +65,7 @@ export function useDisconnectIntegration() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (provider: IntegrationProvider) =>
-      sendJson(`/api/integrations/${provider}`, "DELETE"),
+      sendData(`/api/integrations/${provider}`, "DELETE"),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: integrationKeys.status() });
     },

@@ -101,3 +101,65 @@ export type IntegrationStatus = {
 
 /** Aggregate status of every integration. */
 export type IntegrationsStatus = Record<IntegrationProvider, IntegrationStatus>;
+
+/* ------------------------------------------------------------------ *
+ * Patients (the backend calls these "customers")
+ * ------------------------------------------------------------------ */
+
+/**
+ * A patient/contact as returned by the CRM listing
+ * (`GET /clinics/:clinicId/customers`). The backend names this resource
+ * *customer*; we keep the domain term *patient* in the frontend.
+ */
+export type Patient = {
+  id: string;
+  name: string;
+  email: string | null;
+  whatsappNumber: string;
+  acquisitionSource: string | null;
+  createdAt: string;
+};
+
+/** Standard `{ data, meta }` paginated envelope used by the backend. */
+export type Paginated<T> = {
+  data: T[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
+/** `GET /clinics/:clinicId/customers` → 200 (paginated patient listing). */
+export type PatientsListResponse = Paginated<Patient>;
+
+/** One past service entry in a patient's history (`serviceHistory[]`). */
+export type PatientServiceEntry = {
+  id: string;
+  performedAt: string | null;
+  priceCharged: number | null;
+  notes: string | null;
+  procedure: { id: string; name: string } | null;
+  professional: { id: string; name: string } | null;
+  appointment: { id: string; startAt: string; status: string } | null;
+};
+
+/** Aggregate stats shown on the patient detail page. */
+export type PatientStats = {
+  totalAppointments: number;
+  lastAppointment: string | null;
+  lifetimeValue: number;
+};
+
+/**
+ * Full patient profile returned by
+ * `GET /clinics/:clinicId/customers/:customerId`, including service history
+ * and lifetime-value stats.
+ */
+export type PatientDetail = Patient & {
+  birthDate: string | null;
+  address: string | null;
+  serviceHistory: PatientServiceEntry[];
+  stats: PatientStats;
+};

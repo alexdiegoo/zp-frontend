@@ -1,9 +1,20 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+import { handleUnauthorized } from "@/lib/api/http";
 
 function makeQueryClient() {
   return new QueryClient({
+    // A 401 from any query or mutation means the session expired — log the user
+    // out and redirect to login from a single place (see `handleUnauthorized`).
+    queryCache: new QueryCache({ onError: handleUnauthorized }),
+    mutationCache: new MutationCache({ onError: handleUnauthorized }),
     defaultOptions: {
       queries: {
         // Avoid refetching immediately on the client after SSR/hydration.

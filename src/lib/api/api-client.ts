@@ -1,4 +1,4 @@
-import { getSessionToken } from "@/lib/auth-session";
+import { clearSessionCookie, getSessionToken } from "@/lib/auth-session";
 
 /**
  * Server-side fetch wrapper for the ZapBlast backend (BFF bridge).
@@ -71,6 +71,13 @@ async function request<T>(
   const data = res.status === 204 ? null : await res.json().catch(() => null);
 
   if (!res.ok) {
+    // An authenticated request rejected with 401 means the session token is
+    // expired/invalid — drop the cookie so the proxy gate stops treating the
+    // user as logged in. Public endpoints (login/register, `auth: false`) are
+    // skipped: a 401 there is just bad credentials, not an expired session.
+    if (res.status === 401 && options?.auth !== false) {
+      await clearSessionCookie();
+    }
     throw new ApiError(
       res.status,
       extractMessage(data) ?? `API error: ${res.status}`,
