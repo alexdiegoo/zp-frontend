@@ -28,6 +28,7 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-template-variable: var(--template-variable);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -114,6 +115,9 @@
   --appt-consultation: #2563eb; /* blue   — CONSULTATION */
   --appt-procedure: #7c3aed; /* violet — PROCEDURE */
   --appt-return: #15803d; /* green  — RETURN */
+
+  /* Unfilled `{{variable}}` highlight in the template preview */
+  --template-variable: #ea580c; /* orange */
 }
 
 .dark {
@@ -157,6 +161,9 @@
   --appt-consultation: #60a5fa;
   --appt-procedure: #a78bfa;
   --appt-return: #4ade80;
+
+  /* Lightened for contrast against the dark canvas */
+  --template-variable: #fb923c;
 }
 
 @layer base {

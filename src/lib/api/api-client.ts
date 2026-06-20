@@ -89,6 +89,34 @@ async function request<T>(
 }
 
 /**
+ * Forwards a `multipart/form-data` body to the backend (e.g. the template
+ * header-media upload). Unlike {@link request} it does NOT set `Content-Type`
+ * — `fetch` derives it (with the boundary) from the `FormData` itself.
+ */
+async function postForm<T>(path: string, form: FormData): Promise<T> {
+  const token = await getSessionToken();
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+    cache: "no-store",
+  });
+
+  const data = res.status === 204 ? null : await res.json().catch(() => null);
+
+  if (!res.ok) {
+    if (res.status === 401) await clearSessionCookie();
+    throw new ApiError(
+      res.status,
+      extractMessage(data) ?? `API error: ${res.status}`,
+      data,
+    );
+  }
+
+  return data as T;
+}
+
+/**
  * Issues a GET the backend answers with a redirect (e.g. the OAuth start
  * endpoints, which 302 to the Google/Meta authorization URL) and returns the
  * `Location` without following it. Used by the BFF to bounce the browser to the
@@ -116,6 +144,7 @@ async function redirectLocation(path: string): Promise<string> {
 export const apiClient = {
   get: <T>(path: string, options?: RequestOptions) =>
     request<T>("GET", path, undefined, options),
+  postForm,
   redirectLocation,
   post: <T>(path: string, body?: unknown, options?: RequestOptions) =>
     request<T>("POST", path, body, options),

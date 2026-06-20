@@ -278,3 +278,90 @@ export type Appointment = {
  * bare array (not the `{ data, meta }` envelope) for a date-window listing.
  */
 export type AppointmentsListResponse = Appointment[];
+
+/* ------------------------------------------------------------------ *
+ * Messaging — WhatsApp message templates
+ * ------------------------------------------------------------------ */
+
+/**
+ * Lifecycle of a local template, mirroring the Meta submission state
+ * (`MessageTemplateStatus`). `DRAFT` is created locally; the rest reflect the
+ * status reported back by the Meta WhatsApp Cloud review.
+ */
+export type TemplateStatus =
+  | "DRAFT"
+  | "PENDING_REVIEW"
+  | "APPROVED"
+  | "REJECTED"
+  | "PAUSED"
+  | "DISABLED";
+
+/** Meta template category (`MessageTemplateCategory`). */
+export type TemplateCategory =
+  | "MARKETING"
+  | "UTILITY"
+  | "AUTHENTICATION"
+  | "UNKNOWN";
+
+/** Header kind of a template (`MessageTemplateHeaderType`). */
+export type TemplateHeaderType =
+  | "NONE"
+  | "TEXT"
+  | "IMAGE"
+  | "VIDEO"
+  | "DOCUMENT";
+
+/**
+ * A template row as returned by the local listing
+ * (`GET /clinics/:clinicId/messaging/templates`). `status`/`category` are
+ * widened to `string` defensively in case the backend reports a value the
+ * frontend doesn't yet model.
+ */
+export type Template = {
+  id: string;
+  name: string;
+  category: TemplateCategory | string;
+  status: TemplateStatus | string;
+  /** Language tag, e.g. `pt_BR`. */
+  language: string;
+  createdAt: string;
+};
+
+/** `GET /clinics/:clinicId/messaging/templates` → 200 (paginated listing). */
+export type TemplatesListResponse = Paginated<Template>;
+
+/** `POST /clinics/:clinicId/messaging/templates/sync` → 200. */
+export type SyncTemplatesResponse = {
+  syncedCount: number;
+};
+
+/** A button attached to a template (`QUICK_REPLY` or `URL`). */
+export type TemplateButton = {
+  text: string;
+  type: string;
+  url?: string;
+};
+
+/** A variable placeholder declared in the template body. */
+export type TemplateVariable = {
+  name: string;
+};
+
+/**
+ * Full template detail (`GET /clinics/:clinicId/messaging/templates/:id`):
+ * the listing fields plus body, header, buttons, footer and variables.
+ */
+export type TemplateDetail = Template & {
+  /** Body with `{{var}}` placeholders substituted by their example values. */
+  bodyPreview: string | null;
+  bodyText: string | null;
+  buttons: TemplateButton[] | null;
+  footer: string | null;
+  headerType: TemplateHeaderType | string;
+  headerText: string | null;
+  headerMediaUrl: string | null;
+  metaTemplateId: string | null;
+  variableExamples: Record<string, string>;
+  variableMapping: TemplateVariable[];
+  updatedAt: string;
+};

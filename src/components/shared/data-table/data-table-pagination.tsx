@@ -14,6 +14,8 @@ interface DataTablePaginationProps {
   limit: number;
   onPageChange: (page: number) => void;
   isFetching?: boolean;
+  /** Item noun shown in the "X–Y de N" label. Defaults to paciente(s). */
+  noun?: { singular: string; plural: string };
 }
 
 /** Server-side pagination controls driven by the parent's URL state. */
@@ -25,6 +27,7 @@ export function DataTablePagination({
   limit,
   onPageChange,
   isFetching,
+  noun = { singular: "paciente", plural: "pacientes" },
 }: DataTablePaginationProps) {
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = total === 0 ? 0 : from + pageCount - 1;
@@ -33,8 +36,8 @@ export function DataTablePagination({
     <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
       <Muted aria-live="polite">
         {total === 0
-          ? "Nenhum paciente"
-          : `${from}–${to} de ${total} ${total === 1 ? "paciente" : "pacientes"}`}
+          ? `Nenhum ${noun.singular}`
+          : `${from}–${to} de ${total} ${total === 1 ? noun.singular : noun.plural}`}
       </Muted>
 
       <div className="flex items-center gap-2">
