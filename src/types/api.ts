@@ -163,3 +163,49 @@ export type PatientDetail = Patient & {
   serviceHistory: PatientServiceEntry[];
   stats: PatientStats;
 };
+
+/* ------------------------------------------------------------------ *
+ * Procedures (the clinic's service catalog)
+ * ------------------------------------------------------------------ */
+
+/**
+ * A catalog procedure (`ProcedureDto`) as returned by
+ * `GET /clinics/:clinicId/catalog/procedures`. `basePrice` is the registered
+ * starting price; `currentPrice` reflects the latest price-history entry.
+ */
+export type Procedure = {
+  id: string;
+  name: string;
+  description: string | null;
+  basePrice: number | null;
+  currentPrice: number | null;
+  isActive: boolean;
+  createdAt: string;
+};
+
+/** `GET /clinics/:clinicId/catalog/procedures` → 200 (paginated listing). */
+export type ProceduresListResponse = Paginated<Procedure>;
+
+/**
+ * One price-history entry for a procedure
+ * (`GET /clinics/:clinicId/catalog/procedures/:procedureId/prices`).
+ * `effectiveTo === null` ⇒ the currently-vigent price.
+ */
+export type ProcedurePrice = {
+  id: string;
+  procedureId: string;
+  amount: number;
+  effectiveFrom: string;
+  effectiveTo: string | null;
+  isCurrent: boolean;
+  createdAt: string;
+};
+
+/**
+ * Full procedure detail: the catalog entry plus its complete price history.
+ * The backend has no single-procedure GET, so our BFF composes this from the
+ * listing and the prices endpoint (see `app/api/procedures/[id]/route.ts`).
+ */
+export type ProcedureDetail = Procedure & {
+  priceHistory: ProcedurePrice[];
+};

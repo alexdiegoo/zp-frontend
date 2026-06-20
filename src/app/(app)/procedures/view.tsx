@@ -1,0 +1,141 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { z } from "zod";
+
+import { useProcedures } from "@/hooks/queries/use-procedures";
+import { useDebounce } from "@/hooks/ui/use-debounce";
+import { PageHeader, Section } from "@/components/shared/layout/page-header";
+import { DataTable } from "@/components/shared/data-table/data-table";
+import { DataTablePagination } from "@/components/shared/data-table/data-table-pagination";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { procedureColumns } from "./_components/columns";
+import { CreateProcedureDialog } from "./_components/create-procedure-dialog";
+import { ProcedureSearch } from "./_components/procedure-search";
+
+const PAGE_SIZE = 20;
+
+/** A standalone search term is valid only when empty or ≥ 2 characters. */
+const searchTermSchema = z.string().trim().max(120);
+
+export function ProceduresView() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // URL is the source of truth for what the query fetches (shareable + survives
+  // refresh). The input keeps its own immediate state for responsive typing.
+  const pageParam = Number(searchParams.get("page"));
+  const page = Number.isFinite(pageParam) && pageParam >= 1 ? pageParam : 1;
+  const activeQuery = searchParams.get("q") ?? "";
+
+  const [searchInput, setSearchInput] = useState(activeQuery);
+  const debouncedSearch = useDebounce(searchInput, 400);
+
+  const trimmed = debouncedSearch.trim();
+  const searchError =
+    trimmed.length === 1 ? "Digite ao menos 2 caracteres." : null;
+
+  // Push the debounced, validated term into the URL (server-side search, so it
+  // spans every page). Resetting to page 1 keeps results consistent.
+  const replaceParams = useCallback(
+    (next: { page?: number; q?: string }) => {
+      const params = new URLSearchParams(searchParams);
+      if (next.q !== undefined) {
+        if (next.q) params.set("q", next.q);
+        else params.delete("q");
+      }
+      if (next.page !== undefined) {
+        if (next.page > 1) params.set("page", String(next.page));
+        else params.delete("page");
+      }
+      router.replace(`${pathname}?${params}`, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  useEffect(() => {
+    const parsed = searchTermSchema.safeParse(debouncedSearch);
+    if (!parsed.success) return;
+    const value = parsed.data;
+    // Block 1-char queries; let empty through (clears the search).
+    if (value.length === 1) return;
+    if (value === activeQuery) return;
+    replaceParams({ q: value, page: 1 });
+  }, [debouncedSearch, activeQuery, replaceParams]);
+
+  const params = useMemo(
+    () => ({ page, limit: PAGE_SIZE, q: activeQuery || undefined }),
+    [page, activeQuery],
+  );
+  const { data, isLoading, isError, error, isFetching, refetch } =
+    useProcedures(params);
+
+  const rows = data?.data ?? [];
+  const meta = data?.meta;
+
+  const emptyMessage = activeQuery
+    ? `Nenhum procedimento encontrado para “${activeQuery}”.`
+    : "Nenhum procedimento cadastrado ainda.";
+
+  return (
+    <Section>
+      <PageHeader
+        title="Procedimentos"
+        description="Gerencie o catálogo de procedimentos da clínica."
+      >
+        <CreateProcedureDialog />
+      </PageHeader>
+
+      <ProcedureSearch
+        value={searchInput}
+        onChange={setSearchInput}
+        error={searchError}
+      />
+
+      {isError ? (
+        <Alert variant="destructive">
+          <AlertCircle />
+          <AlertTitle>Não foi possível carregar os procedimentos.</AlertTitle>
+          <AlertDescription>
+            {error instanceof Error
+              ? error.message
+              : "Tente novamente em instantes."}
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="font-medium underline underline-offset-4"
+            >
+              Tentar novamente
+            </button>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <DataTable
+            columns={procedureColumns}
+            data={rows}
+            isLoading={isLoading}
+            emptyMessage={emptyMessage}
+            onRowClick={(procedure) =>
+              router.push(`/procedures/${procedure.id}`)
+            }
+          />
+          {meta && meta.total > 0 ? (
+            <DataTablePagination
+              page={meta.page}
+              totalPages={meta.totalPages}
+              total={meta.total}
+              pageCount={rows.length}
+              limit={meta.limit}
+              isFetching={isFetching}
+              onPageChange={(next) => replaceParams({ page: next })}
+            />
+          ) : null}
+        </div>
+      )}
+    </Section>
+  );
+}
