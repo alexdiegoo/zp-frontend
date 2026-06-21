@@ -2,17 +2,9 @@
 
 import { useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  CalendarDays,
-  Check,
-  Copy,
-  Filter,
-  MessageSquare,
-  MessageSquareReply,
-  MoreVertical,
-} from "lucide-react";
+import { Check, Copy, MoreVertical } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { ApiTypeBadge } from "@/components/shared/campaign/api-type-badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +17,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { CampaignApiType, CampaignOverview, CampaignStatus } from "@/types/api";
+import type { CampaignOverview, CampaignStatus } from "@/types/api";
 
 const numberFormatter = new Intl.NumberFormat("pt-BR");
 
@@ -36,28 +28,6 @@ function formatRate(rate: number): string {
   return `${pct.toFixed(decimals).replace(".", ",")}% taxa`;
 }
 
-/** Orange = official Meta API, amber = unofficial. */
-function ApiTypeBadge({ apiType }: { apiType: CampaignApiType }) {
-  if (apiType === "OFFICIAL") {
-    return (
-      <Badge
-        variant="outline"
-        className="border-transparent bg-orange-500/12 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400"
-      >
-        API OFICIAL
-      </Badge>
-    );
-  }
-  return (
-    <Badge
-      variant="outline"
-      className="border-transparent bg-amber-400/15 text-amber-700 dark:bg-amber-400/15 dark:text-amber-400"
-    >
-      API NÃO OFICIAL
-    </Badge>
-  );
-}
-
 /**
  * Status toggle. Read-only for now — it reflects the campaign status but does not
  * mutate it (pause/resume wiring is intentionally out of scope here), so the
@@ -66,7 +36,11 @@ function ApiTypeBadge({ apiType }: { apiType: CampaignApiType }) {
 function StatusCell({ status }: { status: CampaignStatus }) {
   const active = status === "ACTIVE";
   return (
-    <div className="flex items-center gap-2">
+    // Stop propagation so toggling status never triggers the row's navigation.
+    <div
+      className="flex w-fit items-center gap-2"
+      onClick={(event) => event.stopPropagation()}
+    >
       <Switch
         checked={active}
         onCheckedChange={() => {}}
@@ -85,28 +59,16 @@ function StatusCell({ status }: { status: CampaignStatus }) {
   );
 }
 
-function MetricCell({
-  icon: Icon,
-  value,
-  rate,
-}: {
-  icon: typeof MessageSquare;
-  value: number;
-  rate?: number;
-}) {
+function MetricCell({ value, rate }: { value: number; rate?: number }) {
   return (
-    <div className="flex items-center gap-2">
-      <Icon className="size-4 shrink-0 text-muted-foreground" />
-      <div className="flex flex-col leading-tight">
-        <span className="font-medium tabular-nums text-foreground">
-          {numberFormatter.format(value)}
-        </span>
-        {rate !== undefined ? (
-          <span className="text-xs text-muted-foreground tabular-nums">
-            {formatRate(rate)}
-          </span>
-        ) : null}
-      </div>
+    <div className="flex flex-col leading-tight">
+      <span className="font-medium tabular-nums text-foreground">
+        {numberFormatter.format(value)}
+      </span>
+      {/* Always reserve the rate line so the main number stays aligned across columns. */}
+      <span className="text-xs text-muted-foreground tabular-nums">
+        {rate !== undefined ? formatRate(rate) : " "}
+      </span>
     </div>
   );
 }
@@ -169,7 +131,7 @@ export const campaignColumns: ColumnDef<CampaignOverview, unknown>[] = [
     id: "totalSent",
     header: "Total Enviado",
     cell: ({ row }) => (
-      <MetricCell icon={MessageSquare} value={row.original.metrics.totalSent} />
+      <MetricCell value={row.original.metrics.totalSent} />
     ),
   },
   {
@@ -177,7 +139,6 @@ export const campaignColumns: ColumnDef<CampaignOverview, unknown>[] = [
     header: "Respondido",
     cell: ({ row }) => (
       <MetricCell
-        icon={MessageSquareReply}
         value={row.original.metrics.totalReplied}
         rate={row.original.metrics.repliedRate}
       />
@@ -187,10 +148,7 @@ export const campaignColumns: ColumnDef<CampaignOverview, unknown>[] = [
     id: "scheduled",
     header: "Agendamentos",
     cell: ({ row }) => (
-      <MetricCell
-        icon={CalendarDays}
-        value={row.original.metrics.totalScheduled}
-      />
+      <MetricCell value={row.original.metrics.totalScheduled} />
     ),
   },
   {
@@ -198,7 +156,6 @@ export const campaignColumns: ColumnDef<CampaignOverview, unknown>[] = [
     header: "Conversões",
     cell: ({ row }) => (
       <MetricCell
-        icon={Filter}
         value={row.original.metrics.totalConverted}
         rate={row.original.metrics.conversionRate}
       />
@@ -217,7 +174,11 @@ export const campaignColumns: ColumnDef<CampaignOverview, unknown>[] = [
     id: "actions",
     header: () => <span className="sr-only">Ações</span>,
     cell: ({ row }) => (
-      <div className="flex justify-end">
+      // Stop propagation so the actions menu never triggers row navigation.
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
         <RowActions campaign={row.original} />
       </div>
     ),

@@ -12,12 +12,14 @@ import type {
   TemplateAiFeedback,
   TemplateDetail,
   TemplatesListResponse,
+  TemplateStatus,
 } from "@/types/api";
 
 /** Params accepted by the template listing query. */
 export type TemplatesParams = {
   page: number;
   limit: number;
+  status?: TemplateStatus;
 };
 
 export const templateKeys = {
@@ -34,6 +36,7 @@ export function useTemplates(params: TemplatesParams) {
     page: String(params.page),
     limit: String(params.limit),
   });
+  if (params.status) search.set("status", params.status);
 
   return useQuery({
     queryKey: templateKeys.list(params),

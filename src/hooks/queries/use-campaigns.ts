@@ -1,12 +1,20 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-import { getData } from "@/lib/api/http";
+import { getData, postData } from "@/lib/api/http";
+import type { CreateCampaignDto } from "@/lib/validations/campaign";
 import type {
   CampaignApiType,
+  CampaignDetail,
   CampaignEventsResponse,
   CampaignPeriod,
   CampaignsListResponse,
   CampaignStatus,
+  CreatedCampaign,
 } from "@/types/api";
 
 export type CampaignsParams = {
@@ -25,6 +33,8 @@ export const campaignKeys = {
   all: ["campaigns"] as const,
   list: (params: CampaignsParams) =>
     [...campaignKeys.all, "list", params] as const,
+  detail: (id: string, apiType: CampaignApiType) =>
+    [...campaignKeys.all, "detail", id, apiType] as const,
   events: (id: string, page: number) =>
     [...campaignKeys.all, "events", id, page] as const,
 };
@@ -55,6 +65,43 @@ export function useCampaigns(params: CampaignsParams, enabled = true) {
     enabled,
     placeholderData: keepPreviousData,
     staleTime: 1000 * 30,
+  });
+}
+
+/**
+ * Detail for a single campaign. `apiType` (known from the listing row) selects
+ * the backend endpoint server-side and is part of the cache key.
+ */
+export function useCampaignDetail(
+  id: string,
+  apiType: CampaignApiType,
+  enabled = true,
+) {
+  return useQuery({
+    queryKey: campaignKeys.detail(id, apiType),
+    queryFn: () =>
+      getData<CampaignDetail>(
+        `/api/campaigns/${id}?type=${apiType}`,
+        "Não foi possível carregar a campanha.",
+      ),
+    enabled: enabled && Boolean(id),
+    staleTime: 1000 * 30,
+  });
+}
+
+/** Creates a campaign (official or unofficial) via the builder screen. */
+export function useCreateCampaign() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (values: CreateCampaignDto) =>
+      postData<CreatedCampaign>(
+        "/api/campaigns",
+        values,
+        "Não foi possível criar a campanha.",
+      ),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: campaignKeys.all });
+    },
   });
 }
 

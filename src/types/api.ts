@@ -443,6 +443,40 @@ export type CampaignsListResponse = Paginated<CampaignOverview>;
 /** Metrics period presets accepted by the overview listing. */
 export type CampaignPeriod = "7d" | "30d" | "this_month" | "custom";
 
+/** Fields shared by every campaign-detail variant. */
+type CampaignDetailBase = {
+  id: string;
+  name: string;
+  /** Raw backend status (e.g. `SCHEDULED`, `RUNNING`, `ACTIVE`, `ARCHIVED`). */
+  status: string;
+  createdAt: string;
+};
+
+/**
+ * Unofficial (manual) campaign detail. `message` is the tracking-enabled text
+ * the operator copies and sends by hand; `baseMessage` is the original text
+ * without the invisible tracking marker.
+ */
+export type UnofficialCampaignDetail = CampaignDetailBase & {
+  apiType: "UNOFFICIAL";
+  message: string;
+  baseMessage: string | null;
+  trackingCode: string | null;
+};
+
+/**
+ * Official (Meta API) campaign detail. `template` is the resolved approved
+ * template used by the campaign, or `null` when it can't be loaded.
+ */
+export type OfficialCampaignDetail = CampaignDetailBase & {
+  apiType: "OFFICIAL";
+  messageTemplateId: string | null;
+  template: TemplateDetail | null;
+};
+
+/** Normalized campaign detail returned by `GET /api/campaigns/:id`. */
+export type CampaignDetail = UnofficialCampaignDetail | OfficialCampaignDetail;
+
 /** A single drill-down event in a campaign's contact timeline. */
 export type CampaignEvent = {
   id: string;
@@ -453,3 +487,24 @@ export type CampaignEvent = {
 };
 
 export type CampaignEventsResponse = Paginated<CampaignEvent>;
+
+/** A selectable official WhatsApp sender number (campaign builder). */
+export type WaPhoneNumber = {
+  id: string;
+  number: string | null;
+  displayName: string | null;
+};
+
+export type WaPhoneNumbersResponse = {
+  data: WaPhoneNumber[];
+};
+
+/** Result of creating a campaign via the builder. `trackedMessage` is present only for UNOFFICIAL. */
+export type CreatedCampaign = {
+  id: string;
+  name: string;
+  apiType: CampaignApiType;
+  status: CampaignStatus;
+  trackedMessage?: string;
+  createdAt: string;
+};

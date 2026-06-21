@@ -126,8 +126,7 @@ export function CampaignsView() {
         title="Campanhas"
         description="Gerencie e acompanhe o desempenho de suas campanhas de WhatsApp."
       >
-        {/* Campaign creation flow is out of scope for this listing. */}
-        <Button>
+        <Button onClick={() => router.push("/campaigns/new")}>
           <Plus />
           Nova campanha
         </Button>
@@ -169,6 +168,9 @@ export function CampaignsView() {
             data={rows}
             isLoading={isLoading}
             emptyMessage={emptyMessage}
+            onRowClick={(campaign) =>
+              router.push(`/campaigns/${campaign.id}?type=${campaign.apiType}`)
+            }
           />
           {meta && meta.total > 0 ? (
             <DataTablePagination

@@ -28,3 +28,43 @@ export const campaignEventsQuerySchema = z.object({
 });
 
 export type CampaignEventsQuery = z.infer<typeof campaignEventsQuerySchema>;
+
+/* ------------------------------------------------------------------ *
+ * Campaign creation (the "Nova campanha" builder)
+ * ------------------------------------------------------------------ */
+
+const campaignNameSchema = z
+  .string()
+  .trim()
+  .min(1, "Informe o nome da campanha.")
+  .max(120, "O nome deve ter no máximo 120 caracteres.");
+
+/** Official-API campaign: sender number + approved template + selected contacts. */
+export const createOfficialCampaignSchema = z.object({
+  apiType: z.literal("OFFICIAL"),
+  name: campaignNameSchema,
+  waPhoneNumberId: z.string().trim().min(1, "Selecione um número de WhatsApp."),
+  messageTemplateId: z.string().trim().min(1, "Selecione um template aprovado."),
+  contactIds: z.array(z.string().min(1)).min(1, "Selecione ao menos um contato."),
+});
+
+/** Unofficial-API campaign: just the free-text message (tracking is added server-side). */
+export const createUnofficialCampaignSchema = z.object({
+  apiType: z.literal("UNOFFICIAL"),
+  name: campaignNameSchema,
+  message: z
+    .string()
+    .trim()
+    .min(10, "A mensagem deve ter ao menos 10 caracteres.")
+    .max(4096, "A mensagem deve ter no máximo 4096 caracteres."),
+});
+
+/** Discriminated union mirroring the backend `POST .../campaigns/builder` contract. */
+export const createCampaignSchema = z.discriminatedUnion("apiType", [
+  createOfficialCampaignSchema,
+  createUnofficialCampaignSchema,
+]);
+
+export type CreateOfficialCampaignDto = z.infer<typeof createOfficialCampaignSchema>;
+export type CreateUnofficialCampaignDto = z.infer<typeof createUnofficialCampaignSchema>;
+export type CreateCampaignDto = z.infer<typeof createCampaignSchema>;
