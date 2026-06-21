@@ -404,3 +404,52 @@ export type TemplateAiFeedback = {
   summary: string | null;
   issues: AiFeedbackIssue[];
 };
+
+/* -------------------------------------------------------------------------- */
+/* Campaigns                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/** Whether a campaign runs over the official Meta API or the unofficial one. */
+export type CampaignApiType = "OFFICIAL" | "UNOFFICIAL";
+
+/** Two-state campaign status surfaced by the overview toggle. */
+export type CampaignStatus = "ACTIVE" | "PAUSED";
+
+/** Pre-aggregated metrics for a campaign over the selected period window. */
+export type CampaignMetrics = {
+  totalSent: number;
+  totalReplied: number;
+  /** Replies ÷ sent, in the `0..1` range. */
+  repliedRate: number;
+  totalScheduled: number;
+  totalConverted: number;
+  /** Conversions ÷ sent, in the `0..1` range. */
+  conversionRate: number;
+  totalRevenue: number;
+};
+
+/** A single row in the campaigns overview table. */
+export type CampaignOverview = {
+  id: string;
+  name: string;
+  status: CampaignStatus;
+  apiType: CampaignApiType;
+  metrics: CampaignMetrics;
+  createdAt: string;
+};
+
+export type CampaignsListResponse = Paginated<CampaignOverview>;
+
+/** Metrics period presets accepted by the overview listing. */
+export type CampaignPeriod = "7d" | "30d" | "this_month" | "custom";
+
+/** A single drill-down event in a campaign's contact timeline. */
+export type CampaignEvent = {
+  id: string;
+  contactId: string;
+  eventType: string;
+  occurredAt: string;
+  metadata: Record<string, unknown> | null;
+};
+
+export type CampaignEventsResponse = Paginated<CampaignEvent>;
