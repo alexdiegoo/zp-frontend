@@ -325,6 +325,8 @@ export type Template = {
   /** Language tag, e.g. `pt_BR`. */
   language: string;
   createdAt: string;
+  /** Status of the latest AI validation run, or `null` when never validated. */
+  aiFeedbackStatus: AiFeedbackStatus | null;
 };
 
 /** `GET /clinics/:clinicId/messaging/templates` → 200 (paginated listing). */
@@ -364,4 +366,41 @@ export type TemplateDetail = Template & {
   variableExamples: Record<string, string>;
   variableMapping: TemplateVariable[];
   updatedAt: string;
+};
+
+/** Status of a template's latest AI validation run. */
+export type AiFeedbackStatus =
+  | "APPROVED"
+  | "PENDING"
+  | "PROCESSING"
+  | "REJECTED"
+  | "WARNING";
+
+/** Severity of a single issue flagged by the AI validation. */
+export type AiFeedbackSeverity = "alerta" | "bloqueante";
+
+/** A single issue flagged by the AI validation (Portuguese-keyed). */
+export type AiFeedbackIssue = {
+  campo: string;
+  descricao: string;
+  severidade: AiFeedbackSeverity;
+  sugestao: string;
+};
+
+/**
+ * A template's latest AI validation run
+ * (`GET /clinics/:clinicId/ai/templates/:id/feedback`). `null` when the
+ * template has never been validated.
+ */
+export type TemplateAiFeedback = {
+  id: string;
+  messageTemplateId: string;
+  status: AiFeedbackStatus;
+  canSubmit: boolean;
+  forceSubmitted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  modelUsed: string | null;
+  summary: string | null;
+  issues: AiFeedbackIssue[];
 };

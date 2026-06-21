@@ -5,10 +5,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { getData, HttpError, postData } from "@/lib/api/http";
+import { getData, HttpError, postData, sendData } from "@/lib/api/http";
 import type { CreateTemplatePayload } from "@/lib/validations/template";
 import type {
   SyncTemplatesResponse,
+  TemplateAiFeedback,
   TemplateDetail,
   TemplatesListResponse,
 } from "@/types/api";
@@ -24,6 +25,7 @@ export const templateKeys = {
   list: (params: TemplatesParams) =>
     [...templateKeys.all, "list", params] as const,
   detail: (id: string) => [...templateKeys.all, "detail", id] as const,
+  feedback: (id: string) => [...templateKeys.all, "feedback", id] as const,
 };
 
 /** Paginated listing of the clinic's local WhatsApp message templates. */
@@ -52,6 +54,22 @@ export function useTemplate(id: string) {
 }
 
 /**
+ * Latest AI validation feedback for a template (`null` when never validated).
+ * Polls while the run is still `PROCESSING` so the section updates once the
+ * async validation finishes.
+ */
+export function useTemplateAiFeedback(id: string) {
+  return useQuery({
+    queryKey: templateKeys.feedback(id),
+    queryFn: () =>
+      getData<TemplateAiFeedback | null>(`/api/templates/${id}/feedback`),
+    staleTime: 1000 * 30,
+    refetchInterval: (query) =>
+      query.state.data?.status === "PROCESSING" ? 1000 * 5 : false,
+  });
+}
+
+/**
  * Creates a template (draft) and submits it to Meta for approval. On success
  * the listing cache is invalidated so the new `PENDING_REVIEW` row appears.
  */
@@ -63,6 +81,27 @@ export function useCreateTemplate() {
         "/api/templates",
         payload,
         "Não foi possível criar o template. Tente novamente.",
+      ),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: templateKeys.all });
+    },
+  });
+}
+
+/**
+ * Updates an existing template and triggers a fresh AI validation against the
+ * new content. Invalidates the whole `templates` cache (listing, detail and
+ * feedback) so the re-validation status surfaces everywhere.
+ */
+export function useUpdateTemplate(id: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateTemplatePayload) =>
+      sendData<TemplateDetail>(
+        `/api/templates/${id}`,
+        "PUT",
+        payload,
+        "Não foi possível atualizar o template. Tente novamente.",
       ),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: templateKeys.all });

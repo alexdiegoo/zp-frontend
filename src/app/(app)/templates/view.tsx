@@ -68,7 +68,7 @@ export function TemplatesView() {
     <Section>
       <PageHeader
         title="Templates"
-        description="Modelos de mensagem do WhatsApp aprovados e rascunhos."
+        description="Modelos de mensagem do WhatsApp para API Oficial."
       >
         <Button
           variant="outline"

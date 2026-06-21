@@ -47,6 +47,7 @@ export function VariableExamplesSection({
             key={variable}
             control={control}
             name={`variableExamples.${variable}`}
+            shouldUnregister
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{`{{${variable}}}`}</FormLabel>

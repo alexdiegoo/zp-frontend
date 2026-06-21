@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Label, Muted, P } from "@/components/ui/typography";
 import { TemplateMessagePreview } from "@/components/shared/template/template-message-preview";
+import { AiFeedbackSection } from "./_components/ai-feedback-section";
 
 function BackLink() {
   return (
@@ -190,7 +191,9 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
         </div>
 
         <div className="lg:col-span-2">
-          <div className="lg:sticky lg:top-6">
+          <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+            <AiFeedbackSection templateId={templateId} />
+
             <Card>
               <CardHeader>
                 <CardTitle>Pré-visualização</CardTitle>

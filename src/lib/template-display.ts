@@ -12,7 +12,7 @@ type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "Rascunho",
-  PENDING_REVIEW: "Em análise",
+  PENDING_REVIEW: "Aguardando revisão",
   APPROVED: "Aprovado",
   REJECTED: "Rejeitado",
   PAUSED: "Pausado",
@@ -26,6 +26,22 @@ const STATUS_VARIANTS: Record<string, BadgeVariant> = {
   REJECTED: "destructive",
   PAUSED: "outline",
   DISABLED: "outline",
+};
+
+const AI_FEEDBACK_STATUS_LABELS: Record<string, string> = {
+  APPROVED: "Aprovado",
+  PENDING: "Pendente",
+  PROCESSING: "Em análise",
+  REJECTED: "Reprovado",
+  WARNING: "Com alertas",
+};
+
+const AI_FEEDBACK_STATUS_VARIANTS: Record<string, BadgeVariant> = {
+  APPROVED: "default",
+  PENDING: "secondary",
+  PROCESSING: "secondary",
+  REJECTED: "destructive",
+  WARNING: "outline",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -49,6 +65,16 @@ export function templateStatusLabel(status: string): string {
 /** Badge variant for a template status (falls back to `outline`). */
 export function templateStatusVariant(status: string): BadgeVariant {
   return STATUS_VARIANTS[status] ?? "outline";
+}
+
+/** Human label for an AI feedback status (falls back to the raw value). */
+export function aiFeedbackStatusLabel(status: string): string {
+  return AI_FEEDBACK_STATUS_LABELS[status] ?? status;
+}
+
+/** Badge variant for an AI feedback status (falls back to `secondary`). */
+export function aiFeedbackStatusVariant(status: string): BadgeVariant {
+  return AI_FEEDBACK_STATUS_VARIANTS[status] ?? "secondary";
 }
 
 /** Human label for a template category (falls back to the raw value). */

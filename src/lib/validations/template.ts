@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { TemplateDetail } from "@/types/api";
+
 /**
  * Validates the template list query (`page`, `limit`) in the Route Handler
  * before forwarding to the backend `GET /clinics/:clinicId/messaging/templates`.
@@ -106,7 +108,7 @@ export const createTemplateFormSchema = z
       .max(TEMPLATE_MAX_BUTTONS, `Máx ${TEMPLATE_MAX_BUTTONS} botões.`)
       .optional(),
     variableExamples: z
-      .record(z.string(), z.string().max(512, "Máx 512 caracteres."))
+      .record(z.string(), z.string().max(512, "Máx 512 caracteres.").optional())
       .optional(),
   })
   .superRefine((values, ctx) => {
@@ -220,6 +222,41 @@ export function toCreateTemplatePayload(
   if (Object.keys(examples).length > 0) payload.variableExamples = examples;
 
   return payload;
+}
+
+/**
+ * Maps a fetched template into the editor's form shape so the edit page mounts
+ * prefilled. The inverse of {@link toCreateTemplatePayload}: a stored `TEXT`
+ * header is surfaced in the `NONE` text input, and categories the editor does
+ * not offer (e.g. `AUTHENTICATION`) fall back to `MARKETING`.
+ */
+export function toTemplateFormValues(
+  template: TemplateDetail,
+): CreateTemplateForm {
+  const headerType = template.headerType === "IMAGE" ? "IMAGE" : "NONE";
+  const category =
+    template.category === "UTILITY" || template.category === "MARKETING"
+      ? template.category
+      : "MARKETING";
+
+  return {
+    name: template.name,
+    language: "pt_BR",
+    category,
+    headerType,
+    headerText:
+      template.headerType === "TEXT" ? (template.headerText ?? "") : "",
+    headerMediaUrl:
+      headerType === "IMAGE" ? (template.headerMediaUrl ?? "") : "",
+    bodyText: template.bodyText ?? "",
+    footer: template.footer ?? "",
+    buttons: (template.buttons ?? []).map((button) =>
+      button.type === "URL"
+        ? { type: "URL" as const, text: button.text, url: button.url ?? "" }
+        : { type: "QUICK_REPLY" as const, text: button.text },
+    ),
+    variableExamples: { ...template.variableExamples },
+  };
 }
 
 /**

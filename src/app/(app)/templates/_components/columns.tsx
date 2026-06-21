@@ -1,9 +1,12 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { Sparkles } from "lucide-react";
 
 import { formatDate } from "@/lib/format";
 import {
+  aiFeedbackStatusLabel,
+  aiFeedbackStatusVariant,
   formatTemplateLanguage,
   templateCategoryLabel,
   templateStatusLabel,
@@ -37,6 +40,22 @@ export const templateColumns: ColumnDef<Template, unknown>[] = [
         {templateStatusLabel(row.original.status)}
       </Badge>
     ),
+  },
+  {
+    accessorKey: "aiFeedbackStatus",
+    header: "Feedback IA",
+    cell: ({ row }) => {
+      const status = row.original.aiFeedbackStatus;
+      if (!status) {
+        return <span className="text-muted-foreground">—</span>;
+      }
+      return (
+        <Badge variant={aiFeedbackStatusVariant(status)}>
+          <Sparkles />
+          {aiFeedbackStatusLabel(status)}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "language",

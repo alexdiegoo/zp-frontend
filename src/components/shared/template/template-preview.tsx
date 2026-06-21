@@ -33,6 +33,13 @@ export function TemplatePreview({ control }: TemplatePreviewProps) {
 
   const variableExamples = useWatch({ control, name: "variableExamples" });
 
+  // The form's record allows `undefined` values (optional per-variable inputs);
+  // drop them so the preview gets a clean `Record<string, string>`.
+  const filledExamples: Record<string, string> = {};
+  for (const [key, value] of Object.entries(variableExamples ?? {})) {
+    if (value) filledExamples[key] = value;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -44,7 +51,7 @@ export function TemplatePreview({ control }: TemplatePreviewProps) {
           headerText={headerText}
           headerMediaUrl={headerMediaUrl}
           bodyText={bodyText}
-          variableExamples={variableExamples}
+          variableExamples={filledExamples}
           footer={footer}
           buttons={buttons}
         />
