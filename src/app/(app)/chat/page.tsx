@@ -1,15 +1,7 @@
-import { Section, PageHeader } from "@/components/shared/layout/page-header";
-import { Muted } from "@/components/ui/typography";
+import { ChatView } from "./view";
 
 export const metadata = { title: "Chat" };
 
 export default function ChatPage() {
-  return (
-    <Section>
-      <PageHeader title="Chat" description="Atenda conversas de WhatsApp em tempo real." />
-      <div className="flex min-h-64 items-center justify-center rounded-xl border border-dashed border-border bg-card">
-        <Muted>Em construção.</Muted>
-      </div>
-    </Section>
-  );
+  return <ChatView />;
 }
