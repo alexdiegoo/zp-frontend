@@ -528,3 +528,25 @@ export type FunnelCard = {
 
 /** Funnel board: cards grouped by stage. `GET /api/funnel`. */
 export type FunnelBoard = Record<FunnelStage, FunnelCard[]>;
+
+/**
+ * Extensible wrapper for a single dashboard metric. A wrapper (not a bare value)
+ * keeps the response stable as metrics gain `delta_percent`, `trend`, etc.
+ */
+export type DashboardMetricValue<T = number> = {
+  value: T;
+};
+
+/** The four dashboard metrics for a period. `GET /api/dashboard`. */
+export type DashboardMetrics = {
+  new_leads: DashboardMetricValue;
+  appointments: DashboardMetricValue;
+  conversion_rate: DashboardMetricValue;
+  revenue: DashboardMetricValue;
+};
+
+/** Dashboard metrics payload: the resolved period plus each metric. */
+export type DashboardMetricsResponse = {
+  period: { start: string; end: string };
+  metrics: DashboardMetrics;
+};
