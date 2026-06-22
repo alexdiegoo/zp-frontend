@@ -508,3 +508,23 @@ export type CreatedCampaign = {
   trackedMessage?: string;
   createdAt: string;
 };
+
+/** Pipeline stage a patient currently sits in (mirrors backend `FunnelStage`). */
+export type FunnelStage =
+  | "LEAD"
+  | "FOLLOW_UP"
+  | "APPOINTMENT_SCHEDULED"
+  | "PROCEDURE_DONE";
+
+/** A single funnel board card (one per patient). `GET /api/funnel`. */
+export type FunnelCard = {
+  id: string;
+  patient_id: string;
+  full_name: string;
+  phone_number: string;
+  stage: FunnelStage;
+  sort_order: number;
+};
+
+/** Funnel board: cards grouped by stage. `GET /api/funnel`. */
+export type FunnelBoard = Record<FunnelStage, FunnelCard[]>;

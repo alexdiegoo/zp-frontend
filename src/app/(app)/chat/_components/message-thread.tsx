@@ -5,7 +5,8 @@ import { useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPhone } from "@/lib/format";
 import type { ChatMessage, Conversation } from "@/types/chat";
-import { ContactAvatar, formatDayLabel } from "./chat-ui";
+import { ContactAvatar } from "@/components/shared/contact-avatar";
+import { formatDayLabel } from "./chat-ui";
 import { MessageBubble } from "./message-bubble";
 import { MessageComposer } from "./message-composer";
 

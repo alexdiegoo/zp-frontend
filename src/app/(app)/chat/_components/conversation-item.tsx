@@ -3,7 +3,8 @@
 import { cn } from "@/lib/utils";
 import { formatPhone } from "@/lib/format";
 import type { Conversation } from "@/types/chat";
-import { ContactAvatar, formatTimeLabel } from "./chat-ui";
+import { ContactAvatar } from "@/components/shared/contact-avatar";
+import { formatTimeLabel } from "./chat-ui";
 
 /** A single row in the conversation list. */
 export function ConversationItem({
