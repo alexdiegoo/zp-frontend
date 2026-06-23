@@ -41,6 +41,14 @@ export type ChatMessage = {
   status?: "PENDING" | "SENT";
 };
 
+/** The 24h customer-service window status returned with a message thread. */
+export type WindowStatus = {
+  /** When the window closes (ISO), or null when it never opened. */
+  expiresAt: string | null;
+  /** Whether a free-form message may be sent right now (server snapshot). */
+  isOpen: boolean;
+};
+
 /** Paginated thread of messages for a patient on a channel. */
 export type MessagesPage = {
   data: ChatMessage[];
@@ -48,4 +56,5 @@ export type MessagesPage = {
   page: number;
   total: number;
   totalPages: number;
+  windowStatus: WindowStatus;
 };

@@ -73,6 +73,14 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
         { status: 404 },
       );
     }
+    // A 403 from the backend means the Meta 24h customer-service window is
+    // closed — surface a specific message so the composer/toast can explain it.
+    if (error instanceof ApiError && error.status === 403) {
+      return NextResponse.json(
+        { error: "A janela de atendimento de 24h está fechada. Aguarde o paciente responder." },
+        { status: 403 },
+      );
+    }
     const status = error instanceof ApiError ? error.status : 500;
     return NextResponse.json(
       { error: "Não foi possível enviar a mensagem." },

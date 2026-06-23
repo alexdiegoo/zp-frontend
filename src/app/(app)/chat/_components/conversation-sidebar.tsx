@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -11,8 +12,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ChatChannel, Conversation } from "@/types/chat";
+import type { ChannelProvider, ChatChannel, Conversation } from "@/types/chat";
 import { ConversationItem } from "./conversation-item";
+
+/** Visual tag distinguishing the official (Meta) vs unofficial (Evolution) API. */
+const PROVIDER_TAG: Record<
+  ChannelProvider,
+  { label: string; variant: "default" | "secondary" }
+> = {
+  META_OFFICIAL: { label: "Oficial", variant: "default" },
+  EVOLUTION_UNOFFICIAL: { label: "Não oficial", variant: "secondary" },
+};
+
+function ChannelProviderBadge({ provider }: { provider: ChannelProvider }) {
+  const tag = PROVIDER_TAG[provider];
+  return (
+    <Badge variant={tag.variant} className="ml-auto shrink-0">
+      {tag.label}
+    </Badge>
+  );
+}
 
 /** Left pane: channel selector, patient search and the conversation list. */
 export function ConversationSidebar({
@@ -52,7 +71,10 @@ export function ConversationSidebar({
             <SelectContent>
               {channels.map((channel) => (
                 <SelectItem key={channel.id} value={channel.id}>
-                  {channel.name}
+                  <span className="flex w-full min-w-0 items-center gap-2">
+                    <span className="truncate">{channel.name}</span>
+                    <ChannelProviderBadge provider={channel.provider} />
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>

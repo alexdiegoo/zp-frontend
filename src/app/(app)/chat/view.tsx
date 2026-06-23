@@ -42,6 +42,11 @@ export function ChatView() {
     [conversationsQuery.data],
   );
 
+  const selectedChannel = useMemo(
+    () => channels.find((c) => c.id === channelId) ?? null,
+    [channels, channelId],
+  );
+
   const selectedConversation = useMemo(
     () => conversations.find((c) => c.patientId === selectedPatientId) ?? null,
     [conversations, selectedPatientId],
@@ -57,7 +62,10 @@ export function ChatView() {
 
   function handleSend(content: string) {
     sendMutation.mutate(content, {
-      onError: () => toast.error("Não foi possível enviar a mensagem."),
+      // Surface the backend message (e.g. a closed 24h window) when present; the
+      // thread refetch on settle re-locks the composer if the window closed.
+      onError: (error) =>
+        toast.error(error instanceof Error ? error.message : "Não foi possível enviar a mensagem."),
     });
   }
 
@@ -100,11 +108,12 @@ export function ChatView() {
         onSelectConversation={setSelectedPatientId}
       />
 
-      {selectedConversation ? (
+      {selectedConversation && selectedChannel ? (
         <MessageThread
           conversation={selectedConversation}
-          channelId={channelId}
+          channel={selectedChannel}
           messages={messagesQuery.data?.data ?? []}
+          windowStatus={messagesQuery.data?.windowStatus}
           isLoading={messagesQuery.isLoading}
           isError={messagesQuery.isError}
           isSending={sendMutation.isPending}

@@ -3,32 +3,48 @@
 import { useEffect, useRef } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useServiceWindow } from "@/hooks/ui/use-service-window";
 import { formatPhone } from "@/lib/format";
-import type { ChatMessage, Conversation } from "@/types/chat";
+import type { ChatChannel, ChatMessage, Conversation, WindowStatus } from "@/types/chat";
 import { ContactAvatar } from "@/components/shared/contact-avatar";
 import { formatDayLabel } from "./chat-ui";
 import { MessageBubble } from "./message-bubble";
 import { MessageComposer } from "./message-composer";
 
+const WINDOW_CLOSED_NOTICE =
+  "A janela de atendimento está fechada. Aguarde o paciente responder.";
+
 /** Right pane: conversation header, message list (auto-scroll) and composer. */
 export function MessageThread({
   conversation,
-  channelId,
+  channel,
   messages,
+  windowStatus,
   isLoading,
   isError,
   isSending,
   onSend,
 }: {
   conversation: Conversation;
-  channelId: string;
+  channel: ChatChannel;
   messages: ChatMessage[];
+  windowStatus: WindowStatus | undefined;
   isLoading: boolean;
   isError: boolean;
   isSending: boolean;
   onSend: (content: string) => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // The 24h service window only gates the official Meta channel; Evolution
+  // (unofficial) sends are unconstrained.
+  const isWindowGated = channel.provider === "META_OFFICIAL";
+  const serviceWindow = useServiceWindow(isWindowGated ? windowStatus : undefined);
+  const lockedReason = isWindowGated && !serviceWindow.isOpen ? WINDOW_CLOSED_NOTICE : null;
+  const hint =
+    isWindowGated && serviceWindow.isOpen && serviceWindow.remainingLabel
+      ? `Janela fecha em ${serviceWindow.remainingLabel}`
+      : null;
 
   // Auto-scroll to the newest message on open, on new messages and on send.
   useEffect(() => {
@@ -66,7 +82,13 @@ export function MessageThread({
         <div ref={bottomRef} />
       </div>
 
-      <MessageComposer channelId={channelId} isSending={isSending} onSend={onSend} />
+      <MessageComposer
+        channelId={channel.id}
+        isSending={isSending}
+        onSend={onSend}
+        lockedReason={lockedReason}
+        hint={hint}
+      />
     </section>
   );
 }

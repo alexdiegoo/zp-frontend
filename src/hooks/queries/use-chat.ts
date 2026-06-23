@@ -104,7 +104,14 @@ export function useSendMessage(params: ConversationThread) {
 
       qc.setQueryData<MessagesPage>(messagesKey, (current) => {
         const base: MessagesPage =
-          current ?? { data: [], limit: 30, page: 1, total: 0, totalPages: 1 };
+          current ?? {
+            data: [],
+            limit: 30,
+            page: 1,
+            total: 0,
+            totalPages: 1,
+            windowStatus: { expiresAt: null, isOpen: false },
+          };
         return {
           ...base,
           data: [...base.data, optimistic],
