@@ -58,14 +58,13 @@ const NAV_GROUPS: NavGroup[] = [
 
 const DASHBOARD: NavItem = {
   label: "Dashboard",
-  href: "/",
+  href: "/dashboard",
   icon: LayoutDashboard,
 };
 
 function useIsActive() {
   const pathname = usePathname();
-  return (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  return (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function NavLink({ item, active }: { item: NavItem; active: boolean }) {

@@ -78,7 +78,7 @@ export function RegisterView() {
       {
         onSuccess: () => {
           toast.success("Conta criada com sucesso!");
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         },
         onError: (error) => {

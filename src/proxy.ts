@@ -25,14 +25,16 @@ export function proxy(request: NextRequest) {
 
   const isAuthRoute =
     pathname.startsWith("/login") || pathname.startsWith("/register");
-  const isProtected = pathname.startsWith("/dashboard") || pathname === "/";
+  // The root (`/`) is now the public marketing landing — open to anonymous
+  // visitors. The authenticated app home moved to `/dashboard`.
+  const isProtected = pathname.startsWith("/dashboard");
 
   if (isProtected && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

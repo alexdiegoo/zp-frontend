@@ -40,7 +40,7 @@ export function LoginView() {
     mutate(values, {
       onSuccess: () => {
         toast.success("Bem-vindo de volta!");
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       },
       onError: (error) => {
