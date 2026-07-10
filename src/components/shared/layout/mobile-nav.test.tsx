@@ -39,6 +39,10 @@ describe("MobileNav", () => {
     );
 
     const chatLink = screen.getByRole("link", { name: "Chat" });
+    // jsdom does not implement navigation, so following the anchor's href logs
+    // a "Not implemented: navigation" error. Suppress the default navigation —
+    // the React onClick (onNavigate → setOpen(false)) still fires.
+    chatLink.addEventListener("click", (e) => e.preventDefault());
     fireEvent.click(chatLink);
 
     // onNavigate → setOpen(false): the drawer content unmounts.
