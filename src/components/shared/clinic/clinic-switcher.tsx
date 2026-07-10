@@ -38,14 +38,18 @@ export function ClinicSwitcher() {
       <Select value={String(activeClinic.id)} onValueChange={handleValueChange}>
         <SelectTrigger
           aria-label="Clínica ativa"
-          className="h-9 gap-2 border-none bg-transparent px-2 font-medium shadow-none hover:bg-muted focus-visible:ring-0"
+          className="h-9 min-w-0 gap-2 border-none bg-transparent px-2 font-medium shadow-none hover:bg-muted focus-visible:ring-0"
         >
-          <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-brand">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary/10 text-brand">
             <Building2 className="size-4" />
           </span>
           {/* Render the name directly: Radix's SelectValue would mirror the
-              item's two-line content into the compact trigger. */}
-          <span className="truncate text-foreground">{activeClinic.name}</span>
+              item's two-line content into the compact trigger. `min-w-0` lets
+              the name shrink so `truncate` adds the ellipsis and every header
+              element stays visible down to 320px. */}
+          <span className="min-w-0 truncate text-foreground">
+            {activeClinic.name}
+          </span>
         </SelectTrigger>
         <SelectContent className="min-w-56">
           {clinics.map((clinic) => (

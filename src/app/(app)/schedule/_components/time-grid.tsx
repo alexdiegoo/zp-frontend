@@ -75,10 +75,15 @@ export function TimeGrid({
   }, []);
 
   const byDay = groupByDay(appointments);
-  const gridTemplate = `${TIME_GUTTER_WIDTH}px repeat(${days.length}, minmax(0, 1fr))`;
+  // For the multi-day (week) view, keep each day column readable on small
+  // screens by giving it a minimum width; the grid then scrolls horizontally
+  // inside its own region instead of squeezing. On wide screens `1fr` exceeds
+  // the minimum so nothing changes. The single-day view fills the width.
+  const dayMinWidth = days.length > 1 ? 110 : 0;
+  const gridTemplate = `${TIME_GUTTER_WIDTH}px repeat(${days.length}, minmax(${dayMinWidth}px, 1fr))`;
 
   return (
-    <div ref={scrollRef} className="relative flex-1 overflow-y-auto bg-card">
+    <div ref={scrollRef} className="relative flex-1 overflow-x-auto overflow-y-auto bg-card">
       {/* Sticky weekday header */}
       <div
         className="sticky top-0 z-20 grid border-b border-border bg-card"

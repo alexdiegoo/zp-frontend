@@ -58,7 +58,7 @@ export function ConversationSidebar({
   onSelectConversation: (patientId: string) => void;
 }) {
   return (
-    <aside className="flex h-full w-full max-w-[320px] shrink-0 flex-col border-r border-border bg-card">
+    <aside className="flex h-full w-full shrink-0 flex-col bg-card lg:max-w-[320px] lg:border-r lg:border-border">
       <div className="space-y-3 border-b border-border p-3">
         {channels.length > 1 && (
           <Select

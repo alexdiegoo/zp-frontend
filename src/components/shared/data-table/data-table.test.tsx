@@ -24,13 +24,23 @@ describe("DataTable", () => {
     render(
       <DataTable columns={columns} data={[]} emptyMessage="Nenhum resultado." />,
     );
-    expect(screen.getByText("Nenhum resultado.")).toBeInTheDocument();
+    // Present in both the (hidden) table and the mobile card layout.
+    expect(screen.getAllByText("Nenhum resultado.").length).toBeGreaterThan(0);
   });
 
-  it("renders one row per item with its cell content", () => {
-    render(<DataTable columns={columns} data={[{ name: "Ana" }, { name: "Bruno" }]} />);
-    expect(screen.getByText("Ana")).toBeInTheDocument();
-    expect(screen.getByText("Bruno")).toBeInTheDocument();
+  it("renders each item in both the table and the mobile card layout", () => {
+    render(
+      <DataTable columns={columns} data={[{ name: "Ana" }, { name: "Bruno" }]} />,
+    );
+    // One occurrence in the desktop table + one in the mobile card layout.
+    expect(screen.getAllByText("Ana")).toHaveLength(2);
+    expect(screen.getAllByText("Bruno")).toHaveLength(2);
+  });
+
+  it("labels each value with its column header in the card layout", () => {
+    render(<DataTable columns={columns} data={[{ name: "Ana" }]} />);
+    // "Nome" appears as the table header AND as the card field label.
+    expect(screen.getAllByText("Nome")).toHaveLength(2);
   });
 
   it("invokes onRowClick with the clicked row's data", async () => {
@@ -40,7 +50,16 @@ describe("DataTable", () => {
     render(
       <DataTable columns={columns} data={[{ name: "Ana" }]} onRowClick={onRowClick} />,
     );
-    await user.click(screen.getByText("Ana"));
+    await user.click(screen.getAllByText("Ana")[0]);
     expect(onRowClick).toHaveBeenCalledWith({ name: "Ana" });
+  });
+
+  it("renders only the scrollable table (no cards) when mobileLayout is 'scroll'", () => {
+    render(
+      <DataTable columns={columns} data={[{ name: "Ana" }]} mobileLayout="scroll" />,
+    );
+    // No duplicate card render: value and header each appear exactly once.
+    expect(screen.getAllByText("Ana")).toHaveLength(1);
+    expect(screen.getAllByText("Nome")).toHaveLength(1);
   });
 });

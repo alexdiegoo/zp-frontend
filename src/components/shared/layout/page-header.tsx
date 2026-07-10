@@ -43,7 +43,7 @@ export function Section({
 }: React.ComponentProps<"section">) {
   return (
     <section
-      className={cn("flex flex-col gap-6 px-6 py-6", className)}
+      className={cn("flex flex-col gap-6 px-4 py-4 sm:px-6 sm:py-6", className)}
       {...props}
     />
   );
