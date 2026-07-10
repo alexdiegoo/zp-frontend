@@ -5,6 +5,7 @@ import { Loader2, MessageSquareDashed } from "lucide-react";
 import { toast } from "sonner";
 
 import { useDebounce } from "@/hooks/ui/use-debounce";
+import { useMediaQuery } from "@/hooks/ui/use-media-query";
 import {
   useChatChannels,
   useConversations,
@@ -25,6 +26,10 @@ export function ChatView() {
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput.trim(), 350);
+
+  // Below lg the two panes collapse into one: the conversation list, or the
+  // selected thread. Above lg both render side by side.
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const channelsQuery = useChatChannels();
   const channels = useMemo(() => channelsQuery.data ?? [], [channelsQuery.data]);
@@ -93,37 +98,48 @@ export function ChatView() {
     );
   }
 
+  // On mobile, show the thread pane only when a conversation is open; otherwise
+  // show the list. On desktop, both panes render together.
+  const mobileShowsThread = selectedPatientId != null;
+  const showList = isDesktop || !mobileShowsThread;
+  const showThreadPane = isDesktop || mobileShowsThread;
+
   return (
     <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
-      <ConversationSidebar
-        channels={channels}
-        selectedChannelId={channelId || null}
-        onSelectChannel={handleSelectChannel}
-        conversations={conversations}
-        isLoading={conversationsQuery.isLoading}
-        isError={conversationsQuery.isError}
-        searchQuery={searchInput}
-        onSearchChange={setSearchInput}
-        selectedPatientId={selectedPatientId}
-        onSelectConversation={setSelectedPatientId}
-      />
-
-      {selectedConversation && selectedChannel ? (
-        <MessageThread
-          conversation={selectedConversation}
-          channel={selectedChannel}
-          messages={messagesQuery.data?.data ?? []}
-          windowStatus={messagesQuery.data?.windowStatus}
-          isLoading={messagesQuery.isLoading}
-          isError={messagesQuery.isError}
-          isSending={sendMutation.isPending}
-          onSend={handleSend}
+      {showList ? (
+        <ConversationSidebar
+          channels={channels}
+          selectedChannelId={channelId || null}
+          onSelectChannel={handleSelectChannel}
+          conversations={conversations}
+          isLoading={conversationsQuery.isLoading}
+          isError={conversationsQuery.isError}
+          searchQuery={searchInput}
+          onSearchChange={setSearchInput}
+          selectedPatientId={selectedPatientId}
+          onSelectConversation={setSelectedPatientId}
         />
-      ) : (
-        <div className="flex min-w-0 flex-1 items-center justify-center bg-background">
-          <EmptyState />
-        </div>
-      )}
+      ) : null}
+
+      {showThreadPane ? (
+        selectedConversation && selectedChannel ? (
+          <MessageThread
+            conversation={selectedConversation}
+            channel={selectedChannel}
+            messages={messagesQuery.data?.data ?? []}
+            windowStatus={messagesQuery.data?.windowStatus}
+            isLoading={messagesQuery.isLoading}
+            isError={messagesQuery.isError}
+            isSending={sendMutation.isPending}
+            onSend={handleSend}
+            onBack={isDesktop ? undefined : () => setSelectedPatientId(null)}
+          />
+        ) : isDesktop ? (
+          <div className="flex min-w-0 flex-1 items-center justify-center bg-background">
+            <EmptyState />
+          </div>
+        ) : null
+      ) : null}
     </div>
   );
 }

@@ -61,7 +61,7 @@ export function ClinicGate({ children }: { children: React.ReactNode }) {
     <ClinicProvider clinics={clinics}>
       <div className="min-h-screen bg-background">
         <Sidebar />
-        <div className="flex min-h-screen flex-col pl-[220px]">
+        <div className="flex min-h-screen flex-col lg:pl-[220px]">
           <Topbar />
           <main className="flex-1">{children}</main>
         </div>

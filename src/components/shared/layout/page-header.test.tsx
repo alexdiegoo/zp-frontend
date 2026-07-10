@@ -1,6 +1,6 @@
 import { render, screen } from "@/test/utils";
 
-import { PageHeader } from "./page-header";
+import { PageHeader, Section } from "./page-header";
 
 describe("PageHeader", () => {
   it("renders the title", () => {
@@ -29,5 +29,27 @@ describe("PageHeader", () => {
     expect(
       screen.getByRole("button", { name: "Nova campanha" }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("Section", () => {
+  it("applies mobile-first fluid padding (tight on mobile, roomier from sm up)", () => {
+    render(<Section data-testid="section">content</Section>);
+    const section = screen.getByTestId("section");
+    // mobile base
+    expect(section).toHaveClass("px-4", "py-4");
+    // sm+ enhancement
+    expect(section).toHaveClass("sm:px-6", "sm:py-6");
+  });
+
+  it("merges caller className with the base padding", () => {
+    render(
+      <Section data-testid="section" className="gap-2">
+        content
+      </Section>,
+    );
+    const section = screen.getByTestId("section");
+    expect(section).toHaveClass("gap-2");
+    expect(section).toHaveClass("px-4");
   });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ArrowLeft } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useServiceWindow } from "@/hooks/ui/use-service-window";
@@ -24,6 +25,7 @@ export function MessageThread({
   isError,
   isSending,
   onSend,
+  onBack,
 }: {
   conversation: Conversation;
   channel: ChatChannel;
@@ -33,6 +35,8 @@ export function MessageThread({
   isError: boolean;
   isSending: boolean;
   onSend: (content: string) => void;
+  /** When provided, shows a back control (mobile single-pane) to return to the list. */
+  onBack?: () => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +58,16 @@ export function MessageThread({
   return (
     <section className="flex h-full min-w-0 flex-1 flex-col bg-background">
       <header className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Voltar para a lista de conversas"
+            className="-ml-2 flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted lg:hidden"
+          >
+            <ArrowLeft className="size-5" />
+          </button>
+        ) : null}
         <ContactAvatar name={conversation.patientName || conversation.phoneNumber} className="size-9" />
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-foreground">

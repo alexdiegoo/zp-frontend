@@ -1,28 +1,33 @@
 import { Bell, ChevronDown } from "lucide-react";
 
 import { ClinicSwitcher } from "@/components/shared/clinic/clinic-switcher";
+import { MobileNav } from "@/components/shared/layout/mobile-nav";
 
-/** Sticky top bar for the authenticated shell: clinic switcher + notifications + user menu. */
+/** Sticky top bar for the authenticated shell: mobile nav trigger + clinic switcher + notifications + user menu. */
 export function Topbar() {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card px-6">
-      <ClinicSwitcher />
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-b border-border bg-card px-4 lg:px-6">
+      <div className="flex min-w-0 items-center gap-1">
+        {/* Hamburger — only below lg; opens the navigation drawer. */}
+        <MobileNav />
+        <ClinicSwitcher />
+      </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button
           type="button"
           aria-label="Notificações"
-          className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
+          className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted"
         >
           <Bell className="size-5" />
-          <span className="absolute top-2 right-2.5 size-2 rounded-full border-2 border-card bg-destructive" />
+          <span className="absolute top-2.5 right-3 size-2 rounded-full border-2 border-card bg-destructive" />
         </button>
 
         <div className="h-4 w-px bg-border" />
 
         <button
           type="button"
-          className="group flex items-center gap-2 rounded-full"
+          className="group flex min-h-11 items-center gap-2 rounded-full"
           aria-label="Menu do usuário"
         >
           <span className="flex size-8 items-center justify-center rounded-full bg-brand text-xs font-semibold text-brand-foreground">

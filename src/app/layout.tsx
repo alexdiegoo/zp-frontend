@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   },
   description:
     "CRM para clínicas com disparos de WhatsApp em escala — gerencie leads, agende procedimentos e acompanhe métricas.",
+};
+
+// Mobile-first viewport. `width=device-width` + `initialScale: 1` keep the
+// layout at device width; user scaling is intentionally left enabled for
+// accessibility (WCAG 1.4.4 / 1.4.10) — do not set maximumScale/userScalable.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

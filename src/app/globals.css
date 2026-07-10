@@ -2,6 +2,15 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/*
+ * Responsive convention (mobile-first):
+ * Unprefixed utilities are the small-screen base; add breakpoint prefixes to
+ * enhance for larger screens. Default Tailwind v4 breakpoints are used (no
+ * `--breakpoint-*` overrides): sm 640px, md 768px, lg 1024px, xl 1280px.
+ * The app shell switches from the mobile drawer nav to the persistent sidebar
+ * at `lg` (1024px).
+ */
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

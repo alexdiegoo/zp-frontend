@@ -191,7 +191,7 @@ export function AppointmentDetailsDialog({
         </div>
 
         <DialogFooter className="flex-col gap-2 sm:flex-col sm:gap-2">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {canConfirm ? (
               <Button onClick={handleConfirm} disabled={busy}>
                 {isConfirming ? (
@@ -215,7 +215,7 @@ export function AppointmentDetailsDialog({
             ) : null}
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Button
               variant="secondary"
               onClick={() => router.push(`/patients/${appointment.patient.id}`)}
