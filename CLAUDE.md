@@ -657,6 +657,22 @@ Use React Error Boundaries at the route level (`error.tsx`) to catch unexpected 
 
 ---
 
+## Testing
+
+Unit tests run on **Jest + React Testing Library** (configured via `next/jest`). Run them with:
+
+- `npm test` — full suite, `npm run test:watch` — watch mode, `npm run test:coverage` — with coverage.
+
+Conventions (see `specs/013-component-unit-tests/` for the full spec/plan/quickstart):
+
+- Test files are **colocated** with their source as `<source>.test.ts(x)`.
+- Shared helpers live in `src/test/`: `renderWithProviders` (fresh `QueryClient`, `retry:false`) and typed fixtures in `src/test/fixtures/`.
+- **No test hits the network** — mock query hooks or feed data through the provider.
+- **Time-dependent code** (debounce, service window, calendar) uses `jest.useFakeTimers()` / `jest.setSystemTime(...)`; the suite pins `TZ=America/Sao_Paulo` in `jest.setup.ts` for deterministic pt-BR formatting.
+- Priorities covered: validation schemas (incl. official vs. unofficial channel branches), `lib/` helpers, UI hooks, and the highest-reuse shared components.
+
+---
+
 ## Performance
 
 - Prefer **Server Components** for anything that doesn't need interactivity or browser APIs.
