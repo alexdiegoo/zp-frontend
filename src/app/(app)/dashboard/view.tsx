@@ -2,7 +2,6 @@
 
 import { PageHeader, Section } from "@/components/shared/layout/page-header";
 import { DashboardMetricsGrid } from "@/components/dashboard/dashboard-metrics-grid";
-import { H3, Muted } from "@/components/ui/typography";
 
 /**
  * Dashboard home: a filterable overview of the clinic's key metrics (new leads,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 
@@ -23,12 +23,16 @@ import { SidebarNav } from "@/components/shared/layout/sidebar-nav";
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
   // Close the drawer whenever the route changes (covers link clicks and any
-  // programmatic navigation).
-  useEffect(() => {
+  // programmatic navigation). Adjusting state during render — React's
+  // recommended alternative to a state-syncing effect — so the closed drawer is
+  // committed in the same pass as the new route.
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

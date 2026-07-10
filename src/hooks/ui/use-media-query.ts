@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * SSR-safe media-query hook. Returns whether `query` currently matches.
@@ -10,20 +10,23 @@ import { useEffect, useState } from "react";
  * For pure show/hide layout, prefer Tailwind's `lg:hidden` / `hidden lg:flex`
  * to avoid a hydration flash.
  *
- * During SSR and the first client render it returns `false`, then syncs to the
- * real value in an effect, so it never causes a hydration mismatch.
+ * Backed by `useSyncExternalStore`: the server snapshot is `false`, so SSR and
+ * hydration never mismatch, and the client snapshot reads the live match state
+ * without syncing through an effect.
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", onStoreChange);
+      return () => mql.removeEventListener("change", onStoreChange);
+    },
+    [query],
+  );
 
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    setMatches(mql.matches);
-
-    const onChange = (event: MediaQueryListEvent) => setMatches(event.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, [query]);
-
-  return matches;
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }
