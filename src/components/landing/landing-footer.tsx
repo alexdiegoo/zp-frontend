@@ -18,7 +18,7 @@ export function LandingFooter() {
 
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link
-            href="#"
+            href="/privacidade"
             className="transition-colors hover:text-foreground"
           >
             Política de privacidade
