@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,8 +72,21 @@ export function ConnectWhatsAppDialog({
   const polling = open && connect.isSuccess;
   const evolution = useEvolutionConnection(polling);
 
-  const connection: ChannelEvolutionConnection | null =
-    evolution.data ?? connect.data ?? null;
+  // The polling endpoint (`evolution.data`) only carries the live status — it
+  // never returns the QR / pairing payload, which comes solely from the initial
+  // pairing (`connect.data`). Merging keeps the QR visible while we poll for the
+  // linked status, instead of the poll blanking it out and looping forever.
+  const connection = useMemo<ChannelEvolutionConnection | null>(() => {
+    const base = connect.data ?? null;
+    const live = evolution.data ?? null;
+    if (!base && !live) return null;
+    return {
+      ...base,
+      ...live,
+      qrCode: live?.qrCode ?? base?.qrCode ?? null,
+      pairingCode: live?.pairingCode ?? base?.pairingCode ?? null,
+    } as ChannelEvolutionConnection;
+  }, [connect.data, evolution.data]);
   const linked = isLinked(connection?.status);
 
   // Close the dialog once the device is linked.
@@ -113,7 +126,7 @@ export function ConnectWhatsAppDialog({
         </DialogHeader>
 
         {connect.isSuccess ? (
-          <PairingStep connection={connection} loading={evolution.isFetching} />
+          <PairingStep connection={connection} />
         ) : (
           <Form {...form}>
             <form
@@ -163,10 +176,8 @@ export function ConnectWhatsAppDialog({
 
 function PairingStep({
   connection,
-  loading,
 }: {
   connection: ChannelEvolutionConnection | null;
-  loading: boolean;
 }) {
   const qrCode = connection?.qrCode;
   const pairingCode = connection?.pairingCode;
@@ -203,9 +214,7 @@ function PairingStep({
       <div className="flex items-center gap-2 text-muted-foreground">
         <Smartphone className="size-4" />
         <Muted>
-          {loading
-            ? "Aguardando leitura do QR Code…"
-            : "Abra o WhatsApp > Aparelhos conectados > Conectar aparelho."}
+          Abra o WhatsApp &gt; Aparelhos conectados &gt; Conectar aparelho.
         </Muted>
       </div>
     </div>
