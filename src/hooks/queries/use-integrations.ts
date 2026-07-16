@@ -8,6 +8,7 @@ import { getData, sendData } from "@/lib/api/http";
 import type { ConnectWhatsAppDto } from "@/lib/validations/integrations";
 import type {
   ChannelEvolutionConnection,
+  IntegrationDetails,
   IntegrationProvider,
   IntegrationsStatus,
 } from "@/types/api";
@@ -16,6 +17,8 @@ export const integrationKeys = {
   all: ["integrations"] as const,
   status: () => [...integrationKeys.all, "status"] as const,
   evolution: () => [...integrationKeys.all, "evolution"] as const,
+  details: (provider: IntegrationProvider) =>
+    [...integrationKeys.all, "details", provider] as const,
 };
 
 /** Aggregate status of every integration for the current clinic. */
@@ -23,6 +26,26 @@ export function useIntegrations() {
   return useQuery({
     queryKey: integrationKeys.status(),
     queryFn: () => getData<IntegrationsStatus>("/api/integrations"),
+    staleTime: 1000 * 30,
+  });
+}
+
+/**
+ * Rich, provider-specific detail for a connected integration. Fetched lazily —
+ * only while the details dialog is open — since the Meta branch triggers live
+ * Meta API calls on the backend.
+ */
+export function useIntegrationDetails(
+  provider: IntegrationProvider,
+  enabled: boolean,
+) {
+  return useQuery({
+    queryKey: integrationKeys.details(provider),
+    queryFn: () =>
+      getData<IntegrationDetails>(
+        `/api/integrations/details?provider=${provider}`,
+      ),
+    enabled,
     staleTime: 1000 * 30,
   });
 }

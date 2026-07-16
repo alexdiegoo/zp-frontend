@@ -709,6 +709,7 @@
       "connected": "Connected",
       "connect": "Connect",
       "disconnect": "Disconnect",
+      "details": "Details",
       "disconnectSuccess": "Integration disconnected.",
       "fallbackLabel": "the integration",
       "connectError": "Unable to connect {provider}. Please try again.",
@@ -732,6 +733,24 @@
       "pairingCodeLabel": "Or use the pairing code:",
       "instructions": "Open WhatsApp > Linked devices > Link a device.",
       "connectSuccess": "WhatsApp connected successfully!"
+    },
+    "integrationDetails": {
+      "title": "Integration details",
+      "loading": "Loading details…",
+      "error": "Unable to load the details.",
+      "meta": {
+        "businessName": "Business Manager",
+        "businessNameFallback": "Connected Meta account",
+        "phoneNumbers": "Connected WhatsApp numbers",
+        "noNumbers": "No numbers connected."
+      },
+      "google": {
+        "email": "Connected account"
+      },
+      "whatsapp": {
+        "phoneNumber": "Connected number",
+        "profileName": "Profile"
+      }
     }
   },
   "procedures": {

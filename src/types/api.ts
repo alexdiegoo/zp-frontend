@@ -104,6 +104,40 @@ export type IntegrationStatus = {
 /** Aggregate status of every integration. */
 export type IntegrationsStatus = Record<IntegrationProvider, IntegrationStatus>;
 
+/** A connected Meta WhatsApp phone-number asset, surfaced in the details dialog. */
+export type MetaPhoneNumberDetail = {
+  id: string;
+  /** The human-readable phone number (e.g. `+55 11 99999-9999`). */
+  number: string;
+  /** The verified display name of the number, when Meta provides one. */
+  name: string | null;
+};
+
+/**
+ * Per-provider rich detail shown in the "Details" dialog of a connected
+ * integration card (`GET /api/integrations/details?provider=…`). Discriminated
+ * by `provider` so each card renders only the fields that apply.
+ */
+export type IntegrationDetails =
+  | {
+      provider: "meta";
+      /** Business Manager (Facebook account) name, or null when it could not be resolved. */
+      businessName: string | null;
+      phoneNumbers: MetaPhoneNumberDetail[];
+    }
+  | {
+      provider: "google";
+      email: string;
+      connectedAt: string | null;
+      expiresAt: string | null;
+    }
+  | {
+      provider: "whatsapp";
+      phoneNumber: string | null;
+      profileName: string | null;
+      status: string;
+    };
+
 /* ------------------------------------------------------------------ *
  * Patients (the backend calls these "customers")
  * ------------------------------------------------------------------ */

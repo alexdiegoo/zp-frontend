@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Check, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -17,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Muted } from "@/components/ui/typography";
 import type { IntegrationConfig } from "./integrations.config";
+import { IntegrationDetailsDialog } from "./integration-details-dialog";
 
 interface IntegrationCardProps {
   config: IntegrationConfig;
@@ -35,6 +37,7 @@ export function IntegrationCard({
 }: IntegrationCardProps) {
   const t = useTranslations("settings");
   const { connected, detail } = status;
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   return (
     <Card className="flex flex-col">
@@ -70,15 +73,24 @@ export function IntegrationCard({
 
       <CardFooter>
         {connected ? (
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={onDisconnect}
-            disabled={isBusy}
-          >
-            {isBusy ? <Loader2 className="animate-spin" /> : null}
-            {t("integration.disconnect")}
-          </Button>
+          <div className="flex w-full gap-2">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setDetailsOpen(true)}
+            >
+              {t("integration.details")}
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-1"
+              onClick={onDisconnect}
+              disabled={isBusy}
+            >
+              {isBusy ? <Loader2 className="animate-spin" /> : null}
+              {t("integration.disconnect")}
+            </Button>
+          </div>
         ) : (
           <Button className="w-full" onClick={onConnect} disabled={isBusy}>
             {isBusy ? <Loader2 className="animate-spin" /> : null}
@@ -86,6 +98,15 @@ export function IntegrationCard({
           </Button>
         )}
       </CardFooter>
+
+      {connected ? (
+        <IntegrationDetailsDialog
+          provider={config.provider}
+          name={config.name}
+          open={detailsOpen}
+          onOpenChange={setDetailsOpen}
+        />
+      ) : null}
     </Card>
   );
 }
