@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
@@ -26,39 +27,29 @@ const EMPTY_FORM: FormState = {
 
 const FIELDS: ReadonlyArray<{
   name: Field;
-  label: string;
   type: string;
-  placeholder: string;
   autoComplete: string;
   inputMode?: "email" | "tel" | "text";
 }> = [
   {
     name: "name",
-    label: "Seu nome",
     type: "text",
-    placeholder: "Maria Silva",
     autoComplete: "name",
   },
   {
     name: "clinicName",
-    label: "Nome da clínica",
     type: "text",
-    placeholder: "Clínica Sorriso",
     autoComplete: "organization",
   },
   {
     name: "email",
-    label: "E-mail",
     type: "email",
-    placeholder: "voce@clinica.com",
     autoComplete: "email",
     inputMode: "email",
   },
   {
     name: "whatsapp",
-    label: "WhatsApp",
     type: "tel",
-    placeholder: "(11) 98888-7777",
     autoComplete: "tel",
     inputMode: "tel",
   },
@@ -70,6 +61,7 @@ const FIELDS: ReadonlyArray<{
  * Per spec this avoids a native <form>; submit is wired through a React handler.
  */
 export function PreRegisterCta() {
+  const t = useTranslations("public");
   const [values, setValues] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,7 +94,7 @@ export function PreRegisterCta() {
     setTimeout(() => {
       setIsSubmitting(false);
       setValues(EMPTY_FORM);
-      toast.success("Você está na lista! Entraremos em contato em breve.");
+      toast.success(t("preRegister.successToast"));
     }, 1000);
   }
 
@@ -123,15 +115,14 @@ export function PreRegisterCta() {
             {/* Pitch */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Entre na lista de espera do ZapBlast
+                {t("preRegister.pitchTitle")}
               </h2>
               <p className="mt-4 max-w-md text-base text-white/80">
-                Deixe seus dados e seja uma das primeiras clínicas a organizar o
-                funil de pacientes e disparar campanhas de WhatsApp em escala.
+                {t("preRegister.pitchDescription")}
               </p>
               <p className="mt-6 flex items-center gap-2 text-sm text-white/70">
                 <ShieldCheck className="size-4" />
-                Sem compromisso. Usamos seus dados apenas para o convite.
+                {t("preRegister.privacyNote")}
               </p>
             </div>
 
@@ -143,13 +134,15 @@ export function PreRegisterCta() {
                   const errorId = `${field.name}-error`;
                   return (
                     <div key={field.name} className="space-y-1.5">
-                      <Label htmlFor={field.name}>{field.label}</Label>
+                      <Label htmlFor={field.name}>
+                        {t(`preRegister.fields.${field.name}.label`)}
+                      </Label>
                       <Input
                         id={field.name}
                         type={field.type}
                         inputMode={field.inputMode}
                         autoComplete={field.autoComplete}
-                        placeholder={field.placeholder}
+                        placeholder={t(`preRegister.fields.${field.name}.placeholder`)}
                         value={values[field.name]}
                         disabled={isSubmitting}
                         aria-invalid={Boolean(error)}
@@ -182,10 +175,10 @@ export function PreRegisterCta() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="animate-spin" />
-                      Enviando…
+                      {t("preRegister.submitting")}
                     </>
                   ) : (
-                    "Quero entrar na lista"
+                    t("cta.joinWaitlist")
                   )}
                 </Button>
               </div>

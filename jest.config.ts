@@ -19,5 +19,17 @@ const config: Config = {
   ],
 };
 
-// Exported this way so next/jest can load the (async) Next.js config.
-export default createJestConfig(config);
+// next/jest replaces `transformIgnorePatterns` with its own default (which
+// ignores all of node_modules). `next-intl` (and its `use-intl` core) ship ESM,
+// so we resolve next/jest's config first, then re-allow those two packages to be
+// transformed by SWC.
+export default async (): Promise<Config> => {
+  const resolved = await createJestConfig(config)();
+  return {
+    ...resolved,
+    transformIgnorePatterns: [
+      "/node_modules/(?!(?:next-intl|use-intl|@formatjs|intl-messageformat)/)",
+      "^.+\\.module\\.(css|sass|scss)$",
+    ],
+  };
+};

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { useProcedures } from "@/hooks/queries/use-procedures";
@@ -11,7 +12,7 @@ import { DataTable } from "@/components/shared/data-table/data-table";
 import { DataTablePagination } from "@/components/shared/data-table/data-table-pagination";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { procedureColumns } from "./_components/columns";
+import { getProcedureColumns } from "./_components/columns";
 import { CreateProcedureDialog } from "./_components/create-procedure-dialog";
 import { ProcedureSearch } from "./_components/procedure-search";
 
@@ -21,6 +22,7 @@ const PAGE_SIZE = 20;
 const searchTermSchema = z.string().trim().max(120);
 
 export function ProceduresView() {
+  const t = useTranslations("procedures");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,8 +37,7 @@ export function ProceduresView() {
   const debouncedSearch = useDebounce(searchInput, 400);
 
   const trimmed = debouncedSearch.trim();
-  const searchError =
-    trimmed.length === 1 ? "Digite ao menos 2 caracteres." : null;
+  const searchError = trimmed.length === 1 ? t("search.minChars") : null;
 
   // Push the debounced, validated term into the URL (server-side search, so it
   // spans every page). Resetting to page 1 keeps results consistent.
@@ -76,16 +77,15 @@ export function ProceduresView() {
   const rows = data?.data ?? [];
   const meta = data?.meta;
 
+  const columns = useMemo(() => getProcedureColumns(t), [t]);
+
   const emptyMessage = activeQuery
-    ? `Nenhum procedimento encontrado para “${activeQuery}”.`
-    : "Nenhum procedimento cadastrado ainda.";
+    ? t("empty.searchNoResults", { query: activeQuery })
+    : t("empty.title");
 
   return (
     <Section>
-      <PageHeader
-        title="Procedimentos"
-        description="Gerencie o catálogo de procedimentos da clínica."
-      >
+      <PageHeader title={t("title")} description={t("description")}>
         <CreateProcedureDialog />
       </PageHeader>
 
@@ -98,24 +98,22 @@ export function ProceduresView() {
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar os procedimentos.</AlertTitle>
+          <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "Tente novamente em instantes."}
+            {error instanceof Error ? error.message : t("error.description")}
             <button
               type="button"
               onClick={() => refetch()}
               className="font-medium underline underline-offset-4"
             >
-              Tentar novamente
+              {t("error.retry")}
             </button>
           </AlertDescription>
         </Alert>
       ) : (
         <div className="flex flex-col gap-4">
           <DataTable
-            columns={procedureColumns}
+            columns={columns}
             data={rows}
             isLoading={isLoading}
             emptyMessage={emptyMessage}

@@ -1,8 +1,13 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { ProceduresView } from "./view";
 
-export const metadata = { title: "Procedimentos" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("nav");
+  return { title: t("procedures") };
+}
 
 export default function ProceduresPage() {
   return (

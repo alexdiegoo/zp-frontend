@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 
 import { PageHeader, Section } from "@/components/shared/layout/page-header";
@@ -13,6 +14,7 @@ import { OfficialCampaignForm } from "./_components/official-campaign-form";
 import { UnofficialCampaignForm } from "./_components/unofficial-campaign-form";
 
 export function CampaignNewView() {
+  const t = useTranslations("campaigns");
   const router = useRouter();
   const [apiType, setApiType] = useState<CampaignApiType | null>(null);
   const [createdUnofficial, setCreatedUnofficial] = useState<CreatedCampaign | null>(null);
@@ -21,7 +23,7 @@ export function CampaignNewView() {
   if (createdUnofficial) {
     return (
       <Section>
-        <PageHeader title="Nova campanha" />
+        <PageHeader title={t("newCampaign")} />
         <div className="max-w-2xl">
           <CampaignSuccess campaign={createdUnofficial} />
         </div>
@@ -32,12 +34,12 @@ export function CampaignNewView() {
   return (
     <Section>
       <PageHeader
-        title="Nova campanha"
-        description="Escolha o tipo de campanha e configure os detalhes do disparo."
+        title={t("newCampaign")}
+        description={t("new.description")}
       >
         <Button variant="outline" onClick={() => router.push("/campaigns")}>
           <ArrowLeft />
-          Voltar
+          {t("back")}
         </Button>
       </PageHeader>
 

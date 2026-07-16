@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ interface UnofficialCampaignFormProps {
 }
 
 export function UnofficialCampaignForm({ onCreated }: UnofficialCampaignFormProps) {
+  const t = useTranslations("campaigns");
   const router = useRouter();
   const { mutate, isPending } = useCreateCampaign();
 
@@ -46,7 +48,7 @@ export function UnofficialCampaignForm({ onCreated }: UnofficialCampaignFormProp
   function onSubmit(values: CreateUnofficialCampaignDto) {
     mutate(values, {
       onSuccess: (campaign) => {
-        toast.success("Campanha criada com sucesso.");
+        toast.success(t("toast.created"));
         onCreated(campaign);
       },
       onError: (error) => toast.error(error.message),
@@ -61,9 +63,9 @@ export function UnofficialCampaignForm({ onCreated }: UnofficialCampaignFormProp
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome da campanha</FormLabel>
+              <FormLabel>{t("form.name.label")}</FormLabel>
               <FormControl>
-                <Input placeholder="Ex.: Reativação de pacientes" {...field} />
+                <Input placeholder={t("unofficial.name.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,16 +77,16 @@ export function UnofficialCampaignForm({ onCreated }: UnofficialCampaignFormProp
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mensagem</FormLabel>
+              <FormLabel>{t("unofficial.message.label")}</FormLabel>
               <FormControl>
                 <Textarea
                   rows={6}
-                  placeholder="Escreva a mensagem que os operadores irão enviar…"
+                  placeholder={t("unofficial.message.placeholder")}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Copie a mensagem abaixo e envie para seus contatos.
+                {t("unofficial.message.description")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -97,10 +99,10 @@ export function UnofficialCampaignForm({ onCreated }: UnofficialCampaignFormProp
             variant="outline"
             onClick={() => router.push("/campaigns")}
           >
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button type="submit" disabled={!form.formState.isValid || isPending}>
-            {isPending ? "Criando…" : "Criar campanha"}
+            {isPending ? t("form.submitting") : t("form.submit")}
           </Button>
         </div>
       </form>

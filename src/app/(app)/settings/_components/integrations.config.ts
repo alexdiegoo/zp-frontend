@@ -1,4 +1,9 @@
+import type { useTranslations } from "next-intl";
+
 import type { IntegrationProvider } from "@/types/api";
+
+/** Translator bound to the `settings` message namespace (type-checked keys). */
+type Translator = ReturnType<typeof useTranslations<"settings">>;
 
 /**
  * How an integration is connected:
@@ -16,28 +21,29 @@ export type IntegrationConfig = {
   connect: ConnectKind;
 };
 
-export const INTEGRATIONS: IntegrationConfig[] = [
-  {
-    provider: "meta",
-    name: "WhatsApp Oficial (Meta)",
-    description:
-      "Integre a API Oficial do WhatsApp para realizar disparos de mensagens aprovadas pelo Meta.",
-    icon: "/integrations/meta.png",
-    connect: "oauth",
-  },
-  {
-    provider: "google",
-    name: "Google",
-    description: "Integre ao Google para sincronizar sua agenda com o google calendar.",
-    icon: "/integrations/google.png",
-    connect: "oauth",
-  },
-  {
-    provider: "whatsapp",
-    name: "WhatsApp",
-    description:
-      "Integre diretamente com o WhatsApp via API não oficial e dispare e gerencie mensagens.",
-    icon: "/integrations/whatsapp.png",
-    connect: "evolution",
-  },
-];
+/** Builds the integration catalog with translated display labels. */
+export function getIntegrations(t: Translator): IntegrationConfig[] {
+  return [
+    {
+      provider: "meta",
+      name: t("providers.meta"),
+      description: t("providers.metaDescription"),
+      icon: "/integrations/meta.png",
+      connect: "oauth",
+    },
+    {
+      provider: "google",
+      name: t("providers.google"),
+      description: t("providers.googleDescription"),
+      icon: "/integrations/google.png",
+      connect: "oauth",
+    },
+    {
+      provider: "whatsapp",
+      name: t("providers.whatsapp"),
+      description: t("providers.whatsappDescription"),
+      icon: "/integrations/whatsapp.png",
+      connect: "evolution",
+    },
+  ];
+}

@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AlertCircle, Plus, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
@@ -13,14 +14,17 @@ import { DataTablePagination } from "@/components/shared/data-table/data-table-p
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { templateColumns } from "./_components/columns";
+import { getTemplateColumns } from "./_components/columns";
 
 const PAGE_SIZE = 20;
 
 export function TemplatesView() {
+  const t = useTranslations("templates");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const columns = useMemo(() => getTemplateColumns(t), [t]);
 
   // URL is the source of truth for the current page (shareable + survives refresh).
   const pageParam = Number(searchParams.get("page"));
@@ -50,26 +54,19 @@ export function TemplatesView() {
       onSuccess: ({ syncedCount }) =>
         toast.success(
           syncedCount > 0
-            ? `${syncedCount} ${
-                syncedCount === 1 ? "template sincronizado" : "templates sincronizados"
-              } com a Meta.`
-            : "Templates já estão atualizados.",
+            ? t("toast.syncSuccess", { count: syncedCount })
+            : t("toast.syncUpToDate"),
         ),
       onError: (error) =>
         toast.error(
-          error instanceof Error
-            ? error.message
-            : "Não foi possível sincronizar os templates.",
+          error instanceof Error ? error.message : t("toast.syncError"),
         ),
     });
   }
 
   return (
     <Section>
-      <PageHeader
-        title="Templates"
-        description="Modelos de mensagem do WhatsApp para API Oficial."
-      >
+      <PageHeader title={t("title")} description={t("description")}>
         <Button
           variant="outline"
           onClick={handleSync}
@@ -78,12 +75,12 @@ export function TemplatesView() {
           <RefreshCw
             className={cn(syncTemplates.isPending && "animate-spin")}
           />
-          {syncTemplates.isPending ? "Sincronizando…" : "Sincronizar"}
+          {syncTemplates.isPending ? t("syncing") : t("sync")}
         </Button>
         <Button asChild>
           <Link href="/templates/new">
             <Plus />
-            Criar template
+            {t("newTemplate")}
           </Link>
         </Button>
       </PageHeader>
@@ -91,27 +88,27 @@ export function TemplatesView() {
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar os templates.</AlertTitle>
+          <AlertTitle>{t("error.loadList.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Tente novamente em instantes."}
+              : t("error.loadList.description")}
             <button
               type="button"
               onClick={() => refetch()}
               className="font-medium underline underline-offset-4"
             >
-              Tentar novamente
+              {t("error.retry")}
             </button>
           </AlertDescription>
         </Alert>
       ) : (
         <div className="flex flex-col gap-4">
           <DataTable
-            columns={templateColumns}
+            columns={columns}
             data={rows}
             isLoading={isLoading}
-            emptyMessage="Nenhum template cadastrado ainda."
+            emptyMessage={t("empty")}
             onRowClick={(template) => router.push(`/templates/${template.id}`)}
           />
           {meta && meta.total > 0 ? (
@@ -123,7 +120,10 @@ export function TemplatesView() {
               limit={meta.limit}
               isFetching={isFetching}
               onPageChange={goToPage}
-              noun={{ singular: "template", plural: "templates" }}
+              noun={{
+                singular: t("noun.singular"),
+                plural: t("noun.plural"),
+              }}
             />
           ) : null}
         </div>

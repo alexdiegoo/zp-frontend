@@ -6,6 +6,8 @@ export type AuthUser = {
   email: string;
   name: string;
   googleCalendarConnected: boolean;
+  /** Durable per-account language preference (cross-device — FR-005). */
+  locale?: string | null;
 };
 
 /** `POST /api/v1/users/login` → 200 */

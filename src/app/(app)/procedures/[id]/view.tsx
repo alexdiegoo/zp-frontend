@@ -1,8 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AlertCircle, ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { useProcedure } from "@/hooks/queries/use-procedures";
 import { formatCurrency, formatDate } from "@/lib/format";
@@ -21,52 +23,59 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Label, Muted, P } from "@/components/ui/typography";
 
-const priceColumns: ColumnDef<ProcedurePrice, unknown>[] = [
-  {
-    accessorKey: "amount",
-    header: "Valor",
-    cell: ({ row }) => (
-      <span className="font-medium tabular-nums text-foreground">
-        {formatCurrency(row.original.amount)}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "effectiveFrom",
-    header: "Vigente desde",
-    cell: ({ row }) => (
-      <span className="tabular-nums text-muted-foreground">
-        {formatDate(row.original.effectiveFrom)}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "effectiveTo",
-    header: "Vigente até",
-    cell: ({ row }) => (
-      <span className="tabular-nums text-muted-foreground">
-        {row.original.effectiveTo ? formatDate(row.original.effectiveTo) : "—"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "isCurrent",
-    header: "Situação",
-    cell: ({ row }) =>
-      row.original.isCurrent ? (
-        <Badge variant="secondary">Vigente</Badge>
-      ) : (
-        <Badge variant="outline">Histórico</Badge>
+type Translator = ReturnType<typeof useTranslations<"procedures">>;
+
+function getPriceColumns(
+  t: Translator,
+): ColumnDef<ProcedurePrice, unknown>[] {
+  return [
+    {
+      accessorKey: "amount",
+      header: t("priceColumns.amount"),
+      cell: ({ row }) => (
+        <span className="font-medium tabular-nums text-foreground">
+          {formatCurrency(row.original.amount)}
+        </span>
       ),
-  },
-];
+    },
+    {
+      accessorKey: "effectiveFrom",
+      header: t("priceColumns.effectiveFrom"),
+      cell: ({ row }) => (
+        <span className="tabular-nums text-muted-foreground">
+          {formatDate(row.original.effectiveFrom)}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "effectiveTo",
+      header: t("priceColumns.effectiveTo"),
+      cell: ({ row }) => (
+        <span className="tabular-nums text-muted-foreground">
+          {row.original.effectiveTo ? formatDate(row.original.effectiveTo) : "—"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "isCurrent",
+      header: t("priceColumns.status"),
+      cell: ({ row }) =>
+        row.original.isCurrent ? (
+          <Badge variant="secondary">{t("status.current")}</Badge>
+        ) : (
+          <Badge variant="outline">{t("status.historical")}</Badge>
+        ),
+    },
+  ];
+}
 
 function BackLink() {
+  const t = useTranslations("procedures");
   return (
     <Button variant="ghost" size="sm" asChild className="-ml-2 w-fit">
       <Link href="/procedures">
         <ArrowLeft />
-        Procedimentos
+        {t("title")}
       </Link>
     </Button>
   );
@@ -87,12 +96,15 @@ export function ProcedureDetailView({
 }: {
   procedureId: string;
 }) {
+  const t = useTranslations("procedures");
   const {
     data: procedure,
     isLoading,
     isError,
     error,
   } = useProcedure(procedureId);
+
+  const priceColumns = useMemo(() => getPriceColumns(t), [t]);
 
   if (isLoading) {
     return (
@@ -111,11 +123,11 @@ export function ProcedureDetailView({
         <BackLink />
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar o procedimento.</AlertTitle>
+          <AlertTitle>{t("error.detailTitle")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "O procedimento não foi encontrado ou ocorreu um erro."}
+              : t("error.detailDescription")}
           </AlertDescription>
         </Alert>
       </Section>
@@ -130,38 +142,46 @@ export function ProcedureDetailView({
 
       <PageHeader
         title={procedure.name}
-        description={`Cadastrado em ${formatDate(procedure.createdAt)}`}
+        description={t("registeredOn", {
+          date: formatDate(procedure.createdAt),
+        })}
       >
         {procedure.isActive ? (
-          <Badge variant="secondary">Ativo</Badge>
+          <Badge variant="secondary">{t("status.active")}</Badge>
         ) : (
-          <Badge variant="outline">Inativo</Badge>
+          <Badge variant="outline">{t("status.inactive")}</Badge>
         )}
       </PageHeader>
 
       <Card>
         <CardHeader>
-          <CardTitle>Dados do procedimento</CardTitle>
+          <CardTitle>{t("detail.cardTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
-          <Field label="Valor base" value={formatCurrency(procedure.basePrice)} />
           <Field
-            label="Valor atual"
+            label={t("fields.basePrice.label")}
+            value={formatCurrency(procedure.basePrice)}
+          />
+          <Field
+            label={t("fields.currentPrice.label")}
             value={formatCurrency(procedure.currentPrice)}
           />
-          <Field label="Status" value={procedure.isActive ? "Ativo" : "Inativo"} />
+          <Field
+            label={t("fields.status.label")}
+            value={procedure.isActive ? t("status.active") : t("status.inactive")}
+          />
           <div className="space-y-1 sm:col-span-2">
-            <Label>Descrição</Label>
+            <Label>{t("fields.description.label")}</Label>
             <P>{procedure.description || "—"}</P>
           </div>
         </CardContent>
       </Card>
 
       <div className="space-y-3">
-        <H3>Histórico de preços</H3>
+        <H3>{t("detail.priceHistory")}</H3>
         {priceHistory.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center">
-            <Muted>Este procedimento ainda não possui histórico de preços.</Muted>
+            <Muted>{t("detail.priceHistoryEmpty")}</Muted>
           </div>
         ) : (
           <DataTable columns={priceColumns} data={priceHistory} />

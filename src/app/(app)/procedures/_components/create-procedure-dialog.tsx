@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useCreateProcedure } from "@/hooks/queries/use-procedures";
@@ -41,6 +42,7 @@ const DEFAULT_VALUES: CreateProcedureDto = {
 
 /** "Cadastrar procedimento" action + dialog form, validated client-side with Zod. */
 export function CreateProcedureDialog() {
+  const t = useTranslations("procedures");
   const [open, setOpen] = useState(false);
 
   const form = useForm<CreateProcedureDto>({
@@ -60,7 +62,7 @@ export function CreateProcedureDialog() {
     // Only fires after Zod validation passes — safe to forward to the backend.
     mutate(cleanProcedurePayload(values), {
       onSuccess: (procedure) => {
-        toast.success(`${procedure.name} cadastrado com sucesso.`);
+        toast.success(t("toast.created", { name: procedure.name }));
         handleOpenChange(false);
       },
       onError: (error) => toast.error(error.message),
@@ -72,14 +74,14 @@ export function CreateProcedureDialog() {
       <DialogTrigger asChild>
         <Button>
           <Plus />
-          Cadastrar procedimento
+          {t("newProcedure")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Cadastrar procedimento</DialogTitle>
+          <DialogTitle>{t("newProcedure")}</DialogTitle>
           <DialogDescription>
-            Adicione um novo procedimento ao catálogo da clínica ativa.
+            {t("dialog.create.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,9 +97,13 @@ export function CreateProcedureDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel>{t("fields.name.label")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Limpeza de pele" autoFocus {...field} />
+                    <Input
+                      placeholder={t("fields.name.placeholder")}
+                      autoFocus
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,13 +116,17 @@ export function CreateProcedureDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Valor base{" "}
+                    {t("fields.basePrice.label")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input inputMode="decimal" placeholder="150,00" {...field} />
+                    <Input
+                      inputMode="decimal"
+                      placeholder={t("fields.basePrice.placeholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,15 +139,15 @@ export function CreateProcedureDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Descrição{" "}
+                    {t("fields.description.label")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       rows={3}
-                      placeholder="Detalhes do procedimento…"
+                      placeholder={t("fields.description.placeholder")}
                       {...field}
                     />
                   </FormControl>
@@ -157,10 +167,10 @@ export function CreateProcedureDialog() {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Cadastrando…
+                {t("dialog.create.submitting")}
               </>
             ) : (
-              "Cadastrar"
+              t("dialog.create.submit")
             )}
           </Button>
         </DialogFooter>

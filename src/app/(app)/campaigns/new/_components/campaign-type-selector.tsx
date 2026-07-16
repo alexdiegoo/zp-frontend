@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { BadgeCheck, Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -14,37 +15,27 @@ interface CampaignTypeSelectorProps {
 const OPTIONS = [
   {
     type: "OFFICIAL",
+    i18n: "official",
     icon: BadgeCheck,
-    title: "API Oficial",
-    description:
-      "Disparos via WhatsApp Business API oficial. Requer template aprovado pela Meta.",
-    badge: {
-      label: "Disparo automático",
-      className: "border-transparent bg-primary/10 text-primary",
-    },
+    badgeClassName: "border-transparent bg-primary/10 text-primary",
   },
   {
     type: "UNOFFICIAL",
+    i18n: "unofficial",
     icon: Zap,
-    title: "API Não Oficial",
-    description:
-      "Envio manual pelos operadores. A mensagem gerada permite identificar de qual campanha veio cada conversa.",
-    badge: {
-      label: "Envio Manual",
-      className:
-        "border-transparent bg-amber-400/15 text-amber-700 dark:text-amber-400",
-    },
+    badgeClassName:
+      "border-transparent bg-amber-400/15 text-amber-700 dark:text-amber-400",
   },
 ] as const satisfies readonly {
   type: CampaignApiType;
+  i18n: "official" | "unofficial";
   icon: typeof BadgeCheck;
-  title: string;
-  description: string;
-  badge: { label: string; className: string };
+  badgeClassName: string;
 }[];
 
 /** Step 1: highlighted cards to pick the campaign's sending channel. */
 export function CampaignTypeSelector({ value, onChange }: CampaignTypeSelectorProps) {
+  const t = useTranslations("campaigns");
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {OPTIONS.map((option) => {
@@ -75,13 +66,17 @@ export function CampaignTypeSelector({ value, onChange }: CampaignTypeSelectorPr
               >
                 <Icon className="size-6" />
               </span>
-              <Badge variant="outline" className={option.badge.className}>
-                {option.badge.label}
+              <Badge variant="outline" className={option.badgeClassName}>
+                {t(`selector.${option.i18n}.badge`)}
               </Badge>
             </div>
             <div className="space-y-1">
-              <h3 className="font-medium text-foreground">{option.title}</h3>
-              <p className="text-sm text-muted-foreground">{option.description}</p>
+              <h3 className="font-medium text-foreground">
+                {t(`channel.${option.i18n}`)}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t(`selector.${option.i18n}.description`)}
+              </p>
             </div>
           </button>
         );

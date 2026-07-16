@@ -1,13 +1,15 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { FunnelCard as FunnelCardType, FunnelStage } from "@/types/api";
 
 import { FunnelCard } from "./funnel-card";
-import { FUNNEL_STAGE_COLORS, FUNNEL_STAGE_LABELS } from "./funnel-constants";
+import { FUNNEL_STAGE_COLORS, getFunnelStageLabels } from "./funnel-constants";
 
 interface FunnelColumnProps {
   stage: FunnelStage;
@@ -17,6 +19,8 @@ interface FunnelColumnProps {
 /** A droppable stage column listing its cards. */
 export function FunnelColumn({ stage, cards }: FunnelColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
+  const t = useTranslations("funnel");
+  const stageLabels = useMemo(() => getFunnelStageLabels(t), [t]);
 
   return (
     <div
@@ -33,7 +37,7 @@ export function FunnelColumn({ stage, cards }: FunnelColumnProps) {
         )}
       >
         <span className="text-sm font-medium text-foreground">
-          {FUNNEL_STAGE_LABELS[stage]}
+          {stageLabels[stage]}
         </span>
         <Badge variant="secondary">{cards.length}</Badge>
       </div>

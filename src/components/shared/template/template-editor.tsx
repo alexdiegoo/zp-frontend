@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
@@ -54,6 +55,7 @@ export function TemplateEditor({
   submitError,
   onSubmit,
 }: TemplateEditorProps) {
+  const t = useTranslations("templates");
   const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<CreateTemplateForm>({
@@ -86,17 +88,17 @@ export function TemplateEditor({
           <Button variant="outline" asChild>
             <Link href={backHref}>
               <ArrowLeft />
-              Voltar
+              {t("back")}
             </Link>
           </Button>
           <Button type="submit" form={FORM_ID} disabled={submitDisabled}>
             {isSubmitting ? (
               <>
                 <Loader2 className="animate-spin" />
-                Enviando…
+                {t("submitting")}
               </>
             ) : (
-              "Enviar para aprovação"
+              t("submit")
             )}
           </Button>
         </PageHeader>
@@ -104,7 +106,7 @@ export function TemplateEditor({
         {submitError ? (
           <Alert variant="destructive">
             <AlertCircle />
-            <AlertTitle>Não foi possível enviar o template.</AlertTitle>
+            <AlertTitle>{t("error.submitTitle")}</AlertTitle>
             <AlertDescription>{submitError}</AlertDescription>
           </Alert>
         ) : null}

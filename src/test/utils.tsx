@@ -2,6 +2,12 @@ import type { ReactElement, ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, type RenderOptions } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import type { AbstractIntlMessages } from "next-intl";
+
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+import { formats } from "@/i18n/request";
+import ptBRMessages from "../../messages/pt-BR.json";
 
 /**
  * A fresh QueryClient per test with retries disabled, so query hooks resolve
@@ -16,19 +22,36 @@ function makeTestQueryClient() {
   });
 }
 
+type ProviderOptions = Omit<RenderOptions, "wrapper"> & {
+  /** Active locale for the test (defaults to the app default, `pt-BR`). */
+  locale?: Locale;
+  /** Message catalog to resolve keys against (defaults to the pt-BR catalog). */
+  messages?: AbstractIntlMessages;
+};
+
 /**
- * Renders `ui` wrapped in the providers a client component expects. Each call
- * gets an isolated QueryClient so tests never leak cache between one another.
+ * Renders `ui` wrapped in the providers a client component expects — an
+ * isolated QueryClient plus a `NextIntlClientProvider` so `useTranslations`/
+ * `useFormatter` resolve without the network. Pass `locale`/`messages` to test
+ * a specific language or a focused fixture catalog.
  */
 export function renderWithProviders(
   ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">,
+  { locale = DEFAULT_LOCALE, messages = ptBRMessages, ...options }: ProviderOptions = {},
 ) {
   const queryClient = makeTestQueryClient();
 
   function Wrapper({ children }: { children: ReactNode }) {
     return (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <NextIntlClientProvider
+        locale={locale}
+        messages={messages}
+        formats={formats}
+      >
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </NextIntlClientProvider>
     );
   }
 

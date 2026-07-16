@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -54,6 +55,7 @@ function TemplatePreview({ templateId }: { templateId: string }) {
 }
 
 export function OfficialCampaignForm() {
+  const t = useTranslations("campaigns");
   const router = useRouter();
   const { mutate, isPending } = useCreateCampaign();
 
@@ -80,7 +82,7 @@ export function OfficialCampaignForm() {
   function onSubmit(values: CreateOfficialCampaignDto) {
     mutate(values, {
       onSuccess: () => {
-        toast.success("Campanha criada com sucesso.");
+        toast.success(t("toast.created"));
         router.push("/campaigns");
       },
       onError: (error) => toast.error(error.message),
@@ -95,9 +97,9 @@ export function OfficialCampaignForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome da campanha</FormLabel>
+              <FormLabel>{t("form.name.label")}</FormLabel>
               <FormControl>
-                <Input placeholder="Ex.: Promoção Black Friday 2024" {...field} />
+                <Input placeholder={t("official.name.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -109,17 +111,17 @@ export function OfficialCampaignForm() {
           name="waPhoneNumberId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Número do WhatsApp</FormLabel>
+              <FormLabel>{t("official.phone.label")}</FormLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um número oficial" />
+                    <SelectValue placeholder={t("official.phone.placeholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {numbers.map((number) => (
                     <SelectItem key={number.id} value={number.id}>
-                      {number.number ?? "Número não informado"}
+                      {number.number ?? t("official.phone.unnamed")}
                       {number.displayName ? ` — ${number.displayName}` : ""}
                     </SelectItem>
                   ))}
@@ -127,7 +129,7 @@ export function OfficialCampaignForm() {
               </Select>
               {!numbersQuery.isLoading && numbers.length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">
-                  Nenhum número oficial conectado. Conecte um WhatsApp Business em Configurações.
+                  {t("official.phone.empty")}
                 </p>
               ) : null}
               <FormMessage />
@@ -140,11 +142,11 @@ export function OfficialCampaignForm() {
           name="messageTemplateId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Template da mensagem</FormLabel>
+              <FormLabel>{t("official.template.label")}</FormLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um template aprovado" />
+                    <SelectValue placeholder={t("official.template.placeholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -157,7 +159,7 @@ export function OfficialCampaignForm() {
               </Select>
               {!templatesQuery.isLoading && templates.length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">
-                  Nenhum template aprovado disponível. Crie e aprove um template antes de continuar.
+                  {t("official.template.empty")}
                 </p>
               ) : null}
               {selectedTemplateId ? (
@@ -173,7 +175,7 @@ export function OfficialCampaignForm() {
           name="contactIds"
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel>Contatos</FormLabel>
+              <FormLabel>{t("official.contacts.label")}</FormLabel>
               <FormControl>
                 <ContactPicker
                   value={field.value}
@@ -191,10 +193,10 @@ export function OfficialCampaignForm() {
             variant="outline"
             onClick={() => router.push("/campaigns")}
           >
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button type="submit" disabled={!form.formState.isValid || isPending}>
-            {isPending ? "Criando…" : "Criar campanha"}
+            {isPending ? t("form.submitting") : t("form.submit")}
           </Button>
         </div>
       </form>

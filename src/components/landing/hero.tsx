@@ -1,16 +1,19 @@
 import { ArrowRight, CalendarCheck, MessageCircle, TrendingUp } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const PROOF_POINTS = [
-  { icon: MessageCircle, label: "Disparos em escala" },
-  { icon: TrendingUp, label: "Métricas por estágio" },
-  { icon: CalendarCheck, label: "Agendamentos automáticos" },
+  { icon: MessageCircle, labelKey: "hero.proofPoints.dispatch" },
+  { icon: TrendingUp, labelKey: "hero.proofPoints.metrics" },
+  { icon: CalendarCheck, labelKey: "hero.proofPoints.scheduling" },
 ] as const;
 
 /** Top-of-funnel hero — headline, subheadline and the primary pre-register CTA. */
-export function Hero() {
+export async function Hero() {
+  const t = await getTranslations("public");
+
   return (
     <section className="relative overflow-hidden">
       {/* Soft brand glows */}
@@ -25,29 +28,28 @@ export function Hero() {
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
         <Badge variant="secondary" className="mb-6 text-brand">
-          Lista de espera aberta · Vagas limitadas
+          {t("hero.badge")}
         </Badge>
 
         <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          Pare de perder pacientes entre uma{" "}
-          <span className="text-brand">conversa e outra</span> no WhatsApp.
+          {t.rich("hero.title", {
+            highlight: (chunks) => <span className="text-brand">{chunks}</span>,
+          })}
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-          O ZapBlast une CRM, funil de pacientes e disparos de WhatsApp em escala
-          em uma só plataforma — feito para clínicas de estética, saúde e
-          odontologia que querem crescer com previsibilidade.
+          {t("hero.subtitle")}
         </p>
 
         <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
           <Button asChild size="lg" className="h-11 px-6 text-base">
             <a href="#pre-cadastro">
-              Quero entrar na lista
+              {t("cta.joinWaitlist")}
               <ArrowRight />
             </a>
           </Button>
           <Button asChild variant="outline" size="lg" className="h-11 px-6 text-base">
-            <a href="#recursos">Ver recursos</a>
+            <a href="#recursos">{t("hero.ctaSecondary")}</a>
           </Button>
         </div>
 
@@ -56,13 +58,13 @@ export function Hero() {
             const Icon = point.icon;
             return (
               <li
-                key={point.label}
+                key={point.labelKey}
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
               >
                 <span className="flex size-7 items-center justify-center rounded-lg bg-secondary text-brand">
                   <Icon className="size-4" />
                 </span>
-                {point.label}
+                {t(point.labelKey)}
               </li>
             );
           })}

@@ -2,6 +2,7 @@
 
 import type { UseFormReturn } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 
 import {
@@ -39,16 +40,12 @@ interface ButtonsSectionProps {
   form: UseFormReturn<CreateTemplateForm>;
 }
 
-const BUTTON_TYPE_LABELS: Record<string, string> = {
-  QUICK_REPLY: "Resposta rápida",
-  URL: "Acessar link",
-};
-
 /**
  * Optional template buttons (max 10). The "Adicionar botão" menu appends either
  * a QUICK_REPLY (text only) or a URL (text + link) row; each row can be removed.
  */
 export function ButtonsSection({ form }: ButtonsSectionProps) {
+  const t = useTranslations("templates");
   const { control } = form;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -65,9 +62,9 @@ export function ButtonsSection({ form }: ButtonsSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Botões (opcional)</CardTitle>
+        <CardTitle>{t("form.buttons.title")}</CardTitle>
         <CardDescription>
-          Até {TEMPLATE_MAX_BUTTONS} botões de resposta rápida ou de link.
+          {t("form.buttons.description", { max: TEMPLATE_MAX_BUTTONS })}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -80,13 +77,15 @@ export function ButtonsSection({ form }: ButtonsSectionProps) {
             >
               <div className="flex items-center justify-between">
                 <Muted className="font-medium">
-                  {BUTTON_TYPE_LABELS[buttonType] ?? buttonType}
+                  {buttonType === "URL"
+                    ? t("form.buttons.type.url")
+                    : t("form.buttons.type.quickReply")}
                 </Muted>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Remover botão"
+                  aria-label={t("form.buttons.remove")}
                   onClick={() => remove(index)}
                 >
                   <X />
@@ -98,11 +97,11 @@ export function ButtonsSection({ form }: ButtonsSectionProps) {
                 name={`buttons.${index}.text`}
                 render={({ field: textField }) => (
                   <FormItem>
-                    <FormLabel>Texto do botão</FormLabel>
+                    <FormLabel>{t("form.buttons.textLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         maxLength={TEMPLATE_BUTTON_TEXT_MAX}
-                        placeholder="Ex.: Confirmar"
+                        placeholder={t("form.buttons.textPlaceholder")}
                         {...textField}
                       />
                     </FormControl>
@@ -117,12 +116,12 @@ export function ButtonsSection({ form }: ButtonsSectionProps) {
                   name={`buttons.${index}.url`}
                   render={({ field: urlField }) => (
                     <FormItem>
-                      <FormLabel>URL</FormLabel>
+                      <FormLabel>{t("form.buttons.urlLabel")}</FormLabel>
                       <FormControl>
                         <Input
                           inputMode="url"
                           maxLength={TEMPLATE_BUTTON_URL_MAX}
-                          placeholder="https://exemplo.com"
+                          placeholder={t("form.buttons.urlPlaceholder")}
                           {...urlField}
                           value={urlField.value ?? ""}
                         />
@@ -145,15 +144,19 @@ export function ButtonsSection({ form }: ButtonsSectionProps) {
             disabled={atLimit}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Adicionar botão" />
+              <SelectValue placeholder={t("form.buttons.add")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="QUICK_REPLY">Resposta rápida</SelectItem>
-              <SelectItem value="URL">Chamada para ação — Acessar link</SelectItem>
+              <SelectItem value="QUICK_REPLY">
+                {t("form.buttons.type.quickReply")}
+              </SelectItem>
+              <SelectItem value="URL">{t("form.buttons.type.cta")}</SelectItem>
             </SelectContent>
           </Select>
           {atLimit ? (
-            <Muted>Limite de {TEMPLATE_MAX_BUTTONS} botões atingido.</Muted>
+            <Muted>
+              {t("form.buttons.limitReached", { max: TEMPLATE_MAX_BUTTONS })}
+            </Muted>
           ) : null}
         </div>
       </CardContent>

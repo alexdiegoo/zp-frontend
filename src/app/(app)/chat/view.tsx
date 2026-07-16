@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Loader2, MessageSquareDashed } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { useDebounce } from "@/hooks/ui/use-debounce";
 import { useMediaQuery } from "@/hooks/ui/use-media-query";
@@ -22,6 +23,7 @@ import { MessageThread } from "./_components/message-thread";
  * the realtime fallback; sending is optimistic.
  */
 export function ChatView() {
+  const t = useTranslations("chat");
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState("");
@@ -70,7 +72,7 @@ export function ChatView() {
       // Surface the backend message (e.g. a closed 24h window) when present; the
       // thread refetch on settle re-locks the composer if the window closed.
       onError: (error) =>
-        toast.error(error instanceof Error ? error.message : "Não foi possível enviar a mensagem."),
+        toast.error(error instanceof Error ? error.message : t("errors.sendFailed")),
     });
   }
 
@@ -89,9 +91,9 @@ export function ChatView() {
           <MessageSquareDashed className="size-6" />
         </div>
         <div className="space-y-1">
-          <p className="text-base font-medium text-foreground">Nenhum canal conectado</p>
+          <p className="text-base font-medium text-foreground">{t("noChannels.title")}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Conecte um canal de WhatsApp nas configurações para começar a atender conversas.
+            {t("noChannels.description")}
           </p>
         </div>
       </div>

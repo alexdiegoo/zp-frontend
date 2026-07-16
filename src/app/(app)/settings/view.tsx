@@ -3,17 +3,12 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Section, PageHeader } from "@/components/shared/layout/page-header";
 import { integrationKeys } from "@/hooks/queries/use-integrations";
 import { IntegrationsSection } from "./_components/integrations-section";
-
-const PROVIDER_LABELS: Record<string, string> = {
-  google: "Google",
-  meta: "WhatsApp Oficial (Meta)",
-  whatsapp: "WhatsApp",
-};
 
 /** `?<provider>_connected=true` flags the backend OAuth callback bounces back. */
 const CONNECTED_PARAMS: Record<string, string> = {
@@ -25,6 +20,7 @@ export function SettingsView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const t = useTranslations("settings");
   const integrationError = searchParams.get("integration_error");
   const connectedParam = Object.keys(CONNECTED_PARAMS).find(
     (key) => searchParams.get(key) === "true",
@@ -33,28 +29,35 @@ export function SettingsView() {
   // Surface OAuth failures bounced back from the connect Route Handlers.
   useEffect(() => {
     if (!integrationError) return;
-    const label = PROVIDER_LABELS[integrationError] ?? "a integração";
-    toast.error(`Não foi possível conectar ${label}. Tente novamente.`);
+    const labels: Record<string, string> = {
+      google: t("providers.google"),
+      meta: t("providers.meta"),
+      whatsapp: t("providers.whatsapp"),
+    };
+    const label = labels[integrationError] ?? t("integration.fallbackLabel");
+    toast.error(t("integration.connectError", { provider: label }));
     router.replace("/settings");
-  }, [integrationError, router]);
+  }, [integrationError, router, t]);
 
   // Surface OAuth successes the provider callback redirects back with, and
   // refresh the status so the card flips to "connected".
   useEffect(() => {
     if (!connectedParam) return;
     const provider = CONNECTED_PARAMS[connectedParam];
-    const label = PROVIDER_LABELS[provider] ?? "a integração";
-    toast.success(`${label} conectado com sucesso.`);
+    const labels: Record<string, string> = {
+      google: t("providers.google"),
+      meta: t("providers.meta"),
+      whatsapp: t("providers.whatsapp"),
+    };
+    const label = labels[provider] ?? t("integration.fallbackLabel");
+    toast.success(t("integration.connectSuccess", { provider: label }));
     queryClient.invalidateQueries({ queryKey: integrationKeys.status() });
     router.replace("/settings");
-  }, [connectedParam, queryClient, router]);
+  }, [connectedParam, queryClient, router, t]);
 
   return (
     <Section>
-      <PageHeader
-        title="Configurações"
-        description="Preferências da conta e da clínica."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
       <IntegrationsSection />
     </Section>
   );

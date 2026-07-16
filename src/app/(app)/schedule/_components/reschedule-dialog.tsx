@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useRescheduleAppointment } from "@/hooks/queries/use-appointments";
@@ -83,6 +84,7 @@ export function RescheduleDialog({
   onClose,
   onRescheduled,
 }: RescheduleDialogProps) {
+  const t = useTranslations("schedule");
   const open = appointment !== null;
 
   const form = useForm<RescheduleForm>({
@@ -135,7 +137,7 @@ export function RescheduleDialog({
       { id: appointment.id, ...payload },
       {
         onSuccess: () => {
-          toast.success("Agendamento remarcado com sucesso.");
+          toast.success(t("toast.rescheduledSuccess"));
           onClose();
           onRescheduled?.();
         },
@@ -148,10 +150,12 @@ export function RescheduleDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Reagendar</DialogTitle>
+          <DialogTitle>{t("dialog.reschedule.title")}</DialogTitle>
           <DialogDescription>
-            Escolha a nova data e horário do agendamento
-            {endLabel ? ` (término às ${endLabel}).` : "."}
+            {t("dialog.reschedule.description")}
+            {endLabel
+              ? t("dialog.reschedule.endSuffix", { time: endLabel })
+              : "."}
           </DialogDescription>
         </DialogHeader>
 
@@ -167,7 +171,7 @@ export function RescheduleDialog({
               name="startAt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nova data e horário</FormLabel>
+                  <FormLabel>{t("fields.newDateTime")}</FormLabel>
                   <FormControl>
                     <Input type="datetime-local" {...field} />
                   </FormControl>
@@ -181,7 +185,7 @@ export function RescheduleDialog({
               name="durationMinutes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Duração (min)</FormLabel>
+                  <FormLabel>{t("fields.duration")}</FormLabel>
                   <FormControl>
                     <Input type="number" min={5} step={5} {...field} />
                   </FormControl>
@@ -196,9 +200,9 @@ export function RescheduleDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Profissional{" "}
+                    {t("fields.professional")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <Select
@@ -207,11 +211,11 @@ export function RescheduleDialog({
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={t("fields.selectPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={NONE}>Nenhum</SelectItem>
+                      <SelectItem value={NONE}>{t("fields.none")}</SelectItem>
                       {(professionals ?? []).map((pro) => (
                         <SelectItem key={pro.id} value={pro.id}>
                           {pro.name}
@@ -233,7 +237,7 @@ export function RescheduleDialog({
             onClick={onClose}
             disabled={isPending}
           >
-            Voltar
+            {t("actions.back")}
           </Button>
           <Button
             type="submit"
@@ -243,10 +247,10 @@ export function RescheduleDialog({
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Salvando…
+                {t("actions.saving")}
               </>
             ) : (
-              "Reagendar"
+              t("actions.reschedule")
             )}
           </Button>
         </DialogFooter>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { usePatientSearch } from "@/hooks/queries/use-patients";
 import { useDebounce } from "@/hooks/ui/use-debounce";
@@ -20,6 +21,7 @@ export function PatientCombobox({
   invalid,
   onBlur,
 }: PatientComboboxProps) {
+  const t = useTranslations("schedule");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<ComboboxOption>();
   const debounced = useDebounce(query, 300);
@@ -48,9 +50,9 @@ export function PatientCombobox({
       selectedLabel={selectedLabel}
       options={options}
       isLoading={isFetching && !tooShort}
-      placeholder="Buscar paciente por nome…"
-      typeMoreMessage={tooShort ? "Digite ao menos 2 caracteres." : undefined}
-      emptyMessage="Nenhum paciente encontrado."
+      placeholder={t("patientSearch.placeholder")}
+      typeMoreMessage={tooShort ? t("patientSearch.typeMore") : undefined}
+      emptyMessage={t("patientSearch.empty")}
       invalid={invalid}
       onBlur={onBlur}
       onSearchChange={setQuery}

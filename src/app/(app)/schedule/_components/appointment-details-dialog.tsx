@@ -10,6 +10,7 @@ import {
   User,
   UserRound,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
@@ -41,18 +42,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { APPOINTMENT_TYPE_META } from "./appointment-card";
 
-/** Per-status label + badge variant for the detail header. */
-const STATUS_META: Record<
+/** Per-status badge variant for the detail header. */
+const STATUS_VARIANT: Record<
   AppointmentStatus,
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
+  "default" | "secondary" | "destructive" | "outline"
 > = {
-  SCHEDULED: { label: "Agendado", variant: "secondary" },
-  IN_PROGRESS: { label: "Em andamento", variant: "default" },
-  DONE: { label: "Realizado", variant: "default" },
-  CANCELLED: { label: "Cancelado", variant: "destructive" },
-  NO_SHOW: { label: "Não compareceu", variant: "destructive" },
+  SCHEDULED: "secondary",
+  IN_PROGRESS: "default",
+  DONE: "default",
+  CANCELLED: "destructive",
+  NO_SHOW: "destructive",
 };
 
 interface AppointmentDetailsDialogProps {
@@ -93,6 +93,7 @@ export function AppointmentDetailsDialog({
   onClose,
   onReschedule,
 }: AppointmentDetailsDialogProps) {
+  const t = useTranslations("schedule");
   const router = useRouter();
   const { mutate: updateStatus, isPending: isConfirming } =
     useUpdateAppointmentStatus();
@@ -109,8 +110,23 @@ export function AppointmentDetailsDialog({
     return <Dialog open={open} onOpenChange={handleOpenChange} />;
   }
 
-  const typeMeta = APPOINTMENT_TYPE_META[appointment.type];
-  const statusMeta = STATUS_META[appointment.status];
+  const statusVariant = STATUS_VARIANT[appointment.status];
+  const typeLabel =
+    appointment.type === "CONSULTATION"
+      ? t("type.consultation")
+      : appointment.type === "PROCEDURE"
+        ? t("type.procedure")
+        : t("type.return");
+  const statusLabel =
+    appointment.status === "SCHEDULED"
+      ? t("status.scheduled")
+      : appointment.status === "IN_PROGRESS"
+        ? t("status.inProgress")
+        : appointment.status === "DONE"
+          ? t("status.done")
+          : appointment.status === "CANCELLED"
+            ? t("status.cancelled")
+            : t("status.noShow");
   const start = new Date(appointment.startAt);
   const end = new Date(appointment.endAt);
   const isFinal =
@@ -130,7 +146,7 @@ export function AppointmentDetailsDialog({
       },
       {
         onSuccess: () => {
-          toast.success("Realização confirmada.");
+          toast.success(t("toast.confirmed"));
           onClose();
         },
         onError: (error) => toast.error(error.message),
@@ -141,7 +157,7 @@ export function AppointmentDetailsDialog({
   function handleCancel() {
     cancel(appointment!.id, {
       onSuccess: () => {
-        toast.success("Agendamento cancelado.");
+        toast.success(t("toast.cancelled"));
         onClose();
       },
       onError: (error) => toast.error(error.message),
@@ -153,8 +169,8 @@ export function AppointmentDetailsDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="flex flex-wrap items-center gap-2">
-            <DialogTitle>{typeMeta.label}</DialogTitle>
-            <Badge variant={statusMeta.variant}>{statusMeta.label}</Badge>
+            <DialogTitle>{typeLabel}</DialogTitle>
+            <Badge variant={statusVariant}>{statusLabel}</Badge>
           </div>
           <DialogDescription>
             {formatDayLabel(start)} · {formatTime(start)} – {formatTime(end)}
@@ -162,27 +178,27 @@ export function AppointmentDetailsDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-2">
-          <DetailRow icon={User} label="Paciente">
+          <DetailRow icon={User} label={t("fields.patient")}>
             {appointment.patient.name}
             <span className="block text-xs font-normal text-muted-foreground">
               {appointment.patient.whatsappNumber}
             </span>
           </DetailRow>
 
-          <DetailRow icon={Stethoscope} label="Procedimento">
+          <DetailRow icon={Stethoscope} label={t("fields.procedure")}>
             {appointment.procedure?.name ?? "—"}
           </DetailRow>
 
-          <DetailRow icon={DollarSign} label="Valor do procedimento">
+          <DetailRow icon={DollarSign} label={t("fields.procedurePrice")}>
             {formatCurrency(appointment.procedureRecord?.priceCharged)}
           </DetailRow>
 
-          <DetailRow icon={UserRound} label="Profissional">
-            {appointment.professional?.name ?? "Não atribuído"}
+          <DetailRow icon={UserRound} label={t("fields.professional")}>
+            {appointment.professional?.name ?? t("details.unassigned")}
           </DetailRow>
 
           {appointment.notes ? (
-            <DetailRow icon={CalendarClock} label="Observações">
+            <DetailRow icon={CalendarClock} label={t("fields.notes")}>
               <span className="font-normal whitespace-pre-wrap">
                 {appointment.notes}
               </span>
@@ -199,7 +215,7 @@ export function AppointmentDetailsDialog({
                 ) : (
                   <CheckCircle2 />
                 )}
-                Confirmar realização
+                {t("actions.confirmDone")}
               </Button>
             ) : null}
 
@@ -210,7 +226,7 @@ export function AppointmentDetailsDialog({
                 disabled={busy}
               >
                 <CalendarClock />
-                Reagendar
+                {t("actions.reschedule")}
               </Button>
             ) : null}
           </div>
@@ -222,7 +238,7 @@ export function AppointmentDetailsDialog({
               disabled={busy}
             >
               <User />
-              Ver paciente
+              {t("actions.viewPatient")}
             </Button>
 
             {!isFinal ? (
@@ -232,23 +248,28 @@ export function AppointmentDetailsDialog({
                     {isCancelling ? (
                       <Loader2 className="animate-spin" />
                     ) : null}
-                    Cancelar agendamento
+                    {t("actions.cancelAppointment")}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Cancelar agendamento?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t("cancelConfirm.title")}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Esta ação marca o agendamento de{" "}
-                      <span className="font-medium text-foreground">
-                        {appointment.patient.name}
-                      </span>{" "}
-                      como cancelado. Não é possível desfazer.
+                      {t.rich("cancelConfirm.description", {
+                        name: appointment.patient.name,
+                        strong: (chunks) => (
+                          <span className="font-medium text-foreground">
+                            {chunks}
+                          </span>
+                        ),
+                      })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel disabled={isCancelling}>
-                      Voltar
+                      {t("actions.back")}
                     </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={(e) => {
@@ -263,10 +284,10 @@ export function AppointmentDetailsDialog({
                       {isCancelling ? (
                         <>
                           <Loader2 className="animate-spin" />
-                          Cancelando…
+                          {t("actions.cancelling")}
                         </>
                       ) : (
-                        "Cancelar agendamento"
+                        t("actions.cancelAppointment")
                       )}
                     </AlertDialogAction>
                   </AlertDialogFooter>

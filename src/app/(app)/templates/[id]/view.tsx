@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { useTemplate } from "@/hooks/queries/use-templates";
@@ -22,11 +23,12 @@ import { TemplateMessagePreview } from "@/components/shared/template/template-me
 import { AiFeedbackSection } from "./_components/ai-feedback-section";
 
 function BackLink() {
+  const t = useTranslations("templates");
   return (
     <Button variant="ghost" size="sm" asChild className="-ml-2 w-fit">
       <Link href="/templates">
         <ArrowLeft />
-        Templates
+        {t("backToList")}
       </Link>
     </Button>
   );
@@ -43,6 +45,7 @@ function Field({ label, value }: { label: string; value: string }) {
 }
 
 export function TemplateDetailView({ templateId }: { templateId: string }) {
+  const t = useTranslations("templates");
   const { data: template, isLoading, isError, error } = useTemplate(templateId);
 
   if (isLoading) {
@@ -62,11 +65,11 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
         <BackLink />
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar o template.</AlertTitle>
+          <AlertTitle>{t("error.load.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "O template não foi encontrado ou ocorreu um erro."}
+              : t("error.load.description")}
           </AlertDescription>
         </Alert>
       </Section>
@@ -76,14 +79,14 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
   const { buttons, variableMapping } = template;
   const headerLabel =
     template.headerType === "TEXT"
-      ? "Texto"
+      ? t("detail.header.text")
       : template.headerType === "IMAGE"
-        ? "Imagem"
+        ? t("detail.header.image")
         : template.headerType === "VIDEO"
-          ? "Vídeo"
+          ? t("detail.header.video")
           : template.headerType === "DOCUMENT"
-            ? "Documento"
-            : "Nenhum";
+            ? t("detail.header.document")
+            : t("detail.header.none");
 
   return (
     <Section>
@@ -91,7 +94,7 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
 
       <PageHeader
         title={template.name}
-        description={`Criado em ${formatDate(template.createdAt)}`}
+        description={t("createdOn", { date: formatDate(template.createdAt) })}
       >
         <Badge variant={templateStatusVariant(template.status)}>
           {templateStatusLabel(template.status)}
@@ -102,60 +105,63 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
         <div className="flex flex-col gap-6 lg:col-span-3">
           <Card>
             <CardHeader>
-              <CardTitle>Dados do template</CardTitle>
+              <CardTitle>{t("detail.dataCard")}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-5 sm:grid-cols-2">
               <Field
-                label="Categoria"
+                label={t("detail.fields.category")}
                 value={templateCategoryLabel(template.category)}
               />
               <Field
-                label="Idioma"
+                label={t("detail.fields.language")}
                 value={formatTemplateLanguage(template.language)}
               />
               <Field
-                label="Status"
+                label={t("detail.fields.status")}
                 value={templateStatusLabel(template.status)}
               />
-              <Field label="Cabeçalho" value={headerLabel} />
+              <Field label={t("detail.fields.header")} value={headerLabel} />
               {template.headerType === "TEXT" && template.headerText ? (
                 <div className="space-y-1 sm:col-span-2">
-                  <Label>Texto do cabeçalho</Label>
+                  <Label>{t("detail.fields.headerText")}</Label>
                   <P>{template.headerText}</P>
                 </div>
               ) : null}
               {template.metaTemplateId ? (
-                <Field label="ID na Meta" value={template.metaTemplateId} />
+                <Field
+                  label={t("detail.fields.metaId")}
+                  value={template.metaTemplateId}
+                />
               ) : null}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Conteúdo da mensagem</CardTitle>
+              <CardTitle>{t("detail.contentCard")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="space-y-1">
-                <Label>Corpo</Label>
+                <Label>{t("detail.fields.body")}</Label>
                 {template.bodyPreview || template.bodyText ? (
                   <P className="whitespace-pre-wrap">
                     {template.bodyPreview ?? template.bodyText}
                   </P>
                 ) : (
-                  <Muted>Sem corpo definido.</Muted>
+                  <Muted>{t("detail.noBody")}</Muted>
                 )}
               </div>
 
               {template.footer ? (
                 <div className="space-y-1">
-                  <Label>Rodapé</Label>
+                  <Label>{t("detail.fields.footer")}</Label>
                   <P className="text-muted-foreground">{template.footer}</P>
                 </div>
               ) : null}
 
               {buttons && buttons.length > 0 ? (
                 <div className="space-y-2">
-                  <Label>Botões</Label>
+                  <Label>{t("detail.fields.buttons")}</Label>
                   <div className="flex flex-wrap gap-2">
                     {buttons.map((button, index) => (
                       <Badge key={`${button.text}-${index}`} variant="outline">
@@ -169,10 +175,10 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
           </Card>
 
           <div className="space-y-3">
-            <H3>Variáveis</H3>
+            <H3>{t("detail.variables.title")}</H3>
             {variableMapping.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center">
-                <Muted>Este template não possui variáveis.</Muted>
+                <Muted>{t("detail.variables.none")}</Muted>
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
@@ -196,7 +202,7 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
 
             <Card>
               <CardHeader>
-                <CardTitle>Pré-visualização</CardTitle>
+                <CardTitle>{t("preview.title")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <TemplateMessagePreview

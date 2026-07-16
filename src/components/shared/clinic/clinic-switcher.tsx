@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Building2, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   Select,
@@ -22,6 +23,7 @@ const ADD_CLINIC = "__add_clinic__";
  * provider, and the list ends with an action to create a new clinic.
  */
 export function ClinicSwitcher() {
+  const t = useTranslations("common");
   const { clinics, activeClinic, switchClinic } = useActiveClinic();
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -37,7 +39,7 @@ export function ClinicSwitcher() {
     <>
       <Select value={String(activeClinic.id)} onValueChange={handleValueChange}>
         <SelectTrigger
-          aria-label="Clínica ativa"
+          aria-label={t("activeClinic")}
           className="h-9 min-w-0 gap-2 border-none bg-transparent px-2 font-medium shadow-none hover:bg-muted focus-visible:ring-0"
         >
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary/10 text-brand">
@@ -66,7 +68,7 @@ export function ClinicSwitcher() {
           <SelectItem value={ADD_CLINIC} className="text-muted-foreground">
             <span className="flex items-center gap-2">
               <Plus className="size-4" />
-              Cadastrar clínica
+              {t("registerClinic")}
             </span>
           </SelectItem>
         </SelectContent>

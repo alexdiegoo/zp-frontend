@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,14 +17,16 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "ZapBlast",
-    template: "%s · ZapBlast",
-  },
-  description:
-    "CRM para clínicas com disparos de WhatsApp em escala — gerencie leads, agende procedimentos e acompanhe métricas.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("common");
+  return {
+    title: {
+      default: "ZapBlast",
+      template: "%s · ZapBlast",
+    },
+    description: t("appDescription"),
+  };
+}
 
 // Mobile-first viewport. `width=device-width` + `initialScale: 1` keep the
 // layout at device width; user scaling is intentionally left enabled for
@@ -32,19 +36,26 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="pt-BR"
+      lang={locale}
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
-        <Toaster richColors position="top-right" />
+        {/* Rendered in a Server Component, the provider inherits the request's
+            locale, messages, and formats — Client Components resolve keys
+            without a client-side fetch. */}
+        <NextIntlClientProvider>
+          <Providers>{children}</Providers>
+          <Toaster richColors position="top-right" />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

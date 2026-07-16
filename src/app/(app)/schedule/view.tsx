@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
@@ -39,6 +40,7 @@ function windowFor(date: Date, mode: ViewMode) {
 }
 
 export function ScheduleView() {
+  const t = useTranslations("schedule");
   const [viewMode, setViewMode] = useState<ViewMode>("week");
   // Default to the current week/day; `Date` is only created on the client.
   const [currentDate, setCurrentDate] = useState(() => new Date());
@@ -116,7 +118,7 @@ export function ScheduleView() {
     if (appt.professionalId) payload.professionalId = appt.professionalId;
 
     reschedule(payload, {
-      onSuccess: () => toast.success("Agendamento remarcado."),
+      onSuccess: () => toast.success(t("toast.rescheduled")),
       onError: (err) => {
         snapshot.forEach(([key, value]) => qc.setQueryData(key, value));
         toast.error(err.message);
@@ -141,10 +143,7 @@ export function ScheduleView() {
 
   return (
     <Section className="h-[calc(100svh-3.5rem)] gap-4 py-4">
-      <PageHeader
-        title="Agenda"
-        description="Visualize e crie agendamentos da clínica."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
 
       <CalendarHeader
         currentDate={currentDate}
@@ -158,17 +157,17 @@ export function ScheduleView() {
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar a agenda.</AlertTitle>
+          <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Tente novamente em instantes."}
+              : t("error.description")}
             <button
               type="button"
               onClick={() => refetch()}
               className="font-medium underline underline-offset-4"
             >
-              Tentar novamente
+              {t("error.retry")}
             </button>
           </AlertDescription>
         </Alert>

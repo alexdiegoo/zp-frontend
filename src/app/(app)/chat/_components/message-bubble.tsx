@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Clock } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import type { ChatMessage } from "@/types/chat";
@@ -8,6 +9,7 @@ import { formatTimeLabel } from "./chat-ui";
 
 /** A single chat bubble; outbound right-aligned (primary), inbound left (card). */
 export function MessageBubble({ message }: { message: ChatMessage }) {
+  const t = useTranslations("chat");
   const isOutbound = message.direction === "OUTBOUND";
   const isPending = message.status === "PENDING";
 
@@ -37,9 +39,9 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
           <span>{formatTimeLabel(message.occurredAt)}</span>
           {isOutbound &&
             (isPending ? (
-              <Clock className="size-3" aria-label="Enviando" />
+              <Clock className="size-3" aria-label={t("message.sending")} />
             ) : (
-              <Check className="size-3" aria-label="Enviada" />
+              <Check className="size-3" aria-label={t("message.sent")} />
             ))}
         </div>
       </div>

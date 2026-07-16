@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,13 +12,6 @@ import {
   type Period,
   type PeriodPreset,
 } from "./dashboard-config";
-
-const PRESET_LABELS: { preset: PeriodPreset; label: string }[] = [
-  { preset: "7d", label: "Últimos 7 dias" },
-  { preset: "30d", label: "Últimos 30 dias" },
-  { preset: "90d", label: "Últimos 90 dias" },
-  { preset: "custom", label: "Personalizado" },
-];
 
 /** `yyyy-mm-dd` (for `<input type="date">`) from a local Date. */
 function toInputValue(date: Date): string {
@@ -50,6 +44,16 @@ type PeriodPickerProps = {
  * end is never before the start. `onChange` fires only with a valid range.
  */
 export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
+  const t = useTranslations("dashboard");
+  const presetLabels = useMemo<{ preset: PeriodPreset; label: string }[]>(
+    () => [
+      { preset: "7d", label: t("period.last7Days") },
+      { preset: "30d", label: t("period.last30Days") },
+      { preset: "90d", label: t("period.last90Days") },
+      { preset: "custom", label: t("period.custom") },
+    ],
+    [t],
+  );
   const [preset, setPreset] = useState<PeriodPreset>(DEFAULT_PERIOD_PRESET);
   const [startInput, setStartInput] = useState(() => toInputValue(value.start));
   const [endInput, setEndInput] = useState(() => toInputValue(value.end));
@@ -82,7 +86,7 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
-        {PRESET_LABELS.map(({ preset: option, label }) => (
+        {presetLabels.map(({ preset: option, label }) => (
           <Button
             key={option}
             type="button"
@@ -98,7 +102,7 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
       {preset === "custom" ? (
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1.5">
-            <Label htmlFor="period-start">Início</Label>
+            <Label htmlFor="period-start">{t("period.startLabel")}</Label>
             <Input
               id="period-start"
               type="date"
@@ -109,7 +113,7 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="period-end">Fim</Label>
+            <Label htmlFor="period-end">{t("period.endLabel")}</Label>
             <Input
               id="period-end"
               type="date"
@@ -120,9 +124,7 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
             />
           </div>
           {rangeInvalid ? (
-            <p className="text-xs text-destructive">
-              A data final deve ser igual ou posterior à inicial.
-            </p>
+            <p className="text-xs text-destructive">{t("period.rangeInvalid")}</p>
           ) : null}
         </div>
       ) : null}

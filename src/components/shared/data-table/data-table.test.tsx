@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import userEvent from "@testing-library/user-event";
 
-import { render, screen } from "@/test/utils";
+import { renderWithProviders, screen } from "@/test/utils";
 
 import { DataTable } from "./data-table";
 
@@ -13,7 +13,7 @@ const columns: ColumnDef<Row, unknown>[] = [
 
 describe("DataTable", () => {
   it("shows a skeleton (and no data rows) while loading", () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <DataTable columns={columns} data={[{ name: "Ana" }]} isLoading />,
     );
     expect(container.querySelector('[data-slot="skeleton"]')).not.toBeNull();
@@ -21,7 +21,7 @@ describe("DataTable", () => {
   });
 
   it("shows the empty message when there are no rows", () => {
-    render(
+    renderWithProviders(
       <DataTable columns={columns} data={[]} emptyMessage="Nenhum resultado." />,
     );
     // Present in both the (hidden) table and the mobile card layout.
@@ -29,7 +29,7 @@ describe("DataTable", () => {
   });
 
   it("renders each item in both the table and the mobile card layout", () => {
-    render(
+    renderWithProviders(
       <DataTable columns={columns} data={[{ name: "Ana" }, { name: "Bruno" }]} />,
     );
     // One occurrence in the desktop table + one in the mobile card layout.
@@ -38,7 +38,7 @@ describe("DataTable", () => {
   });
 
   it("labels each value with its column header in the card layout", () => {
-    render(<DataTable columns={columns} data={[{ name: "Ana" }]} />);
+    renderWithProviders(<DataTable columns={columns} data={[{ name: "Ana" }]} />);
     // "Nome" appears as the table header AND as the card field label.
     expect(screen.getAllByText("Nome")).toHaveLength(2);
   });
@@ -47,7 +47,7 @@ describe("DataTable", () => {
     const onRowClick = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    renderWithProviders(
       <DataTable columns={columns} data={[{ name: "Ana" }]} onRowClick={onRowClick} />,
     );
     await user.click(screen.getAllByText("Ana")[0]);
@@ -55,7 +55,7 @@ describe("DataTable", () => {
   });
 
   it("renders only the scrollable table (no cards) when mobileLayout is 'scroll'", () => {
-    render(
+    renderWithProviders(
       <DataTable columns={columns} data={[{ name: "Ana" }]} mobileLayout="scroll" />,
     );
     // No duplicate card render: value and header each appear exactly once.

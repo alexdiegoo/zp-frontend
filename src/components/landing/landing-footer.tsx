@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { Logo } from "@/components/shared/layout/logo";
 
 /** Public footer — wordmark and placeholder legal links. */
-export function LandingFooter() {
+export async function LandingFooter() {
+  const t = await getTranslations("public");
   const year = new Date().getFullYear();
 
   return (
@@ -12,7 +14,7 @@ export function LandingFooter() {
         <div className="flex flex-col items-center gap-2 sm:items-start">
           <Logo size="md" />
           <p className="text-[13px] leading-[18px] text-muted-foreground">
-            CRM e WhatsApp marketing para clínicas.
+            {t("footer.tagline")}
           </p>
         </div>
 
@@ -21,17 +23,17 @@ export function LandingFooter() {
             href="/privacidade"
             className="transition-colors hover:text-foreground"
           >
-            Política de privacidade
+            {t("footer.privacyLink")}
           </Link>
           <Link href="/login" className="transition-colors hover:text-foreground">
-            Entrar
+            {t("nav.login")}
           </Link>
         </nav>
       </div>
 
       <div className="border-t border-border/60">
         <p className="mx-auto w-full max-w-6xl px-4 py-5 text-center text-xs text-muted-foreground sm:px-6">
-          © {year} ZapBlast. Todos os direitos reservados.
+          {t("footer.copyright", { year })}
         </p>
       </div>
     </footer>

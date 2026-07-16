@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useCreateAppointment } from "@/hooks/queries/use-appointments";
@@ -72,6 +73,7 @@ function buildDefaults(start: Date | null): CreateAppointmentForm {
  * closes and the calendar refetches via the mutation's cache invalidation.
  */
 export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
+  const t = useTranslations("schedule");
   const open = start !== null;
 
   const form = useForm<CreateAppointmentForm>({
@@ -127,7 +129,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
 
     mutate(payload, {
       onSuccess: () => {
-        toast.success("Agendamento criado com sucesso.");
+        toast.success(t("toast.created"));
         onClose();
       },
       onError: (error) => toast.error(error.message),
@@ -138,7 +140,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Novo agendamento</DialogTitle>
+          <DialogTitle>{t("dialog.create.title")}</DialogTitle>
           <DialogDescription>
             {start
               ? `${formatDayLabel(start)} · ${formatTime(start)}${
@@ -160,17 +162,21 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tipo</FormLabel>
+                  <FormLabel>{t("fields.type")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecione o tipo" />
+                        <SelectValue placeholder={t("fields.typePlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {APPOINTMENT_TYPE_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          {option.value === "CONSULTATION"
+                            ? t("type.consultation")
+                            : option.value === "PROCEDURE"
+                              ? t("type.procedure")
+                              : t("type.return")}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -185,7 +191,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
               name="patientId"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Paciente</FormLabel>
+                  <FormLabel>{t("fields.patient")}</FormLabel>
                   <PatientCombobox
                     value={field.value}
                     onChange={field.onChange}
@@ -202,7 +208,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
               name="procedureId"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Procedimento</FormLabel>
+                  <FormLabel>{t("fields.procedure")}</FormLabel>
                   <ProcedureCombobox
                     value={field.value}
                     onChange={(procedureId, procedure) => {
@@ -220,7 +226,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
                     invalid={!!fieldState.error}
                   />
                   <FormDescription>
-                    Exigido para todos os tipos pelo backend.
+                    {t("fields.procedureHint")}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -233,11 +239,11 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
                 name="priceCharged"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Valor cobrado (R$)</FormLabel>
+                    <FormLabel>{t("fields.priceCharged")}</FormLabel>
                     <FormControl>
                       <Input
                         inputMode="decimal"
-                        placeholder="150,00"
+                        placeholder={t("fields.pricePlaceholder")}
                         {...field}
                       />
                     </FormControl>
@@ -254,9 +260,9 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Profissional{" "}
+                      {t("fields.professional")}{" "}
                       <span className="font-normal text-muted-foreground">
-                        (opcional)
+                        {t("fields.optional")}
                       </span>
                     </FormLabel>
                     <Select
@@ -267,11 +273,11 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder={t("fields.selectPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value={NONE}>Nenhum</SelectItem>
+                        <SelectItem value={NONE}>{t("fields.none")}</SelectItem>
                         {(professionals ?? []).map((pro) => (
                           <SelectItem key={pro.id} value={pro.id}>
                             {pro.name}
@@ -289,7 +295,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
                 name="durationMinutes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duração (min)</FormLabel>
+                    <FormLabel>{t("fields.duration")}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -310,16 +316,16 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Observações{" "}
+                    {t("fields.notes")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       rows={3}
                       maxLength={2000}
-                      placeholder="Detalhes do agendamento…"
+                      placeholder={t("fields.notesPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -337,7 +343,7 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
             onClick={onClose}
             disabled={isPending}
           >
-            Cancelar
+            {t("actions.cancel")}
           </Button>
           <Button
             type="submit"
@@ -347,10 +353,10 @@ export function AppointmentDialog({ start, onClose }: AppointmentDialogProps) {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Salvando…
+                {t("actions.saving")}
               </>
             ) : (
-              "Agendar"
+              t("actions.schedule")
             )}
           </Button>
         </DialogFooter>

@@ -1,0 +1,1014 @@
+{
+  "common": {
+    "appDescription": "CRM para clínicas com disparos de WhatsApp em escala — gerencie leads, agende procedimentos e acompanhe métricas.",
+    "notifications": "Notificações",
+    "userMenu": "Menu do usuário",
+    "openNav": "Abrir menu de navegação",
+    "navigation": "Navegação",
+    "appMenu": "Menu principal do aplicativo",
+    "noResults": "Nenhum resultado encontrado.",
+    "patientSingular": "paciente",
+    "patientPlural": "pacientes",
+    "noneOf": "Nenhum {noun}",
+    "rangeOf": "{from}–{to} de {total} {noun}",
+    "pageOf": "Página {page} de {total}",
+    "previousPage": "Página anterior",
+    "nextPage": "Próxima página",
+    "activeClinic": "Clínica ativa",
+    "registerClinic": "Cadastrar clínica"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "funnel": "Funil",
+    "patients": "Pacientes",
+    "procedures": "Procedimentos",
+    "schedule": "Agenda",
+    "campaigns": "Campanhas",
+    "templates": "Templates",
+    "settings": "Configurações",
+    "groupService": "Atendimento",
+    "groupWhatsapp": "Disparos WhatsApp",
+    "plan": "Seu plano: Pro",
+    "upgrade": "UPGRADE"
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Acesse sua conta para gerenciar suas campanhas.",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "forgotPassword": "Esqueci minha senha",
+      "noAccount": "Não tem uma conta?",
+      "createAccount": "Criar uma conta",
+      "welcomeBack": "Bem-vindo de volta!"
+    },
+    "register": {
+      "title": "Criar conta",
+      "subtitle": "Comece a disparar campanhas em poucos minutos.",
+      "submit": "Criar conta",
+      "submitting": "Criando conta…",
+      "hasAccount": "Já tem uma conta?",
+      "signIn": "Entrar",
+      "created": "Conta criada com sucesso!",
+      "nameLabel": "Nome completo",
+      "namePlaceholder": "Maria Silva",
+      "confirmPasswordLabel": "Confirmar senha",
+      "strength": "Força da senha:",
+      "strengthWeak": "Fraca",
+      "strengthMedium": "Média",
+      "strengthStrong": "Forte"
+    },
+    "fields": {
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voce@clinica.com",
+      "passwordLabel": "Senha",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Visão geral da clínica",
+    "metrics": {
+      "newLeads": {
+        "label": "Novos Leads",
+        "description": "Pacientes que entraram no funil no período"
+      },
+      "appointments": {
+        "label": "Agendamentos",
+        "description": "Consultas agendadas no período"
+      },
+      "conversionRate": {
+        "label": "Taxa de Conversão",
+        "description": "Leads que realizaram procedimento"
+      },
+      "revenue": {
+        "label": "Receita",
+        "description": "Soma dos procedimentos concluídos no período"
+      }
+    },
+    "period": {
+      "last7Days": "Últimos 7 dias",
+      "last30Days": "Últimos 30 dias",
+      "last90Days": "Últimos 90 dias",
+      "custom": "Personalizado",
+      "startLabel": "Início",
+      "endLabel": "Fim",
+      "rangeInvalid": "A data final deve ser igual ou posterior à inicial."
+    },
+    "error": {
+      "title": "Erro ao carregar métricas",
+      "description": "Não foi possível carregar as métricas do período selecionado.",
+      "retry": "Tentar novamente"
+    }
+  },
+  "leads": {
+    "title": "Pacientes",
+    "description": "Gerencie os pacientes cadastrados na clínica.",
+    "newPatient": "Cadastrar paciente",
+    "columns": {
+      "name": "Nome",
+      "phone": "Telefone",
+      "email": "E-mail",
+      "createdAt": "Cadastro"
+    },
+    "serviceColumns": {
+      "date": "Data",
+      "procedure": "Procedimento",
+      "professional": "Profissional",
+      "amount": "Valor"
+    },
+    "search": {
+      "placeholder": "Buscar por nome ou telefone…",
+      "ariaLabel": "Buscar pacientes",
+      "clear": "Limpar busca",
+      "minChars": "Digite ao menos 2 caracteres."
+    },
+    "empty": {
+      "title": "Nenhum paciente cadastrado ainda.",
+      "search": "Nenhum paciente encontrado para “{query}”."
+    },
+    "error": {
+      "loadList": "Não foi possível carregar os pacientes.",
+      "retryHint": "Tente novamente em instantes.",
+      "retry": "Tentar novamente",
+      "loadPatient": "Não foi possível carregar o paciente.",
+      "patientNotFound": "O paciente não foi encontrado ou ocorreu um erro."
+    },
+    "fields": {
+      "name": "Nome",
+      "whatsapp": "WhatsApp",
+      "email": "E-mail",
+      "optional": "(opcional)",
+      "birthDate": "Data de nascimento",
+      "source": "Origem",
+      "address": "Endereço",
+      "sourcePlaceholder": "Indicação, Instagram…",
+      "addressPlaceholder": "Rua, número, cidade"
+    },
+    "dialog": {
+      "create": {
+        "title": "Cadastrar paciente",
+        "description": "Adicione um novo paciente à clínica ativa.",
+        "submit": "Cadastrar",
+        "submitting": "Cadastrando…",
+        "toast": {
+          "created": "{name} cadastrado com sucesso."
+        }
+      }
+    },
+    "detail": {
+      "registeredOn": "Cadastrado em {date}",
+      "dataTitle": "Dados do paciente",
+      "stats": {
+        "appointments": "Atendimentos",
+        "lastAppointment": "Último atendimento",
+        "ltv": "LTV"
+      },
+      "fields": {
+        "birth": "Nascimento"
+      },
+      "history": {
+        "title": "Histórico de atendimentos",
+        "empty": "Este paciente ainda não possui atendimentos."
+      }
+    }
+  },
+  "funnel": {
+    "title": "Funil de Pacientes",
+    "description": "Gerencie o progresso dos seus pacientes",
+    "error": {
+      "title": "Não foi possível carregar o funil",
+      "description": "Tente novamente em instantes."
+    },
+    "stages": {
+      "lead": "Entrada / Qualificação",
+      "followUp": "Follow Up",
+      "appointmentScheduled": "Reunião Agendada",
+      "procedureDone": "Procedimento Realizado"
+    },
+    "card": {
+      "completed": "Concluído"
+    }
+  },
+  "schedule": {
+    "title": "Agenda",
+    "description": "Visualize e crie agendamentos da clínica.",
+    "today": "Hoje",
+    "nav": {
+      "prevWeek": "Semana anterior",
+      "prevDay": "Dia anterior",
+      "nextWeek": "Próxima semana",
+      "nextDay": "Próximo dia"
+    },
+    "viewMode": {
+      "label": "Modo de visualização",
+      "week": "Semana",
+      "day": "Dia"
+    },
+    "type": {
+      "consultation": "Consulta",
+      "procedure": "Procedimento",
+      "return": "Retorno"
+    },
+    "status": {
+      "scheduled": "Agendado",
+      "inProgress": "Em andamento",
+      "done": "Realizado",
+      "cancelled": "Cancelado",
+      "noShow": "Não compareceu"
+    },
+    "slot": {
+      "newAppointmentAt": "Novo agendamento às {time}"
+    },
+    "combobox": {
+      "searchPlaceholder": "Buscar…",
+      "empty": "Nenhum resultado.",
+      "loading": "Buscando…"
+    },
+    "patientSearch": {
+      "placeholder": "Buscar paciente por nome…",
+      "typeMore": "Digite ao menos 2 caracteres.",
+      "empty": "Nenhum paciente encontrado."
+    },
+    "procedureSearch": {
+      "placeholder": "Buscar procedimento…",
+      "empty": "Nenhum procedimento ativo encontrado."
+    },
+    "error": {
+      "title": "Não foi possível carregar a agenda.",
+      "description": "Tente novamente em instantes.",
+      "retry": "Tentar novamente"
+    },
+    "fields": {
+      "type": "Tipo",
+      "typePlaceholder": "Selecione o tipo",
+      "patient": "Paciente",
+      "procedure": "Procedimento",
+      "procedureHint": "Exigido para todos os tipos pelo backend.",
+      "priceCharged": "Valor cobrado (R$)",
+      "pricePlaceholder": "150,00",
+      "professional": "Profissional",
+      "optional": "(opcional)",
+      "selectPlaceholder": "Selecione",
+      "none": "Nenhum",
+      "duration": "Duração (min)",
+      "notes": "Observações",
+      "notesPlaceholder": "Detalhes do agendamento…",
+      "newDateTime": "Nova data e horário",
+      "procedurePrice": "Valor do procedimento"
+    },
+    "dialog": {
+      "create": {
+        "title": "Novo agendamento"
+      },
+      "reschedule": {
+        "title": "Reagendar",
+        "description": "Escolha a nova data e horário do agendamento",
+        "endSuffix": " (término às {time})."
+      }
+    },
+    "details": {
+      "unassigned": "Não atribuído"
+    },
+    "cancelConfirm": {
+      "title": "Cancelar agendamento?",
+      "description": "Esta ação marca o agendamento de <strong>{name}</strong> como cancelado. Não é possível desfazer."
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "saving": "Salvando…",
+      "schedule": "Agendar",
+      "back": "Voltar",
+      "reschedule": "Reagendar",
+      "confirmDone": "Confirmar realização",
+      "viewPatient": "Ver paciente",
+      "cancelAppointment": "Cancelar agendamento",
+      "cancelling": "Cancelando…"
+    },
+    "toast": {
+      "created": "Agendamento criado com sucesso.",
+      "rescheduled": "Agendamento remarcado.",
+      "rescheduledSuccess": "Agendamento remarcado com sucesso.",
+      "confirmed": "Realização confirmada.",
+      "cancelled": "Agendamento cancelado."
+    }
+  },
+  "campaigns": {
+    "title": "Campanhas",
+    "description": "Gerencie e acompanhe o desempenho de suas campanhas de WhatsApp.",
+    "newCampaign": "Nova campanha",
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "copied": "Copiado!",
+    "copyMessage": "Copiar mensagem",
+    "clearSearch": "Limpar busca",
+    "trackedMessageLabel": "Mensagem com rastreamento",
+    "search": {
+      "minChars": "Digite ao menos 2 caracteres."
+    },
+    "empty": {
+      "filtered": "Nenhuma campanha encontrada com os filtros atuais.",
+      "none": "Nenhuma campanha cadastrada ainda."
+    },
+    "error": {
+      "title": "Não foi possível carregar as campanhas.",
+      "retry": "Tente novamente em instantes.",
+      "retryAction": "Tentar novamente"
+    },
+    "pagination": {
+      "nounSingular": "campanha",
+      "nounPlural": "campanhas"
+    },
+    "status": {
+      "active": "Ativo",
+      "paused": "Pausado"
+    },
+    "channel": {
+      "official": "API Oficial",
+      "unofficial": "API Não Oficial",
+      "officialBadge": "API OFICIAL",
+      "unofficialBadge": "API NÃO OFICIAL"
+    },
+    "filters": {
+      "searchPlaceholder": "Buscar campanhas…",
+      "searchAria": "Buscar campanhas",
+      "statusAria": "Filtrar por status",
+      "statusPlaceholder": "Status",
+      "typeAria": "Filtrar por tipo",
+      "typePlaceholder": "Tipo",
+      "periodAria": "Filtrar por período",
+      "periodPlaceholder": "Período",
+      "all": "Todos",
+      "periodLast30": "Últimos 30 dias",
+      "periodLast7": "Últimos 7 dias",
+      "periodThisMonth": "Este mês"
+    },
+    "columns": {
+      "name": "Campanha",
+      "status": "Status",
+      "totalSent": "Total Enviado",
+      "replied": "Respondido",
+      "scheduled": "Agendamentos",
+      "converted": "Conversões",
+      "revenue": "Receita",
+      "actions": "Ações",
+      "rate": "{value}% taxa",
+      "statusActiveAria": "Campanha ativa",
+      "statusPausedAria": "Campanha pausada",
+      "actionsFor": "Ações para {name}",
+      "idCopied": "ID copiado",
+      "copyId": "Copiar ID",
+      "viewEvents": "Ver eventos (em breve)"
+    },
+    "new": {
+      "description": "Escolha o tipo de campanha e configure os detalhes do disparo."
+    },
+    "selector": {
+      "official": {
+        "badge": "Disparo automático",
+        "description": "Disparos via WhatsApp Business API oficial. Requer template aprovado pela Meta."
+      },
+      "unofficial": {
+        "badge": "Envio Manual",
+        "description": "Envio manual pelos operadores. A mensagem gerada permite identificar de qual campanha veio cada conversa."
+      }
+    },
+    "form": {
+      "name": {
+        "label": "Nome da campanha"
+      },
+      "submit": "Criar campanha",
+      "submitting": "Criando…"
+    },
+    "toast": {
+      "created": "Campanha criada com sucesso."
+    },
+    "official": {
+      "name": {
+        "placeholder": "Ex.: Promoção Black Friday 2024"
+      },
+      "phone": {
+        "label": "Número do WhatsApp",
+        "placeholder": "Selecione um número oficial",
+        "unnamed": "Número não informado",
+        "empty": "Nenhum número oficial conectado. Conecte um WhatsApp Business em Configurações."
+      },
+      "template": {
+        "label": "Template da mensagem",
+        "placeholder": "Selecione um template aprovado",
+        "empty": "Nenhum template aprovado disponível. Crie e aprove um template antes de continuar."
+      },
+      "contacts": {
+        "label": "Contatos"
+      }
+    },
+    "unofficial": {
+      "name": {
+        "placeholder": "Ex.: Reativação de pacientes"
+      },
+      "message": {
+        "label": "Mensagem",
+        "placeholder": "Escreva a mensagem que os operadores irão enviar…",
+        "description": "Copie a mensagem abaixo e envie para seus contatos."
+      }
+    },
+    "contactPicker": {
+      "searchPlaceholder": "Buscar por nome ou telefone…",
+      "searchAria": "Buscar contatos",
+      "selectAll": "Selecionar todos os contatos da página",
+      "columns": {
+        "name": "Nome",
+        "phone": "Telefone"
+      },
+      "loading": "Carregando contatos…",
+      "emptySearch": "Nenhum contato encontrado para \"{query}\".",
+      "empty": "Nenhum contato cadastrado ainda.",
+      "selectOne": "Selecionar {name}",
+      "selectedCount": "{count, plural, one {# contato selecionado} other {# contatos selecionados}}",
+      "pageOf": "Página {page} de {total}",
+      "prevPage": "Página anterior",
+      "nextPage": "Próxima página"
+    },
+    "success": {
+      "title": "Campanha criada! Copie a mensagem para disparar.",
+      "description": "A campanha “{name}” foi criada com rastreamento de respostas.",
+      "warning": "Esta campanha requer envio manual. Copie a mensagem abaixo e envie para os contatos desejados.",
+      "goToCampaigns": "Ir para campanhas"
+    },
+    "detail": {
+      "error": {
+        "title": "Não foi possível carregar a campanha.",
+        "description": "A campanha não foi encontrada ou ocorreu um erro."
+      },
+      "createdOn": "Criada em {date}"
+    },
+    "messageCard": {
+      "title": "Mensagem para disparar",
+      "warning": "Esta campanha usa a API não oficial e requer envio manual. Não altere o texto para preservar o rastreamento."
+    },
+    "templateCard": {
+      "title": "Template",
+      "empty": "Não foi possível carregar o template desta campanha.",
+      "open": "Abrir",
+      "preview": "Pré-visualização",
+      "noBody": "Sem corpo definido.",
+      "fields": {
+        "name": "Nome",
+        "category": "Categoria",
+        "language": "Idioma",
+        "header": "Cabeçalho",
+        "body": "Corpo",
+        "footer": "Rodapé",
+        "buttons": "Botões"
+      },
+      "headerType": {
+        "text": "Texto",
+        "image": "Imagem",
+        "video": "Vídeo",
+        "document": "Documento",
+        "none": "Nenhum"
+      }
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "description": "Modelos de mensagem do WhatsApp para API Oficial.",
+    "sync": "Sincronizar",
+    "syncing": "Sincronizando…",
+    "newTemplate": "Criar template",
+    "empty": "Nenhum template cadastrado ainda.",
+    "back": "Voltar",
+    "backToList": "Templates",
+    "submit": "Enviar para aprovação",
+    "submitting": "Enviando…",
+    "createdOn": "Criado em {date}",
+    "noun": {
+      "singular": "template",
+      "plural": "templates"
+    },
+    "toast": {
+      "syncSuccess": "{count, plural, one {# template sincronizado com a Meta.} other {# templates sincronizados com a Meta.}}",
+      "syncUpToDate": "Templates já estão atualizados.",
+      "syncError": "Não foi possível sincronizar os templates.",
+      "created": "Template enviado para aprovação!",
+      "updated": "Template atualizado e enviado para nova validação!"
+    },
+    "error": {
+      "loadList": {
+        "title": "Não foi possível carregar os templates.",
+        "description": "Tente novamente em instantes."
+      },
+      "retry": "Tentar novamente",
+      "load": {
+        "title": "Não foi possível carregar o template.",
+        "description": "O template não foi encontrado ou ocorreu um erro."
+      },
+      "create": "Não foi possível criar o template.",
+      "update": "Não foi possível atualizar o template.",
+      "submitTitle": "Não foi possível enviar o template."
+    },
+    "columns": {
+      "name": "Nome",
+      "category": "Categoria",
+      "status": "Status",
+      "aiFeedback": "Feedback IA",
+      "language": "Idioma",
+      "createdAt": "Data de criação"
+    },
+    "new": {
+      "title": "Novo template",
+      "description": "Monte a mensagem e envie para aprovação da Meta."
+    },
+    "edit": {
+      "title": "Editar template",
+      "description": "Atualize a mensagem e envie para uma nova validação por IA."
+    },
+    "detail": {
+      "metaTitle": "Template",
+      "dataCard": "Dados do template",
+      "contentCard": "Conteúdo da mensagem",
+      "noBody": "Sem corpo definido.",
+      "fields": {
+        "category": "Categoria",
+        "language": "Idioma",
+        "status": "Status",
+        "header": "Cabeçalho",
+        "headerText": "Texto do cabeçalho",
+        "metaId": "ID na Meta",
+        "body": "Corpo",
+        "footer": "Rodapé",
+        "buttons": "Botões"
+      },
+      "header": {
+        "text": "Texto",
+        "image": "Imagem",
+        "video": "Vídeo",
+        "document": "Documento",
+        "none": "Nenhum"
+      },
+      "variables": {
+        "title": "Variáveis",
+        "none": "Este template não possui variáveis."
+      }
+    },
+    "preview": {
+      "title": "Pré-visualização",
+      "empty": "Sua mensagem aparecerá aqui…",
+      "headerAlt": "Cabeçalho do template"
+    },
+    "aiFeedback": {
+      "title": "Feedback IA",
+      "error": {
+        "title": "Não foi possível carregar o feedback da IA.",
+        "description": "Tente novamente mais tarde."
+      },
+      "empty": "Este template ainda não foi analisado pela IA.",
+      "processing": "A análise da IA está em andamento. O resultado aparecerá aqui assim que terminar.",
+      "summary": "Resumo",
+      "issues": "Problemas identificados",
+      "noIssues": "Nenhum problema identificado pela IA.",
+      "general": "Geral",
+      "suggestion": "Sugestão",
+      "edit": "Editar template",
+      "analyzedOn": "Analisado em {date}",
+      "severity": {
+        "alerta": "Alerta",
+        "bloqueante": "Bloqueante"
+      }
+    },
+    "form": {
+      "basicInfo": "Informações básicas",
+      "name": {
+        "label": "Nome",
+        "placeholder": "confirmacao_agendamento",
+        "description": "Apenas letras minúsculas, números e underscore."
+      },
+      "language": {
+        "label": "Idioma",
+        "placeholder": "Selecione",
+        "ptBR": "Português (BR)"
+      },
+      "category": {
+        "label": "Categoria",
+        "placeholder": "Selecione a categoria"
+      },
+      "header": {
+        "title": "Cabeçalho (opcional)",
+        "mediaType": "Tipo de mídia",
+        "none": "Nenhum",
+        "image": "Imagem",
+        "textLabel": "Texto do cabeçalho",
+        "textPlaceholder": "Ex.: Confirmação de agendamento",
+        "textDescription": "Sem quebras de linha ou emoji."
+      },
+      "body": {
+        "title": "Corpo da mensagem",
+        "placeholder": "Olá '{{'nome'}}', seu agendamento foi confirmado para '{{'data'}}'.",
+        "description": "Use variáveis no formato '{{'nome_variavel'}}'."
+      },
+      "footer": {
+        "title": "Rodapé (opcional)",
+        "placeholder": "Equipe da clínica",
+        "description": "Exibido em cinza abaixo do corpo."
+      },
+      "variables": {
+        "title": "Exemplos de variáveis",
+        "description": "Valores de exemplo usados na pré-visualização e na aprovação da Meta.",
+        "examplePlaceholder": "Valor de exemplo para {variable}"
+      },
+      "buttons": {
+        "title": "Botões (opcional)",
+        "description": "Até {max} botões de resposta rápida ou de link.",
+        "limitReached": "Limite de {max} botões atingido.",
+        "add": "Adicionar botão",
+        "remove": "Remover botão",
+        "textLabel": "Texto do botão",
+        "textPlaceholder": "Ex.: Confirmar",
+        "urlLabel": "URL",
+        "urlPlaceholder": "https://exemplo.com",
+        "type": {
+          "quickReply": "Resposta rápida",
+          "url": "Acessar link",
+          "cta": "Chamada para ação — Acessar link"
+        }
+      },
+      "media": {
+        "label": "Imagem do cabeçalho",
+        "uploading": "Enviando…",
+        "change": "Trocar imagem",
+        "select": "Selecionar imagem",
+        "hint": "PNG ou JPEG, máx 5 MB.",
+        "errorType": "Envie uma imagem PNG ou JPEG.",
+        "errorSize": "A imagem deve ter no máximo 5 MB.",
+        "errorUpload": "Não foi possível enviar a imagem.",
+        "previewAlt": "Pré-visualização do cabeçalho"
+      }
+    }
+  },
+  "chat": {
+    "errors": {
+      "sendFailed": "Não foi possível enviar a mensagem.",
+      "loadConversations": "Não foi possível carregar as conversas.",
+      "loadMessages": "Não foi possível carregar as mensagens."
+    },
+    "noChannels": {
+      "title": "Nenhum canal conectado",
+      "description": "Conecte um canal de WhatsApp nas configurações para começar a atender conversas."
+    },
+    "empty": {
+      "title": "Selecione uma conversa",
+      "description": "Escolha um paciente à esquerda para ver e responder as mensagens."
+    },
+    "message": {
+      "sending": "Enviando",
+      "sent": "Enviada"
+    },
+    "composer": {
+      "unavailable": "Envio indisponível",
+      "placeholder": "Digite uma mensagem...",
+      "ariaLabel": "Mensagem",
+      "send": "Enviar mensagem"
+    },
+    "conversation": {
+      "noChatYet": "Sem conversa ainda",
+      "media": "Mídia",
+      "noMessages": "Sem mensagens",
+      "youPrefix": "Você: "
+    },
+    "channel": {
+      "official": "Oficial",
+      "unofficial": "Não oficial",
+      "selectPlaceholder": "Selecione um canal"
+    },
+    "search": {
+      "placeholder": "Buscar paciente",
+      "noResults": "Nenhum paciente encontrado."
+    },
+    "sidebar": {
+      "noPatients": "Nenhum paciente cadastrado."
+    },
+    "thread": {
+      "back": "Voltar para a lista de conversas",
+      "empty": "Nenhuma mensagem nesta conversa ainda."
+    },
+    "window": {
+      "closed": "A janela de atendimento está fechada. Aguarde o paciente responder.",
+      "closesIn": "Janela fecha em {time}"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Preferências da conta e da clínica.",
+    "integration": {
+      "sectionTitle": "Integrações",
+      "sectionDescription": "Conecte a ZapBlast às plataformas que sua clínica já utiliza.",
+      "loadError": "Não foi possível carregar as integrações",
+      "loadErrorFallback": "Tente novamente em instantes.",
+      "connected": "Conectado",
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "disconnectSuccess": "Integração desconectada.",
+      "fallbackLabel": "a integração",
+      "connectError": "Não foi possível conectar {provider}. Tente novamente.",
+      "connectSuccess": "{provider} conectado com sucesso."
+    },
+    "providers": {
+      "google": "Google",
+      "meta": "WhatsApp Oficial (Meta)",
+      "whatsapp": "WhatsApp",
+      "googleDescription": "Integre ao Google para sincronizar sua agenda com o google calendar.",
+      "metaDescription": "Integre a API Oficial do WhatsApp para realizar disparos de mensagens aprovadas pelo Meta.",
+      "whatsappDescription": "Integre diretamente com o WhatsApp via API não oficial e dispare e gerencie mensagens."
+    },
+    "whatsapp": {
+      "dialogTitle": "Conectar WhatsApp",
+      "dialogDescription": "Conexão via API não oficial. Informe o número e escaneie o QR Code no WhatsApp do aparelho.",
+      "phoneLabel": "Número do WhatsApp",
+      "generating": "Gerando QR Code…",
+      "generate": "Gerar QR Code",
+      "qrAlt": "QR Code para conectar o WhatsApp",
+      "pairingCodeLabel": "Ou use o código de pareamento:",
+      "instructions": "Abra o WhatsApp > Aparelhos conectados > Conectar aparelho.",
+      "connectSuccess": "WhatsApp conectado com sucesso!"
+    }
+  },
+  "procedures": {
+    "title": "Procedimentos",
+    "description": "Gerencie o catálogo de procedimentos da clínica.",
+    "newProcedure": "Cadastrar procedimento",
+    "registeredOn": "Cadastrado em {date}",
+    "columns": {
+      "name": "Nome",
+      "basePrice": "Valor base",
+      "status": "Status",
+      "createdAt": "Cadastro"
+    },
+    "priceColumns": {
+      "amount": "Valor",
+      "effectiveFrom": "Vigente desde",
+      "effectiveTo": "Vigente até",
+      "status": "Situação"
+    },
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "current": "Vigente",
+      "historical": "Histórico"
+    },
+    "search": {
+      "placeholder": "Buscar por nome…",
+      "ariaLabel": "Buscar procedimentos",
+      "clearAriaLabel": "Limpar busca",
+      "minChars": "Digite ao menos 2 caracteres."
+    },
+    "empty": {
+      "title": "Nenhum procedimento cadastrado ainda.",
+      "searchNoResults": "Nenhum procedimento encontrado para “{query}”."
+    },
+    "error": {
+      "title": "Não foi possível carregar os procedimentos.",
+      "description": "Tente novamente em instantes.",
+      "retry": "Tentar novamente",
+      "detailTitle": "Não foi possível carregar o procedimento.",
+      "detailDescription": "O procedimento não foi encontrado ou ocorreu um erro."
+    },
+    "detail": {
+      "cardTitle": "Dados do procedimento",
+      "priceHistory": "Histórico de preços",
+      "priceHistoryEmpty": "Este procedimento ainda não possui histórico de preços."
+    },
+    "fields": {
+      "optional": "(opcional)",
+      "name": {
+        "label": "Nome",
+        "placeholder": "Limpeza de pele"
+      },
+      "basePrice": {
+        "label": "Valor base",
+        "placeholder": "150,00"
+      },
+      "currentPrice": {
+        "label": "Valor atual"
+      },
+      "status": {
+        "label": "Status"
+      },
+      "description": {
+        "label": "Descrição",
+        "placeholder": "Detalhes do procedimento…"
+      }
+    },
+    "dialog": {
+      "create": {
+        "description": "Adicione um novo procedimento ao catálogo da clínica ativa.",
+        "submit": "Cadastrar",
+        "submitting": "Cadastrando…"
+      }
+    },
+    "toast": {
+      "created": "{name} cadastrado com sucesso."
+    }
+  },
+  "public": {
+    "cta": {
+      "joinWaitlist": "Quero entrar na lista"
+    },
+    "nav": {
+      "login": "Entrar"
+    },
+    "hero": {
+      "badge": "Lista de espera aberta · Vagas limitadas",
+      "title": "Pare de perder pacientes entre uma <highlight>conversa e outra</highlight> no WhatsApp.",
+      "subtitle": "O ZapBlast une CRM, funil de pacientes e disparos de WhatsApp em escala em uma só plataforma — feito para clínicas de estética, saúde e odontologia que querem crescer com previsibilidade.",
+      "ctaSecondary": "Ver recursos",
+      "proofPoints": {
+        "dispatch": "Disparos em escala",
+        "metrics": "Métricas por estágio",
+        "scheduling": "Agendamentos automáticos"
+      }
+    },
+    "problemSolution": {
+      "title": "Sua clínica atende bem. O problema está no que acontece <highlight>antes e depois</highlight> da consulta.",
+      "subtitle": "É aí que o faturamento escorre — e é exatamente o que o ZapBlast organiza para você.",
+      "problemsTitle": "Como funciona hoje",
+      "solutionsTitle": "Com o ZapBlast",
+      "problems": {
+        "followUp": "Pacientes somem depois da primeira conversa e ninguém faz o follow-up.",
+        "manual": "Acompanhamento manual em planilhas e no caderninho — leads esfriam.",
+        "visibility": "Zero visibilidade: você não sabe quantos leads viraram agendamento.",
+        "campaigns": "Campanhas de WhatsApp feitas no improviso, sem template nem controle."
+      },
+      "solutions": {
+        "funnel": "Funil de pacientes que mostra exatamente quem precisa de follow-up hoje.",
+        "reminders": "Lembretes e mensagens automáticas para reativar quem parou de responder.",
+        "dashboard": "Dashboard com conversão por estágio, no-show e receita por procedimento.",
+        "blast": "Disparos em massa com templates aprovados pela Meta e canal não oficial."
+      }
+    },
+    "features": {
+      "title": "Tudo o que a clínica precisa, sem mais uma aba aberta",
+      "subtitle": "Da primeira mensagem ao pós-procedimento — uma plataforma única para captar, converter e reter pacientes.",
+      "items": {
+        "whatsappBlast": {
+          "title": "Disparos em massa pelo WhatsApp",
+          "description": "Envie campanhas para milhares de pacientes com templates aprovados pela Meta (API oficial) ou pelo canal não oficial. Respeitando a janela de 24h e as regras de opt-in."
+        },
+        "crm": {
+          "title": "CRM de pacientes com funil Kanban",
+          "description": "Arraste cada lead pelos estágios — da captação ao procedimento. Nada se perde e a equipe sabe exatamente quem trabalhar primeiro."
+        },
+        "scheduling": {
+          "title": "Agendamentos e lembretes automáticos",
+          "description": "Agende procedimentos e dispare lembretes automáticos no WhatsApp para reduzir faltas e manter a agenda cheia."
+        },
+        "dashboard": {
+          "title": "Dashboard de métricas de campanhas",
+          "description": "Acompanhe conversão por estágio, taxa de no-show, tempo até o agendamento e a performance de cada campanha em um só lugar."
+        }
+      }
+    },
+    "socialProof": {
+      "title": "Clínicas que vão crescer com o ZapBlast",
+      "subtitle": "Estamos selecionando as primeiras clínicas da lista de espera. Em breve, histórias reais aqui.",
+      "testimonials": {
+        "name": "Nome do cliente",
+        "aesthetics": {
+          "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Os pacientes que sumiam voltaram a responder e a agenda parou de ter buracos.",
+          "role": "Clínica de Estética"
+        },
+        "dental": {
+          "quote": "Sed do eiusmod tempor incididunt ut labore. Finalmente enxergamos a conversão de cada estágio do funil e onde estávamos perdendo leads.",
+          "role": "Clínica Odontológica"
+        },
+        "health": {
+          "quote": "Ut enim ad minim veniam, quis nostrud exercitation. As campanhas de WhatsApp pararam de ser no improviso e viraram rotina previsível.",
+          "role": "Clínica de Saúde"
+        }
+      }
+    },
+    "preRegister": {
+      "pitchTitle": "Entre na lista de espera do ZapBlast",
+      "pitchDescription": "Deixe seus dados e seja uma das primeiras clínicas a organizar o funil de pacientes e disparar campanhas de WhatsApp em escala.",
+      "privacyNote": "Sem compromisso. Usamos seus dados apenas para o convite.",
+      "fields": {
+        "name": {
+          "label": "Seu nome",
+          "placeholder": "Maria Silva"
+        },
+        "clinicName": {
+          "label": "Nome da clínica",
+          "placeholder": "Clínica Sorriso"
+        },
+        "email": {
+          "label": "E-mail",
+          "placeholder": "voce@clinica.com"
+        },
+        "whatsapp": {
+          "label": "WhatsApp",
+          "placeholder": "(11) 98888-7777"
+        }
+      },
+      "submitting": "Enviando…",
+      "successToast": "Você está na lista! Entraremos em contato em breve."
+    },
+    "footer": {
+      "tagline": "CRM e WhatsApp marketing para clínicas.",
+      "privacyLink": "Política de privacidade",
+      "copyright": "© {year} ZapBlast. Todos os direitos reservados."
+    },
+    "privacy": {
+      "title": "Política de Privacidade",
+      "lastUpdated": "Última atualização: {date}",
+      "sections": {
+        "intro": {
+          "title": "1. Introdução",
+          "body": {
+            "p1": "Esta Política de Privacidade descreve como o {controller} (“ZapBlast”, “nós”) coleta, utiliza, compartilha e protege os dados pessoais tratados por meio da plataforma ZapBlast — um CRM para clínicas que também realiza o disparo de campanhas de WhatsApp em escala. Ela se aplica a clínicas usuárias, à sua equipe e aos contatos (leads e pacientes) cujos dados são tratados na plataforma.",
+            "p2": "O tratamento de dados observa a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 — “LGPD”). Ao utilizar a plataforma, você declara estar ciente das práticas descritas aqui."
+          }
+        },
+        "dataCollected": {
+          "title": "2. Dados que coletamos",
+          "intro": "Tratamos as seguintes categorias de dados pessoais e suas finalidades:",
+          "items": {
+            "identity": "<strong>Dados de identificação e contato</strong> (nome, número de telefone/WhatsApp, e-mail) — para identificar o contato e permitir a comunicação.",
+            "account": "<strong>Dados da conta da clínica</strong> (dados de cadastro e credenciais da equipe usuária) — para autenticação e operação da plataforma.",
+            "journey": "<strong>Dados de jornada do paciente</strong> (estágio no funil, agendamentos, procedimentos) — para gerir e otimizar o atendimento.",
+            "campaigns": "<strong>Dados de campanhas e mensagens</strong> (conteúdo enviado, status de entrega e interações) — para operar, medir e otimizar as campanhas de WhatsApp."
+          }
+        },
+        "dataUse": {
+          "title": "3. Como usamos os dados",
+          "intro": "Utilizamos os dados pessoais para as seguintes finalidades:",
+          "items": {
+            "crm": "Operar o CRM e acompanhar a jornada de leads e pacientes.",
+            "dispatch": "Disparar campanhas de WhatsApp — inclusive por meio da API oficial do WhatsApp (WhatsApp Cloud API), disponibilizada pela Meta — respeitando regras de <em>opt-in</em>, modelos de mensagem aprovados e a janela de atendimento de 24 horas quando aplicável.",
+            "metrics": "Gerar métricas e relatórios de desempenho por estágio e por campanha.",
+            "support": "Prestar suporte, garantir a segurança e cumprir obrigações legais."
+          }
+        },
+        "sharing": {
+          "title": "4. Compartilhamento com terceiros",
+          "intro": "Não vendemos dados pessoais. Compartilhamos dados apenas na medida necessária para operar a plataforma, com destaque para:",
+          "items": {
+            "meta": "<strong>Meta / WhatsApp</strong> — para o envio de mensagens por meio da API oficial do WhatsApp (WhatsApp Business Platform), os dados necessários ao envio são tratados pela Meta na condição de operadora/destinatária. O tratamento pela Meta observa os termos e as políticas de privacidade próprios da plataforma.",
+            "infra": "<strong>Provedores de infraestrutura</strong> (hospedagem e serviços correlatos) estritamente para viabilizar o funcionamento da plataforma.",
+            "authorities": "<strong>Autoridades</strong>, quando exigido por lei ou por ordem judicial."
+          }
+        },
+        "retention": {
+          "title": "5. Retenção dos dados",
+          "body": "Mantemos os dados pessoais apenas pelo tempo necessário para cumprir as finalidades descritas nesta Política, enquanto perdurar a relação com a clínica usuária e pelos prazos exigidos por obrigações legais ou regulatórias. Encerradas as finalidades e os prazos aplicáveis, os dados são eliminados ou anonimizados de forma segura."
+        },
+        "rights": {
+          "title": "6. Seus direitos (LGPD)",
+          "intro": "Nos termos da LGPD, o titular dos dados pode, a qualquer momento, exercer os seguintes direitos:",
+          "items": {
+            "access": "<strong>Acesso</strong> — confirmar a existência de tratamento e acessar os seus dados.",
+            "correction": "<strong>Correção</strong> — corrigir dados incompletos, inexatos ou desatualizados.",
+            "deletion": "<strong>Exclusão</strong> — solicitar a eliminação dos seus dados pessoais.",
+            "portability": "<strong>Portabilidade</strong> — solicitar a portabilidade dos dados a outro fornecedor.",
+            "revocation": "<strong>Revogação do consentimento</strong> — revogar, a qualquer tempo, o consentimento anteriormente concedido."
+          }
+        },
+        "deletion": {
+          "title": "7. Exclusão de dados",
+          "intro": "Para solicitar a exclusão dos seus dados pessoais, siga os passos abaixo:",
+          "steps": {
+            "send": "Envie uma mensagem para <link>{channel}</link> com o assunto “Exclusão de dados”.",
+            "identify": "Informe o nome completo e o número de telefone/WhatsApp associado aos dados, para que possamos localizá-los.",
+            "confirm": "Confirmaremos o recebimento e concluiremos a exclusão em {timeframe}, salvo quando a retenção for exigida por lei."
+          }
+        },
+        "controller": {
+          "title": "8. Controlador e contato",
+          "body": "O controlador dos dados é o {controller}. Para dúvidas sobre esta Política ou para exercer os seus direitos, entre em contato pelo e-mail <link>{email}</link>."
+        }
+      }
+    },
+    "meta": {
+      "homeTitle": "ZapBlast — CRM e WhatsApp marketing para clínicas",
+      "homeDescription": "Pare de perder pacientes. O ZapBlast une CRM, funil Kanban, agendamentos e disparos de WhatsApp em escala para clínicas de estética, saúde e odontologia. Entre na lista de espera.",
+      "privacyTitle": "Política de Privacidade",
+      "privacyDescription": "Política de Privacidade do ZapBlast — como coletamos, usamos, compartilhamos e protegemos os dados pessoais, e como você pode solicitar a exclusão dos seus dados."
+    }
+  },
+  "validation": {
+    "email": {
+      "required": "Informe seu e-mail.",
+      "invalid": "Informe um e-mail válido."
+    },
+    "password": {
+      "min": "A senha deve ter ao menos 8 caracteres."
+    },
+    "name": {
+      "min": "Informe seu nome completo."
+    },
+    "confirmPassword": {
+      "required": "Confirme sua senha.",
+      "mismatch": "As senhas não coincidem."
+    }
+  }
+}

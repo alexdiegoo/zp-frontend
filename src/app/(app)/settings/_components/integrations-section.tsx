@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AlertCircle, Plug } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
@@ -13,17 +14,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Muted } from "@/components/ui/typography";
-import { INTEGRATIONS } from "./integrations.config";
+import { getIntegrations } from "./integrations.config";
 import { IntegrationCard } from "./integration-card";
 import { ConnectWhatsAppDialog } from "./connect-whatsapp-dialog";
 
 export function IntegrationsSection() {
+  const t = useTranslations("settings");
+  const integrations = getIntegrations(t);
   const { data, isLoading, isError, error } = useIntegrations();
   const disconnect = useDisconnectIntegration();
   const [whatsappOpen, setWhatsappOpen] = useState(false);
 
   function handleConnect(provider: IntegrationProvider) {
-    const config = INTEGRATIONS.find((i) => i.provider === provider);
+    const config = integrations.find((i) => i.provider === provider);
     if (!config) return;
 
     if (config.connect === "evolution") {
@@ -36,7 +39,7 @@ export function IntegrationsSection() {
 
   function handleDisconnect(provider: IntegrationProvider) {
     disconnect.mutate(provider, {
-      onSuccess: () => toast.success("Integração desconectada."),
+      onSuccess: () => toast.success(t("integration.disconnectSuccess")),
       onError: (err) => toast.error(err.message),
     });
   }
@@ -46,33 +49,31 @@ export function IntegrationsSection() {
       <div className="flex items-center gap-2">
         <Plug className="size-5 text-muted-foreground" />
         <div className="space-y-0.5">
-          <H3>Integrações</H3>
-          <Muted>
-            Conecte a ZapBlast às plataformas que sua clínica já utiliza.
-          </Muted>
+          <H3>{t("integration.sectionTitle")}</H3>
+          <Muted>{t("integration.sectionDescription")}</Muted>
         </div>
       </div>
 
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar as integrações</AlertTitle>
+          <AlertTitle>{t("integration.loadError")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Tente novamente em instantes."}
+              : t("integration.loadErrorFallback")}
           </AlertDescription>
         </Alert>
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading || (!data && !isError)
-          ? INTEGRATIONS.map((config) => (
+          ? integrations.map((config) => (
               <IntegrationCardSkeleton key={config.provider} />
             ))
           : !data
             ? null
-            : INTEGRATIONS.map((config) => {
+            : integrations.map((config) => {
               const status = data[config.provider];
               const isBusy =
                 disconnect.isPending &&

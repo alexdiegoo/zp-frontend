@@ -3,9 +3,11 @@ import { fireEvent, renderWithProviders, screen } from "@/test/utils";
 import { MobileNav } from "./mobile-nav";
 
 // The drawer reads the current path (to highlight the active link and to close
-// on route change). Pin it for a stable render.
+// on route change). Pin it for a stable render. `useRouter` is stubbed because
+// the drawer's `<LocaleSwitcher>` calls it via `useSetLocale`.
 jest.mock("next/navigation", () => ({
   usePathname: () => "/dashboard",
+  useRouter: () => ({ refresh: jest.fn() }),
 }));
 
 describe("MobileNav", () => {

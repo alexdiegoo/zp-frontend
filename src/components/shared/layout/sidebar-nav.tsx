@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Calendar,
   ChevronDown,
@@ -22,42 +23,46 @@ import {
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/layout/logo";
 
+/** Keys of the `nav` message namespace — keeps `labelKey` type-checked (FR-013). */
+type NavKey = Parameters<ReturnType<typeof useTranslations<"nav">>>[0];
+
+/** `labelKey` resolves against the `nav` message namespace at render time. */
 type NavItem = {
-  label: string;
+  labelKey: NavKey;
   href: string;
   icon: LucideIcon;
 };
 
 type NavGroup = {
-  label: string;
+  labelKey: NavKey;
   icon: LucideIcon;
   items: NavItem[];
 };
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    label: "Atendimento",
+    labelKey: "groupService",
     icon: Headset,
     items: [
-      { label: "Chat", href: "/chat", icon: MessageCircle },
-      { label: "Funil", href: "/funnel", icon: Filter },
-      { label: "Pacientes", href: "/patients", icon: Users },
-      { label: "Procedimentos", href: "/procedures", icon: ClipboardList },
-      { label: "Agenda", href: "/schedule", icon: Calendar },
+      { labelKey: "chat", href: "/chat", icon: MessageCircle },
+      { labelKey: "funnel", href: "/funnel", icon: Filter },
+      { labelKey: "patients", href: "/patients", icon: Users },
+      { labelKey: "procedures", href: "/procedures", icon: ClipboardList },
+      { labelKey: "schedule", href: "/schedule", icon: Calendar },
     ],
   },
   {
-    label: "Disparos WhatsApp",
+    labelKey: "groupWhatsapp",
     icon: Zap,
     items: [
-      { label: "Campanhas", href: "/campaigns", icon: Megaphone },
-      { label: "Templates", href: "/templates", icon: FileText },
+      { labelKey: "campaigns", href: "/campaigns", icon: Megaphone },
+      { labelKey: "templates", href: "/templates", icon: FileText },
     ],
   },
 ];
 
 const DASHBOARD: NavItem = {
-  label: "Dashboard",
+  labelKey: "dashboard",
   href: "/dashboard",
   icon: LayoutDashboard,
 };
@@ -76,6 +81,7 @@ function NavLink({
   active: boolean;
   onNavigate?: () => void;
 }) {
+  const t = useTranslations("nav");
   const Icon = item.icon;
   return (
     <Link
@@ -90,7 +96,7 @@ function NavLink({
       )}
     >
       <Icon className="size-5 shrink-0" />
-      <span>{item.label}</span>
+      <span>{t(item.labelKey)}</span>
     </Link>
   );
 }
@@ -104,6 +110,7 @@ function NavGroupBlock({
   isActive: (href: string) => boolean;
   onNavigate?: () => void;
 }) {
+  const t = useTranslations("nav");
   const [open, setOpen] = useState(true);
   const GroupIcon = group.icon;
 
@@ -117,7 +124,7 @@ function NavGroupBlock({
       >
         <span className="flex items-center gap-1.5">
           <GroupIcon className="size-4" />
-          {group.label}
+          {t(group.labelKey)}
         </span>
         <ChevronDown
           className={cn(
@@ -152,6 +159,7 @@ function NavGroupBlock({
  */
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const isActive = useIsActive();
+  const t = useTranslations("nav");
 
   return (
     <div className="flex h-full flex-col">
@@ -171,7 +179,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
         </div>
         {NAV_GROUPS.map((group) => (
           <NavGroupBlock
-            key={group.label}
+            key={group.labelKey}
             group={group}
             isActive={isActive}
             onNavigate={onNavigate}
@@ -182,19 +190,19 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       {/* Footer */}
       <div className="mt-auto space-y-1 border-t border-sidebar-border p-4">
         <NavLink
-          item={{ label: "Configurações", href: "/settings", icon: Settings }}
+          item={{ labelKey: "settings", href: "/settings", icon: Settings }}
           active={isActive("/settings")}
           onNavigate={onNavigate}
         />
         <div className="mt-4 rounded-xl bg-brand/20 p-2">
           <p className="mb-1 text-[11px] font-medium text-sidebar-primary">
-            Seu plano: Pro
+            {t("plan")}
           </p>
           <button
             type="button"
             className="w-full rounded-lg bg-brand py-1 text-[11px] font-bold text-brand-foreground transition-opacity hover:opacity-90"
           >
-            UPGRADE
+            {t("upgrade")}
           </button>
         </div>
       </div>

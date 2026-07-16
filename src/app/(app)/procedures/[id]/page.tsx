@@ -1,6 +1,11 @@
+import { getTranslations } from "next-intl/server";
+
 import { ProcedureDetailView } from "./view";
 
-export const metadata = { title: "Procedimento" };
+export async function generateMetadata() {
+  const t = await getTranslations("nav");
+  return { title: t("procedures") };
+}
 
 export default async function ProcedureDetailPage({
   params,

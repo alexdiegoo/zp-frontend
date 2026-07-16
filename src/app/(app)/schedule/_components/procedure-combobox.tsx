@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { useProcedureSearch } from "@/hooks/queries/use-procedures";
 import { useDebounce } from "@/hooks/ui/use-debounce";
@@ -31,6 +32,7 @@ export function ProcedureCombobox({
   invalid,
   onBlur,
 }: ProcedureComboboxProps) {
+  const t = useTranslations("schedule");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<{ value: string; label: string }>();
   const debounced = useDebounce(query, 300);
@@ -66,8 +68,8 @@ export function ProcedureCombobox({
       selectedLabel={selectedLabel}
       options={options}
       isLoading={isFetching}
-      placeholder="Buscar procedimento…"
-      emptyMessage="Nenhum procedimento ativo encontrado."
+      placeholder={t("procedureSearch.placeholder")}
+      emptyMessage={t("procedureSearch.empty")}
       invalid={invalid}
       onBlur={onBlur}
       onSearchChange={setQuery}
