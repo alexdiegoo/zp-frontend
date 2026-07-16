@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { LandingView } from "./view";
 
-export const metadata: Metadata = {
-  title: "ZapBlast — CRM e WhatsApp marketing para clínicas",
-  description:
-    "Pare de perder pacientes. O ZapBlast une CRM, funil Kanban, agendamentos e disparos de WhatsApp em escala para clínicas de estética, saúde e odontologia. Entre na lista de espera.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("public");
+  return {
+    title: t("meta.homeTitle"),
+    description: t("meta.homeDescription"),
+  };
+}
 
 export default function LandingPage() {
   return <LandingView />;

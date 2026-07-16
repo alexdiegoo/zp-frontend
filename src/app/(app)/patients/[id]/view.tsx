@@ -1,8 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AlertCircle, ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { usePatient } from "@/hooks/queries/use-patients";
 import {
@@ -26,49 +28,56 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Label, Muted, P } from "@/components/ui/typography";
 
-const serviceColumns: ColumnDef<PatientServiceEntry, unknown>[] = [
-  {
-    accessorKey: "performedAt",
-    header: "Data",
-    cell: ({ row }) => (
-      <span className="tabular-nums text-muted-foreground">
-        {formatDateTime(
-          row.original.performedAt ?? row.original.appointment?.startAt,
-        )}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "procedure",
-    header: "Procedimento",
-    cell: ({ row }) => (
-      <span className="font-medium text-foreground">
-        {row.original.procedure?.name ?? "—"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "professional",
-    header: "Profissional",
-    cell: ({ row }) => row.original.professional?.name ?? "—",
-  },
-  {
-    accessorKey: "priceCharged",
-    header: "Valor",
-    cell: ({ row }) => (
-      <span className="tabular-nums">
-        {formatCurrency(row.original.priceCharged)}
-      </span>
-    ),
-  },
-];
+type Translator = ReturnType<typeof useTranslations<"leads">>;
+
+function getServiceColumns(
+  t: Translator,
+): ColumnDef<PatientServiceEntry, unknown>[] {
+  return [
+    {
+      accessorKey: "performedAt",
+      header: t("serviceColumns.date"),
+      cell: ({ row }) => (
+        <span className="tabular-nums text-muted-foreground">
+          {formatDateTime(
+            row.original.performedAt ?? row.original.appointment?.startAt,
+          )}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "procedure",
+      header: t("serviceColumns.procedure"),
+      cell: ({ row }) => (
+        <span className="font-medium text-foreground">
+          {row.original.procedure?.name ?? "—"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "professional",
+      header: t("serviceColumns.professional"),
+      cell: ({ row }) => row.original.professional?.name ?? "—",
+    },
+    {
+      accessorKey: "priceCharged",
+      header: t("serviceColumns.amount"),
+      cell: ({ row }) => (
+        <span className="tabular-nums">
+          {formatCurrency(row.original.priceCharged)}
+        </span>
+      ),
+    },
+  ];
+}
 
 function BackLink() {
+  const t = useTranslations("leads");
   return (
     <Button variant="ghost" size="sm" asChild className="-ml-2 w-fit">
       <Link href="/patients">
         <ArrowLeft />
-        Pacientes
+        {t("title")}
       </Link>
     </Button>
   );
@@ -97,7 +106,9 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 export function PatientDetailView({ patientId }: { patientId: string }) {
+  const t = useTranslations("leads");
   const { data: patient, isLoading, isError, error } = usePatient(patientId);
+  const serviceColumns = useMemo(() => getServiceColumns(t), [t]);
 
   if (isLoading) {
     return (
@@ -120,11 +131,9 @@ export function PatientDetailView({ patientId }: { patientId: string }) {
         <BackLink />
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar o paciente.</AlertTitle>
+          <AlertTitle>{t("error.loadPatient")}</AlertTitle>
           <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "O paciente não foi encontrado ou ocorreu um erro."}
+            {error instanceof Error ? error.message : t("error.patientNotFound")}
           </AlertDescription>
         </Alert>
       </Section>
@@ -139,39 +148,53 @@ export function PatientDetailView({ patientId }: { patientId: string }) {
 
       <PageHeader
         title={patient.name}
-        description={`Cadastrado em ${formatDate(patient.createdAt)}`}
+        description={t("detail.registeredOn", {
+          date: formatDate(patient.createdAt),
+        })}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Atendimentos" value={String(stats.totalAppointments)} />
         <Stat
-          label="Último atendimento"
+          label={t("detail.stats.appointments")}
+          value={String(stats.totalAppointments)}
+        />
+        <Stat
+          label={t("detail.stats.lastAppointment")}
           value={formatDate(stats.lastAppointment)}
         />
-        <Stat label="LTV" value={formatCurrency(stats.lifetimeValue)} />
+        <Stat
+          label={t("detail.stats.ltv")}
+          value={formatCurrency(stats.lifetimeValue)}
+        />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Dados do paciente</CardTitle>
+          <CardTitle>{t("detail.dataTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
-          <Field label="WhatsApp" value={formatPhone(patient.whatsappNumber)} />
-          <Field label="E-mail" value={patient.email || "—"} />
           <Field
-            label="Nascimento"
+            label={t("fields.whatsapp")}
+            value={formatPhone(patient.whatsappNumber)}
+          />
+          <Field label={t("fields.email")} value={patient.email || "—"} />
+          <Field
+            label={t("detail.fields.birth")}
             value={patient.birthDate ? formatDate(patient.birthDate) : "—"}
           />
-          <Field label="Origem" value={patient.acquisitionSource || "—"} />
-          <Field label="Endereço" value={patient.address || "—"} />
+          <Field
+            label={t("fields.source")}
+            value={patient.acquisitionSource || "—"}
+          />
+          <Field label={t("fields.address")} value={patient.address || "—"} />
         </CardContent>
       </Card>
 
       <div className="space-y-3">
-        <H3>Histórico de atendimentos</H3>
+        <H3>{t("detail.history.title")}</H3>
         {serviceHistory.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center">
-            <Muted>Este paciente ainda não possui atendimentos.</Muted>
+            <Muted>{t("detail.history.empty")}</Muted>
           </div>
         ) : (
           <DataTable columns={serviceColumns} data={serviceHistory} />

@@ -7,6 +7,7 @@ import {
   type ColumnDef,
   type Row,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import {
@@ -47,10 +48,12 @@ export function DataTable<TData>({
   columns,
   data,
   isLoading,
-  emptyMessage = "Nenhum resultado encontrado.",
+  emptyMessage,
   onRowClick,
   mobileLayout = "cards",
 }: DataTableProps<TData>) {
+  const t = useTranslations("common");
+  const resolvedEmptyMessage = emptyMessage ?? t("noResults");
   const table = useReactTable({
     data,
     columns,
@@ -134,7 +137,7 @@ export function DataTable<TData>({
                 colSpan={columns.length}
                 className="h-24 text-center text-muted-foreground"
               >
-                {emptyMessage}
+                {resolvedEmptyMessage}
               </TableCell>
             </TableRow>
           )}

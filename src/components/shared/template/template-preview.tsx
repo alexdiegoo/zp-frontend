@@ -2,6 +2,7 @@
 
 import type { Control } from "react-hook-form";
 import { useWatch } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import type { CreateTemplateForm } from "@/lib/validations/template";
 import {
@@ -18,6 +19,7 @@ interface TemplatePreviewProps {
 
 /** Right column: a live WhatsApp-style bubble mirroring the form. */
 export function TemplatePreview({ control }: TemplatePreviewProps) {
+  const t = useTranslations("templates");
   const [headerType, headerText, headerMediaUrl, bodyText, footer, buttons] =
     useWatch({
       control,
@@ -43,7 +45,7 @@ export function TemplatePreview({ control }: TemplatePreviewProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Pré-visualização</CardTitle>
+        <CardTitle>{t("preview.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <TemplateMessagePreview

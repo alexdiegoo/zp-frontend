@@ -1,0 +1,1014 @@
+{
+  "common": {
+    "appDescription": "Clinic CRM with WhatsApp campaigns at scale — manage leads, schedule procedures, and track metrics.",
+    "notifications": "Notifications",
+    "userMenu": "User menu",
+    "openNav": "Open navigation menu",
+    "navigation": "Navigation",
+    "appMenu": "Main application menu",
+    "noResults": "No results found.",
+    "patientSingular": "patient",
+    "patientPlural": "patients",
+    "noneOf": "No {noun}",
+    "rangeOf": "{from}–{to} of {total} {noun}",
+    "pageOf": "Page {page} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "activeClinic": "Active clinic",
+    "registerClinic": "Register clinic"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "funnel": "Funnel",
+    "patients": "Patients",
+    "procedures": "Procedures",
+    "schedule": "Schedule",
+    "campaigns": "Campaigns",
+    "templates": "Templates",
+    "settings": "Settings",
+    "groupService": "Service",
+    "groupWhatsapp": "WhatsApp Campaigns",
+    "plan": "Your plan: Pro",
+    "upgrade": "UPGRADE"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Access your account to manage your campaigns.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "forgotPassword": "Forgot my password",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create an account",
+      "welcomeBack": "Welcome back!"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Start sending campaigns in just a few minutes.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "created": "Account created successfully!",
+      "nameLabel": "Full name",
+      "namePlaceholder": "Maria Silva",
+      "confirmPasswordLabel": "Confirm password",
+      "strength": "Password strength:",
+      "strengthWeak": "Weak",
+      "strengthMedium": "Medium",
+      "strengthStrong": "Strong"
+    },
+    "fields": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@clinic.com",
+      "passwordLabel": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Clinic overview",
+    "metrics": {
+      "newLeads": {
+        "label": "New Leads",
+        "description": "Patients who entered the funnel in the period"
+      },
+      "appointments": {
+        "label": "Appointments",
+        "description": "Appointments scheduled in the period"
+      },
+      "conversionRate": {
+        "label": "Conversion Rate",
+        "description": "Leads who completed a procedure"
+      },
+      "revenue": {
+        "label": "Revenue",
+        "description": "Total of procedures completed in the period"
+      }
+    },
+    "period": {
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "custom": "Custom",
+      "startLabel": "Start",
+      "endLabel": "End",
+      "rangeInvalid": "The end date must be on or after the start date."
+    },
+    "error": {
+      "title": "Failed to load metrics",
+      "description": "We couldn't load the metrics for the selected period.",
+      "retry": "Try again"
+    }
+  },
+  "leads": {
+    "title": "Patients",
+    "description": "Manage the patients registered at the clinic.",
+    "newPatient": "Add patient",
+    "columns": {
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "createdAt": "Registered"
+    },
+    "serviceColumns": {
+      "date": "Date",
+      "procedure": "Procedure",
+      "professional": "Professional",
+      "amount": "Amount"
+    },
+    "search": {
+      "placeholder": "Search by name or phone…",
+      "ariaLabel": "Search patients",
+      "clear": "Clear search",
+      "minChars": "Enter at least 2 characters."
+    },
+    "empty": {
+      "title": "No patients registered yet.",
+      "search": "No patients found for “{query}”."
+    },
+    "error": {
+      "loadList": "Could not load patients.",
+      "retryHint": "Please try again in a moment.",
+      "retry": "Try again",
+      "loadPatient": "Could not load the patient.",
+      "patientNotFound": "The patient was not found or an error occurred."
+    },
+    "fields": {
+      "name": "Name",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "optional": "(optional)",
+      "birthDate": "Date of birth",
+      "source": "Source",
+      "address": "Address",
+      "sourcePlaceholder": "Referral, Instagram…",
+      "addressPlaceholder": "Street, number, city"
+    },
+    "dialog": {
+      "create": {
+        "title": "Add patient",
+        "description": "Add a new patient to the active clinic.",
+        "submit": "Add",
+        "submitting": "Adding…",
+        "toast": {
+          "created": "{name} added successfully."
+        }
+      }
+    },
+    "detail": {
+      "registeredOn": "Registered on {date}",
+      "dataTitle": "Patient details",
+      "stats": {
+        "appointments": "Appointments",
+        "lastAppointment": "Last appointment",
+        "ltv": "LTV"
+      },
+      "fields": {
+        "birth": "Birth date"
+      },
+      "history": {
+        "title": "Service history",
+        "empty": "This patient has no services yet."
+      }
+    }
+  },
+  "funnel": {
+    "title": "Patient Funnel",
+    "description": "Track your patients' progress",
+    "error": {
+      "title": "Couldn't load the funnel",
+      "description": "Please try again in a moment."
+    },
+    "stages": {
+      "lead": "Intake / Qualification",
+      "followUp": "Follow Up",
+      "appointmentScheduled": "Appointment Scheduled",
+      "procedureDone": "Procedure Completed"
+    },
+    "card": {
+      "completed": "Completed"
+    }
+  },
+  "schedule": {
+    "title": "Schedule",
+    "description": "View and create clinic appointments.",
+    "today": "Today",
+    "nav": {
+      "prevWeek": "Previous week",
+      "prevDay": "Previous day",
+      "nextWeek": "Next week",
+      "nextDay": "Next day"
+    },
+    "viewMode": {
+      "label": "View mode",
+      "week": "Week",
+      "day": "Day"
+    },
+    "type": {
+      "consultation": "Consultation",
+      "procedure": "Procedure",
+      "return": "Return"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "inProgress": "In progress",
+      "done": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No-show"
+    },
+    "slot": {
+      "newAppointmentAt": "New appointment at {time}"
+    },
+    "combobox": {
+      "searchPlaceholder": "Search…",
+      "empty": "No results.",
+      "loading": "Searching…"
+    },
+    "patientSearch": {
+      "placeholder": "Search patient by name…",
+      "typeMore": "Type at least 2 characters.",
+      "empty": "No patients found."
+    },
+    "procedureSearch": {
+      "placeholder": "Search procedure…",
+      "empty": "No active procedures found."
+    },
+    "error": {
+      "title": "Couldn't load the schedule.",
+      "description": "Please try again shortly.",
+      "retry": "Try again"
+    },
+    "fields": {
+      "type": "Type",
+      "typePlaceholder": "Select a type",
+      "patient": "Patient",
+      "procedure": "Procedure",
+      "procedureHint": "Required for all types by the backend.",
+      "priceCharged": "Price charged (R$)",
+      "pricePlaceholder": "150.00",
+      "professional": "Professional",
+      "optional": "(optional)",
+      "selectPlaceholder": "Select",
+      "none": "None",
+      "duration": "Duration (min)",
+      "notes": "Notes",
+      "notesPlaceholder": "Appointment details…",
+      "newDateTime": "New date and time",
+      "procedurePrice": "Procedure price"
+    },
+    "dialog": {
+      "create": {
+        "title": "New appointment"
+      },
+      "reschedule": {
+        "title": "Reschedule",
+        "description": "Choose the appointment's new date and time",
+        "endSuffix": " (ends at {time})."
+      }
+    },
+    "details": {
+      "unassigned": "Unassigned"
+    },
+    "cancelConfirm": {
+      "title": "Cancel appointment?",
+      "description": "This marks <strong>{name}</strong>'s appointment as cancelled. This can't be undone."
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "schedule": "Schedule",
+      "back": "Back",
+      "reschedule": "Reschedule",
+      "confirmDone": "Confirm completion",
+      "viewPatient": "View patient",
+      "cancelAppointment": "Cancel appointment",
+      "cancelling": "Cancelling…"
+    },
+    "toast": {
+      "created": "Appointment created successfully.",
+      "rescheduled": "Appointment rescheduled.",
+      "rescheduledSuccess": "Appointment rescheduled successfully.",
+      "confirmed": "Completion confirmed.",
+      "cancelled": "Appointment cancelled."
+    }
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "description": "Manage and track the performance of your WhatsApp campaigns.",
+    "newCampaign": "New campaign",
+    "back": "Back",
+    "cancel": "Cancel",
+    "copied": "Copied!",
+    "copyMessage": "Copy message",
+    "clearSearch": "Clear search",
+    "trackedMessageLabel": "Message with tracking",
+    "search": {
+      "minChars": "Enter at least 2 characters."
+    },
+    "empty": {
+      "filtered": "No campaigns found with the current filters.",
+      "none": "No campaigns created yet."
+    },
+    "error": {
+      "title": "Couldn't load the campaigns.",
+      "retry": "Please try again in a moment.",
+      "retryAction": "Try again"
+    },
+    "pagination": {
+      "nounSingular": "campaign",
+      "nounPlural": "campaigns"
+    },
+    "status": {
+      "active": "Active",
+      "paused": "Paused"
+    },
+    "channel": {
+      "official": "Official API",
+      "unofficial": "Unofficial API",
+      "officialBadge": "OFFICIAL API",
+      "unofficialBadge": "UNOFFICIAL API"
+    },
+    "filters": {
+      "searchPlaceholder": "Search campaigns…",
+      "searchAria": "Search campaigns",
+      "statusAria": "Filter by status",
+      "statusPlaceholder": "Status",
+      "typeAria": "Filter by type",
+      "typePlaceholder": "Type",
+      "periodAria": "Filter by period",
+      "periodPlaceholder": "Period",
+      "all": "All",
+      "periodLast30": "Last 30 days",
+      "periodLast7": "Last 7 days",
+      "periodThisMonth": "This month"
+    },
+    "columns": {
+      "name": "Campaign",
+      "status": "Status",
+      "totalSent": "Total Sent",
+      "replied": "Replied",
+      "scheduled": "Appointments",
+      "converted": "Conversions",
+      "revenue": "Revenue",
+      "actions": "Actions",
+      "rate": "{value}% rate",
+      "statusActiveAria": "Active campaign",
+      "statusPausedAria": "Paused campaign",
+      "actionsFor": "Actions for {name}",
+      "idCopied": "ID copied",
+      "copyId": "Copy ID",
+      "viewEvents": "View events (coming soon)"
+    },
+    "new": {
+      "description": "Choose the campaign type and configure the send details."
+    },
+    "selector": {
+      "official": {
+        "badge": "Automatic sending",
+        "description": "Sends via the official WhatsApp Business API. Requires a Meta-approved template."
+      },
+      "unofficial": {
+        "badge": "Manual sending",
+        "description": "Manual sending by operators. The generated message identifies which campaign each conversation came from."
+      }
+    },
+    "form": {
+      "name": {
+        "label": "Campaign name"
+      },
+      "submit": "Create campaign",
+      "submitting": "Creating…"
+    },
+    "toast": {
+      "created": "Campaign created successfully."
+    },
+    "official": {
+      "name": {
+        "placeholder": "e.g. Black Friday 2024 Promotion"
+      },
+      "phone": {
+        "label": "WhatsApp number",
+        "placeholder": "Select an official number",
+        "unnamed": "Number not provided",
+        "empty": "No official number connected. Connect a WhatsApp Business account in Settings."
+      },
+      "template": {
+        "label": "Message template",
+        "placeholder": "Select an approved template",
+        "empty": "No approved template available. Create and approve a template before continuing."
+      },
+      "contacts": {
+        "label": "Contacts"
+      }
+    },
+    "unofficial": {
+      "name": {
+        "placeholder": "e.g. Patient reactivation"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Write the message operators will send…",
+        "description": "Copy the message below and send it to your contacts."
+      }
+    },
+    "contactPicker": {
+      "searchPlaceholder": "Search by name or phone…",
+      "searchAria": "Search contacts",
+      "selectAll": "Select all contacts on this page",
+      "columns": {
+        "name": "Name",
+        "phone": "Phone"
+      },
+      "loading": "Loading contacts…",
+      "emptySearch": "No contacts found for \"{query}\".",
+      "empty": "No contacts created yet.",
+      "selectOne": "Select {name}",
+      "selectedCount": "{count, plural, one {# contact selected} other {# contacts selected}}",
+      "pageOf": "Page {page} of {total}",
+      "prevPage": "Previous page",
+      "nextPage": "Next page"
+    },
+    "success": {
+      "title": "Campaign created! Copy the message to send.",
+      "description": "The campaign “{name}” was created with reply tracking.",
+      "warning": "This campaign requires manual sending. Copy the message below and send it to your intended contacts.",
+      "goToCampaigns": "Go to campaigns"
+    },
+    "detail": {
+      "error": {
+        "title": "Couldn't load the campaign.",
+        "description": "The campaign wasn't found or an error occurred."
+      },
+      "createdOn": "Created on {date}"
+    },
+    "messageCard": {
+      "title": "Message to send",
+      "warning": "This campaign uses the unofficial API and requires manual sending. Don't change the text so tracking is preserved."
+    },
+    "templateCard": {
+      "title": "Template",
+      "empty": "Couldn't load this campaign's template.",
+      "open": "Open",
+      "preview": "Preview",
+      "noBody": "No body defined.",
+      "fields": {
+        "name": "Name",
+        "category": "Category",
+        "language": "Language",
+        "header": "Header",
+        "body": "Body",
+        "footer": "Footer",
+        "buttons": "Buttons"
+      },
+      "headerType": {
+        "text": "Text",
+        "image": "Image",
+        "video": "Video",
+        "document": "Document",
+        "none": "None"
+      }
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "description": "WhatsApp message templates for the Official API.",
+    "sync": "Sync",
+    "syncing": "Syncing…",
+    "newTemplate": "Create template",
+    "empty": "No templates yet.",
+    "back": "Back",
+    "backToList": "Templates",
+    "submit": "Submit for approval",
+    "submitting": "Submitting…",
+    "createdOn": "Created on {date}",
+    "noun": {
+      "singular": "template",
+      "plural": "templates"
+    },
+    "toast": {
+      "syncSuccess": "{count, plural, one {# template synced with Meta.} other {# templates synced with Meta.}}",
+      "syncUpToDate": "Templates are already up to date.",
+      "syncError": "Could not sync templates.",
+      "created": "Template submitted for approval!",
+      "updated": "Template updated and resubmitted for validation!"
+    },
+    "error": {
+      "loadList": {
+        "title": "Could not load templates.",
+        "description": "Please try again in a moment."
+      },
+      "retry": "Try again",
+      "load": {
+        "title": "Could not load the template.",
+        "description": "The template was not found or an error occurred."
+      },
+      "create": "Could not create the template.",
+      "update": "Could not update the template.",
+      "submitTitle": "Could not submit the template."
+    },
+    "columns": {
+      "name": "Name",
+      "category": "Category",
+      "status": "Status",
+      "aiFeedback": "AI feedback",
+      "language": "Language",
+      "createdAt": "Created"
+    },
+    "new": {
+      "title": "New template",
+      "description": "Build the message and submit it for Meta approval."
+    },
+    "edit": {
+      "title": "Edit template",
+      "description": "Update the message and resubmit it for AI validation."
+    },
+    "detail": {
+      "metaTitle": "Template",
+      "dataCard": "Template details",
+      "contentCard": "Message content",
+      "noBody": "No body defined.",
+      "fields": {
+        "category": "Category",
+        "language": "Language",
+        "status": "Status",
+        "header": "Header",
+        "headerText": "Header text",
+        "metaId": "Meta ID",
+        "body": "Body",
+        "footer": "Footer",
+        "buttons": "Buttons"
+      },
+      "header": {
+        "text": "Text",
+        "image": "Image",
+        "video": "Video",
+        "document": "Document",
+        "none": "None"
+      },
+      "variables": {
+        "title": "Variables",
+        "none": "This template has no variables."
+      }
+    },
+    "preview": {
+      "title": "Preview",
+      "empty": "Your message will appear here…",
+      "headerAlt": "Template header"
+    },
+    "aiFeedback": {
+      "title": "AI feedback",
+      "error": {
+        "title": "Could not load the AI feedback.",
+        "description": "Please try again later."
+      },
+      "empty": "This template hasn't been analyzed by AI yet.",
+      "processing": "The AI analysis is in progress. The result will appear here once it finishes.",
+      "summary": "Summary",
+      "issues": "Issues found",
+      "noIssues": "No issues found by the AI.",
+      "general": "General",
+      "suggestion": "Suggestion",
+      "edit": "Edit template",
+      "analyzedOn": "Analyzed on {date}",
+      "severity": {
+        "alerta": "Warning",
+        "bloqueante": "Blocking"
+      }
+    },
+    "form": {
+      "basicInfo": "Basic information",
+      "name": {
+        "label": "Name",
+        "placeholder": "appointment_confirmation",
+        "description": "Lowercase letters, numbers and underscore only."
+      },
+      "language": {
+        "label": "Language",
+        "placeholder": "Select",
+        "ptBR": "Portuguese (BR)"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select a category"
+      },
+      "header": {
+        "title": "Header (optional)",
+        "mediaType": "Media type",
+        "none": "None",
+        "image": "Image",
+        "textLabel": "Header text",
+        "textPlaceholder": "e.g. Appointment confirmation",
+        "textDescription": "No line breaks or emoji."
+      },
+      "body": {
+        "title": "Message body",
+        "placeholder": "Hi '{{'nome'}}', your appointment is confirmed for '{{'data'}}'.",
+        "description": "Use variables in the '{{'variable_name'}}' format."
+      },
+      "footer": {
+        "title": "Footer (optional)",
+        "placeholder": "Clinic team",
+        "description": "Shown in gray below the body."
+      },
+      "variables": {
+        "title": "Variable examples",
+        "description": "Example values used in the preview and for Meta approval.",
+        "examplePlaceholder": "Example value for {variable}"
+      },
+      "buttons": {
+        "title": "Buttons (optional)",
+        "description": "Up to {max} quick-reply or link buttons.",
+        "limitReached": "Limit of {max} buttons reached.",
+        "add": "Add button",
+        "remove": "Remove button",
+        "textLabel": "Button text",
+        "textPlaceholder": "e.g. Confirm",
+        "urlLabel": "URL",
+        "urlPlaceholder": "https://example.com",
+        "type": {
+          "quickReply": "Quick reply",
+          "url": "Open link",
+          "cta": "Call to action — Open link"
+        }
+      },
+      "media": {
+        "label": "Header image",
+        "uploading": "Uploading…",
+        "change": "Change image",
+        "select": "Select image",
+        "hint": "PNG or JPEG, max 5 MB.",
+        "errorType": "Upload a PNG or JPEG image.",
+        "errorSize": "The image must be at most 5 MB.",
+        "errorUpload": "Could not upload the image.",
+        "previewAlt": "Header preview"
+      }
+    }
+  },
+  "chat": {
+    "errors": {
+      "sendFailed": "Couldn't send the message.",
+      "loadConversations": "Couldn't load conversations.",
+      "loadMessages": "Couldn't load messages."
+    },
+    "noChannels": {
+      "title": "No channel connected",
+      "description": "Connect a WhatsApp channel in settings to start handling conversations."
+    },
+    "empty": {
+      "title": "Select a conversation",
+      "description": "Choose a patient on the left to view and reply to messages."
+    },
+    "message": {
+      "sending": "Sending",
+      "sent": "Sent"
+    },
+    "composer": {
+      "unavailable": "Sending unavailable",
+      "placeholder": "Type a message...",
+      "ariaLabel": "Message",
+      "send": "Send message"
+    },
+    "conversation": {
+      "noChatYet": "No conversation yet",
+      "media": "Media",
+      "noMessages": "No messages",
+      "youPrefix": "You: "
+    },
+    "channel": {
+      "official": "Official",
+      "unofficial": "Unofficial",
+      "selectPlaceholder": "Select a channel"
+    },
+    "search": {
+      "placeholder": "Search patient",
+      "noResults": "No patient found."
+    },
+    "sidebar": {
+      "noPatients": "No patient registered."
+    },
+    "thread": {
+      "back": "Back to conversation list",
+      "empty": "No messages in this conversation yet."
+    },
+    "window": {
+      "closed": "The service window is closed. Wait for the patient to reply.",
+      "closesIn": "Window closes in {time}"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Account and clinic preferences.",
+    "integration": {
+      "sectionTitle": "Integrations",
+      "sectionDescription": "Connect ZapBlast to the platforms your clinic already uses.",
+      "loadError": "Unable to load integrations",
+      "loadErrorFallback": "Please try again shortly.",
+      "connected": "Connected",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "disconnectSuccess": "Integration disconnected.",
+      "fallbackLabel": "the integration",
+      "connectError": "Unable to connect {provider}. Please try again.",
+      "connectSuccess": "{provider} connected successfully."
+    },
+    "providers": {
+      "google": "Google",
+      "meta": "WhatsApp Official (Meta)",
+      "whatsapp": "WhatsApp",
+      "googleDescription": "Connect Google to sync your schedule with Google Calendar.",
+      "metaDescription": "Integrate the Official WhatsApp API to send messages approved by Meta.",
+      "whatsappDescription": "Integrate directly with WhatsApp via the unofficial API to send and manage messages."
+    },
+    "whatsapp": {
+      "dialogTitle": "Connect WhatsApp",
+      "dialogDescription": "Connection via the unofficial API. Enter the number and scan the QR code in the device's WhatsApp.",
+      "phoneLabel": "WhatsApp number",
+      "generating": "Generating QR code…",
+      "generate": "Generate QR code",
+      "qrAlt": "QR code to connect WhatsApp",
+      "pairingCodeLabel": "Or use the pairing code:",
+      "instructions": "Open WhatsApp > Linked devices > Link a device.",
+      "connectSuccess": "WhatsApp connected successfully!"
+    }
+  },
+  "procedures": {
+    "title": "Procedures",
+    "description": "Manage the clinic's procedure catalog.",
+    "newProcedure": "Add procedure",
+    "registeredOn": "Registered on {date}",
+    "columns": {
+      "name": "Name",
+      "basePrice": "Base price",
+      "status": "Status",
+      "createdAt": "Registered"
+    },
+    "priceColumns": {
+      "amount": "Amount",
+      "effectiveFrom": "Effective from",
+      "effectiveTo": "Effective to",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "current": "Current",
+      "historical": "Historical"
+    },
+    "search": {
+      "placeholder": "Search by name…",
+      "ariaLabel": "Search procedures",
+      "clearAriaLabel": "Clear search",
+      "minChars": "Enter at least 2 characters."
+    },
+    "empty": {
+      "title": "No procedures registered yet.",
+      "searchNoResults": "No procedures found for “{query}”."
+    },
+    "error": {
+      "title": "Unable to load procedures.",
+      "description": "Please try again shortly.",
+      "retry": "Try again",
+      "detailTitle": "Unable to load the procedure.",
+      "detailDescription": "The procedure was not found or an error occurred."
+    },
+    "detail": {
+      "cardTitle": "Procedure details",
+      "priceHistory": "Price history",
+      "priceHistoryEmpty": "This procedure has no price history yet."
+    },
+    "fields": {
+      "optional": "(optional)",
+      "name": {
+        "label": "Name",
+        "placeholder": "Facial cleansing"
+      },
+      "basePrice": {
+        "label": "Base price",
+        "placeholder": "150.00"
+      },
+      "currentPrice": {
+        "label": "Current price"
+      },
+      "status": {
+        "label": "Status"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Procedure details…"
+      }
+    },
+    "dialog": {
+      "create": {
+        "description": "Add a new procedure to the active clinic's catalog.",
+        "submit": "Register",
+        "submitting": "Registering…"
+      }
+    },
+    "toast": {
+      "created": "{name} registered successfully."
+    }
+  },
+  "public": {
+    "cta": {
+      "joinWaitlist": "Join the waitlist"
+    },
+    "nav": {
+      "login": "Log in"
+    },
+    "hero": {
+      "badge": "Waitlist open · Limited spots",
+      "title": "Stop losing patients between one <highlight>conversation and the next</highlight> on WhatsApp.",
+      "subtitle": "ZapBlast brings together CRM, a patient funnel, and WhatsApp campaigns at scale in a single platform — built for aesthetic, health, and dental clinics that want to grow with predictability.",
+      "ctaSecondary": "See features",
+      "proofPoints": {
+        "dispatch": "Messaging at scale",
+        "metrics": "Metrics by stage",
+        "scheduling": "Automated scheduling"
+      }
+    },
+    "problemSolution": {
+      "title": "Your clinic delivers great care. The problem is what happens <highlight>before and after</highlight> the appointment.",
+      "subtitle": "That is where revenue slips away — and it is exactly what ZapBlast organizes for you.",
+      "problemsTitle": "How it works today",
+      "solutionsTitle": "With ZapBlast",
+      "problems": {
+        "followUp": "Patients disappear after the first conversation and no one follows up.",
+        "manual": "Manual tracking in spreadsheets and notebooks — leads go cold.",
+        "visibility": "Zero visibility: you have no idea how many leads turned into appointments.",
+        "campaigns": "WhatsApp campaigns sent on the fly, with no templates and no control."
+      },
+      "solutions": {
+        "funnel": "A patient funnel that shows exactly who needs a follow-up today.",
+        "reminders": "Automated reminders and messages to re-engage anyone who went quiet.",
+        "dashboard": "A dashboard with conversion by stage, no-show rate, and revenue per procedure.",
+        "blast": "Bulk messaging with Meta-approved templates and the unofficial channel."
+      }
+    },
+    "features": {
+      "title": "Everything your clinic needs, without one more open tab",
+      "subtitle": "From the first message to post-procedure — a single platform to capture, convert, and retain patients.",
+      "items": {
+        "whatsappBlast": {
+          "title": "Bulk WhatsApp messaging",
+          "description": "Send campaigns to thousands of patients using Meta-approved templates (official API) or the unofficial channel — respecting the 24-hour window and opt-in rules."
+        },
+        "crm": {
+          "title": "Patient CRM with a Kanban funnel",
+          "description": "Drag each lead through the stages — from intake to procedure. Nothing slips through, and your team knows exactly who to work first."
+        },
+        "scheduling": {
+          "title": "Automated scheduling and reminders",
+          "description": "Schedule procedures and fire automated WhatsApp reminders to cut no-shows and keep the calendar full."
+        },
+        "dashboard": {
+          "title": "Campaign metrics dashboard",
+          "description": "Track conversion by stage, no-show rate, time to schedule, and the performance of every campaign in one place."
+        }
+      }
+    },
+    "socialProof": {
+      "title": "Clinics that will grow with ZapBlast",
+      "subtitle": "We are selecting the first clinics from the waitlist. Real stories coming here soon.",
+      "testimonials": {
+        "name": "Client name",
+        "aesthetics": {
+          "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. The patients who used to vanish are responding again, and the calendar stopped having gaps.",
+          "role": "Aesthetic Clinic"
+        },
+        "dental": {
+          "quote": "Sed do eiusmod tempor incididunt ut labore. We finally see the conversion at each funnel stage and where we were losing leads.",
+          "role": "Dental Clinic"
+        },
+        "health": {
+          "quote": "Ut enim ad minim veniam, quis nostrud exercitation. Our WhatsApp campaigns stopped being improvised and became a predictable routine.",
+          "role": "Health Clinic"
+        }
+      }
+    },
+    "preRegister": {
+      "pitchTitle": "Join the ZapBlast waitlist",
+      "pitchDescription": "Leave your details and be one of the first clinics to organize the patient funnel and send WhatsApp campaigns at scale.",
+      "privacyNote": "No commitment. We use your details only for the invitation.",
+      "fields": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Jane Smith"
+        },
+        "clinicName": {
+          "label": "Clinic name",
+          "placeholder": "Bright Smile Clinic"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "you@clinic.com"
+        },
+        "whatsapp": {
+          "label": "WhatsApp",
+          "placeholder": "(555) 123-4567"
+        }
+      },
+      "submitting": "Sending…",
+      "successToast": "You are on the list! We will be in touch soon."
+    },
+    "footer": {
+      "tagline": "CRM and WhatsApp marketing for clinics.",
+      "privacyLink": "Privacy policy",
+      "copyright": "© {year} ZapBlast. All rights reserved."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: {date}",
+      "sections": {
+        "intro": {
+          "title": "1. Introduction",
+          "body": {
+            "p1": "This Privacy Policy describes how {controller} (“ZapBlast”, “we”) collects, uses, shares, and protects the personal data processed through the ZapBlast platform — a CRM for clinics that also sends WhatsApp campaigns at scale. It applies to client clinics, their teams, and the contacts (leads and patients) whose data is processed on the platform.",
+            "p2": "Data processing complies with the Brazilian General Data Protection Law (Law No. 13.709/2018 — “LGPD”). By using the platform, you acknowledge that you are aware of the practices described here."
+          }
+        },
+        "dataCollected": {
+          "title": "2. Data we collect",
+          "intro": "We process the following categories of personal data and their purposes:",
+          "items": {
+            "identity": "<strong>Identification and contact data</strong> (name, phone/WhatsApp number, email) — to identify the contact and enable communication.",
+            "account": "<strong>Clinic account data</strong> (registration details and the user team credentials) — for authentication and platform operation.",
+            "journey": "<strong>Patient journey data</strong> (funnel stage, appointments, procedures) — to manage and optimize care.",
+            "campaigns": "<strong>Campaign and message data</strong> (content sent, delivery status, and interactions) — to operate, measure, and optimize WhatsApp campaigns."
+          }
+        },
+        "dataUse": {
+          "title": "3. How we use the data",
+          "intro": "We use personal data for the following purposes:",
+          "items": {
+            "crm": "Operate the CRM and track the journey of leads and patients.",
+            "dispatch": "Send WhatsApp campaigns — including through the official WhatsApp API (WhatsApp Cloud API) provided by Meta — respecting <em>opt-in</em> rules, approved message templates, and the 24-hour customer-service window where applicable.",
+            "metrics": "Generate performance metrics and reports by stage and by campaign.",
+            "support": "Provide support, ensure security, and comply with legal obligations."
+          }
+        },
+        "sharing": {
+          "title": "4. Sharing with third parties",
+          "intro": "We do not sell personal data. We share data only to the extent necessary to operate the platform, notably with:",
+          "items": {
+            "meta": "<strong>Meta / WhatsApp</strong> — to send messages through the official WhatsApp API (WhatsApp Business Platform), the data required for sending is processed by Meta as a processor/recipient. Meta's processing is governed by the platform's own terms and privacy policies.",
+            "infra": "<strong>Infrastructure providers</strong> (hosting and related services) strictly to enable the platform to function.",
+            "authorities": "<strong>Authorities</strong>, when required by law or court order."
+          }
+        },
+        "retention": {
+          "title": "5. Data retention",
+          "body": "We keep personal data only for as long as necessary to fulfill the purposes described in this Policy, for the duration of the relationship with the client clinic, and for the periods required by legal or regulatory obligations. Once the applicable purposes and periods have ended, the data is securely deleted or anonymized."
+        },
+        "rights": {
+          "title": "6. Your rights (LGPD)",
+          "intro": "Under the LGPD, the data subject may, at any time, exercise the following rights:",
+          "items": {
+            "access": "<strong>Access</strong> — confirm the existence of processing and access your data.",
+            "correction": "<strong>Correction</strong> — correct incomplete, inaccurate, or outdated data.",
+            "deletion": "<strong>Deletion</strong> — request the erasure of your personal data.",
+            "portability": "<strong>Portability</strong> — request the portability of your data to another provider.",
+            "revocation": "<strong>Consent withdrawal</strong> — withdraw, at any time, consent previously given."
+          }
+        },
+        "deletion": {
+          "title": "7. Data deletion",
+          "intro": "To request the deletion of your personal data, follow the steps below:",
+          "steps": {
+            "send": "Send a message to <link>{channel}</link> with the subject “Data deletion”.",
+            "identify": "Provide the full name and the phone/WhatsApp number associated with the data so we can locate it.",
+            "confirm": "We will confirm receipt and complete the deletion within {timeframe}, except where retention is required by law."
+          }
+        },
+        "controller": {
+          "title": "8. Data controller and contact",
+          "body": "The data controller is {controller}. For questions about this Policy or to exercise your rights, contact us by email at <link>{email}</link>."
+        }
+      }
+    },
+    "meta": {
+      "homeTitle": "ZapBlast — CRM & WhatsApp marketing for clinics",
+      "homeDescription": "Stop losing patients. ZapBlast combines CRM, a Kanban funnel, scheduling, and WhatsApp campaigns at scale for aesthetic, health, and dental clinics. Join the waitlist.",
+      "privacyTitle": "Privacy Policy",
+      "privacyDescription": "ZapBlast’s Privacy Policy — how we collect, use, share, and protect personal data, and how you can request deletion of your data."
+    }
+  },
+  "validation": {
+    "email": {
+      "required": "Enter your email.",
+      "invalid": "Enter a valid email address."
+    },
+    "password": {
+      "min": "Password must be at least 8 characters."
+    },
+    "name": {
+      "min": "Enter your full name."
+    },
+    "confirmPassword": {
+      "required": "Confirm your password.",
+      "mismatch": "Passwords do not match."
+    }
+  }
+}

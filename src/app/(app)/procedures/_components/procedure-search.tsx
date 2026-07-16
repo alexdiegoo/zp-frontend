@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,8 @@ export function ProcedureSearch({
   onChange,
   error,
 }: ProcedureSearchProps) {
+  const t = useTranslations("procedures");
+
   return (
     <div className="w-full sm:max-w-xs">
       <div className="relative">
@@ -25,8 +28,8 @@ export function ProcedureSearch({
           type="search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Buscar por nome…"
-          aria-label="Buscar procedimentos"
+          placeholder={t("search.placeholder")}
+          aria-label={t("search.ariaLabel")}
           aria-invalid={Boolean(error)}
           className={cn("px-8", error && "border-destructive")}
         />
@@ -34,7 +37,7 @@ export function ProcedureSearch({
           <button
             type="button"
             onClick={() => onChange("")}
-            aria-label="Limpar busca"
+            aria-label={t("search.clearAriaLabel")}
             className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-0.5 text-muted-foreground transition-colors hover:text-foreground"
           >
             <X className="size-4" />

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Smartphone } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
@@ -59,6 +60,7 @@ export function ConnectWhatsAppDialog({
   open,
   onOpenChange,
 }: ConnectWhatsAppDialogProps) {
+  const t = useTranslations("settings");
   const qc = useQueryClient();
 
   const form = useForm<ConnectWhatsAppDto>({
@@ -92,11 +94,11 @@ export function ConnectWhatsAppDialog({
   // Close the dialog once the device is linked.
   useEffect(() => {
     if (open && linked) {
-      toast.success("WhatsApp conectado com sucesso!");
+      toast.success(t("whatsapp.connectSuccess"));
       qc.invalidateQueries({ queryKey: integrationKeys.status() });
       onOpenChange(false);
     }
-  }, [open, linked, onOpenChange, qc]);
+  }, [open, linked, onOpenChange, qc, t]);
 
   function handleOpenChange(next: boolean) {
     if (!next) {
@@ -118,11 +120,8 @@ export function ConnectWhatsAppDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Conectar WhatsApp</DialogTitle>
-          <DialogDescription>
-            Conexão via API não oficial. Informe o número e escaneie o QR Code
-            no WhatsApp do aparelho.
-          </DialogDescription>
+          <DialogTitle>{t("whatsapp.dialogTitle")}</DialogTitle>
+          <DialogDescription>{t("whatsapp.dialogDescription")}</DialogDescription>
         </DialogHeader>
 
         {connect.isSuccess ? (
@@ -139,7 +138,7 @@ export function ConnectWhatsAppDialog({
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Número do WhatsApp</FormLabel>
+                    <FormLabel>{t("whatsapp.phoneLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         type="tel"
@@ -160,10 +159,10 @@ export function ConnectWhatsAppDialog({
                 {connect.isPending ? (
                   <>
                     <Loader2 className="animate-spin" />
-                    Gerando QR Code…
+                    {t("whatsapp.generating")}
                   </>
                 ) : (
-                  "Gerar QR Code"
+                  t("whatsapp.generate")
                 )}
               </Button>
             </form>
@@ -179,6 +178,7 @@ function PairingStep({
 }: {
   connection: ChannelEvolutionConnection | null;
 }) {
+  const t = useTranslations("settings");
   const qrCode = connection?.qrCode;
   const pairingCode = connection?.pairingCode;
 
@@ -188,7 +188,7 @@ function PairingStep({
         {qrCode ? (
           <Image
             src={qrSrc(qrCode)}
-            alt="QR Code para conectar o WhatsApp"
+            alt={t("whatsapp.qrAlt")}
             width={224}
             height={224}
             unoptimized
@@ -197,14 +197,14 @@ function PairingStep({
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <Loader2 className="size-6 animate-spin" />
-            <Muted>Gerando QR Code…</Muted>
+            <Muted>{t("whatsapp.generating")}</Muted>
           </div>
         )}
       </div>
 
       {pairingCode ? (
         <div className="text-center">
-          <Muted>Ou use o código de pareamento:</Muted>
+          <Muted>{t("whatsapp.pairingCodeLabel")}</Muted>
           <P className="font-mono text-base font-semibold tracking-widest">
             {pairingCode}
           </P>
@@ -213,9 +213,7 @@ function PairingStep({
 
       <div className="flex items-center gap-2 text-muted-foreground">
         <Smartphone className="size-4" />
-        <Muted>
-          Abra o WhatsApp &gt; Aparelhos conectados &gt; Conectar aparelho.
-        </Muted>
+        <Muted>{t("whatsapp.instructions")}</Muted>
       </div>
     </div>
   );

@@ -711,3 +711,10 @@ Conventions (see `specs/013-component-unit-tests/` for the full spec/plan/quicks
 - ❌ Use `any` in TypeScript
 - ❌ Skip loading/error/empty states in any data-driven component
 - ❌ Create a new component for something that already exists in `components/shared/`
+
+## Active Technologies
+- TypeScript 5 (strict), React 19.2, Next.js 16.2 (App Router) + `next-intl` v4 (new); existing TanStack Query v5, React Hook Form v7 + Zod v4, shadcn/ui, Tailwind v4 (016-i18n-multi-language)
+- `locale` httpOnly cookie (per-request) + backend user-profile field (durable, cross-device); message catalogs as `messages/*.json` (016-i18n-multi-language)
+
+## Recent Changes
+- 016-i18n-multi-language: Added TypeScript 5 (strict), React 19.2, Next.js 16.2 (App Router) + `next-intl` v4 (new); existing TanStack Query v5, React Hook Form v7 + Zod v4, shadcn/ui, Tailwind v4

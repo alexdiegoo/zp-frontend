@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { PageHeader, Section } from "@/components/shared/layout/page-header";
 import { DashboardMetricsGrid } from "@/components/dashboard/dashboard-metrics-grid";
 
@@ -9,9 +11,11 @@ import { DashboardMetricsGrid } from "@/components/dashboard/dashboard-metrics-g
  * placeholder for upcoming per-stage charts.
  */
 export function DashboardView() {
+  const t = useTranslations("dashboard");
+
   return (
     <Section>
-      <PageHeader title="Dashboard" description="Visão geral da clínica" />
+      <PageHeader title={t("title")} description={t("description")} />
 
       <DashboardMetricsGrid />
     </Section>

@@ -3,6 +3,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { ContactAvatar } from "@/components/shared/contact-avatar";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ interface FunnelCardProps {
 
 /** A draggable patient card. The PROCEDURE_DONE stage gets a "completed" accent. */
 export function FunnelCard({ card }: FunnelCardProps) {
+  const t = useTranslations("funnel");
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: card.id });
 
@@ -42,7 +44,7 @@ export function FunnelCard({ card }: FunnelCardProps) {
             variant="outline"
             className="border-green-500 text-green-600"
           >
-            Concluído
+            {t("card.completed")}
           </Badge>
           <CheckCircle2 className="size-4 text-green-500" aria-hidden />
         </div>

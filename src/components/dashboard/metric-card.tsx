@@ -1,24 +1,11 @@
 "use client";
 
+import { useFormatter } from "next-intl";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Muted } from "@/components/ui/typography";
-import { formatCurrency } from "@/lib/format";
 import type { MetricCardConfig, MetricFormat } from "./dashboard-config";
-
-const numberFormatter = new Intl.NumberFormat("pt-BR");
-
-/** Renders a metric value according to its configured format. */
-function formatValue(value: number, format: MetricFormat): string {
-  switch (format) {
-    case "currency":
-      return formatCurrency(value);
-    case "percent":
-      return `${numberFormatter.format(value)}%`;
-    case "number":
-      return numberFormatter.format(value);
-  }
-}
 
 type MetricCardProps = {
   config: MetricCardConfig;
@@ -33,6 +20,19 @@ type MetricCardProps = {
  */
 export function MetricCard({ config, value, isLoading }: MetricCardProps) {
   const Icon = config.icon;
+  const format = useFormatter();
+
+  // Formatting follows the active locale; currency stays BRL (data-model E4).
+  function formatValue(val: number, fmt: MetricFormat): string {
+    switch (fmt) {
+      case "currency":
+        return format.number(val, "currency");
+      case "percent":
+        return `${format.number(val)}%`;
+      case "number":
+        return format.number(val);
+    }
+  }
 
   return (
     <Card>

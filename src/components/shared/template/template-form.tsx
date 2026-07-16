@@ -2,6 +2,7 @@
 
 import type { UseFormReturn } from "react-hook-form";
 import { useWatch } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import {
   TEMPLATE_BODY_MAX,
@@ -52,6 +53,7 @@ export function TemplateForm({
   onUploadingChange,
   onSubmit,
 }: TemplateFormProps) {
+  const t = useTranslations("templates");
   const { control } = form;
   const headerType = useWatch({ control, name: "headerType" });
   const bodyText = useWatch({ control, name: "bodyText" }) ?? "";
@@ -67,7 +69,7 @@ export function TemplateForm({
       {/* Seção 1 — Informações básicas */}
       <Card>
         <CardHeader>
-          <CardTitle>Informações básicas</CardTitle>
+          <CardTitle>{t("form.basicInfo")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
           <FormField
@@ -75,16 +77,16 @@ export function TemplateForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>{t("form.name.label")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="confirmacao_agendamento"
+                    placeholder={t("form.name.placeholder")}
                     autoComplete="off"
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  Apenas letras minúsculas, números e underscore.
+                  {t("form.name.description")}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -97,15 +99,19 @@ export function TemplateForm({
               name="language"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Idioma</FormLabel>
+                  <FormLabel>{t("form.language.label")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue
+                          placeholder={t("form.language.placeholder")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="pt_BR">Português (BR)</SelectItem>
+                      <SelectItem value="pt_BR">
+                        {t("form.language.ptBR")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -118,11 +124,13 @@ export function TemplateForm({
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Categoria</FormLabel>
+                  <FormLabel>{t("form.category.label")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecione a categoria" />
+                        <SelectValue
+                          placeholder={t("form.category.placeholder")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -144,7 +152,7 @@ export function TemplateForm({
       {/* Seção 2 — Cabeçalho */}
       <Card>
         <CardHeader>
-          <CardTitle>Cabeçalho (opcional)</CardTitle>
+          <CardTitle>{t("form.header.title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
           <FormField
@@ -152,7 +160,7 @@ export function TemplateForm({
             name="headerType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tipo de mídia</FormLabel>
+                <FormLabel>{t("form.header.mediaType")}</FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -160,8 +168,12 @@ export function TemplateForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="NONE">Nenhum</SelectItem>
-                    <SelectItem value="IMAGE">Imagem</SelectItem>
+                    <SelectItem value="NONE">
+                      {t("form.header.none")}
+                    </SelectItem>
+                    <SelectItem value="IMAGE">
+                      {t("form.header.image")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -181,16 +193,16 @@ export function TemplateForm({
               name="headerText"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Texto do cabeçalho</FormLabel>
+                  <FormLabel>{t("form.header.textLabel")}</FormLabel>
                   <FormControl>
                     <Input
                       maxLength={TEMPLATE_HEADER_TEXT_MAX}
-                      placeholder="Ex.: Confirmação de agendamento"
+                      placeholder={t("form.header.textPlaceholder")}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Sem quebras de linha ou emoji.
+                    {t("form.header.textDescription")}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -203,7 +215,7 @@ export function TemplateForm({
       {/* Seção 3 — Corpo da mensagem */}
       <Card>
         <CardHeader>
-          <CardTitle>Corpo da mensagem</CardTitle>
+          <CardTitle>{t("form.body.title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <FormField
@@ -215,13 +227,13 @@ export function TemplateForm({
                   <Textarea
                     rows={6}
                     maxLength={TEMPLATE_BODY_MAX}
-                    placeholder="Olá {{nome}}, seu agendamento foi confirmado para {{data}}."
+                    placeholder={t("form.body.placeholder")}
                     {...field}
                   />
                 </FormControl>
                 <div className="flex items-center justify-between gap-2">
                   <FormDescription>
-                    Use variáveis no formato {"{{nome_variavel}}"}.
+                    {t("form.body.description")}
                   </FormDescription>
                   <Muted className="tabular-nums">
                     {bodyText.length}/{TEMPLATE_BODY_MAX}
@@ -242,7 +254,7 @@ export function TemplateForm({
       {/* Seção 5 — Rodapé */}
       <Card>
         <CardHeader>
-          <CardTitle>Rodapé (opcional)</CardTitle>
+          <CardTitle>{t("form.footer.title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <FormField
@@ -253,13 +265,13 @@ export function TemplateForm({
                 <FormControl>
                   <Input
                     maxLength={TEMPLATE_FOOTER_MAX}
-                    placeholder="Equipe da clínica"
+                    placeholder={t("form.footer.placeholder")}
                     {...field}
                   />
                 </FormControl>
                 <div className="flex items-center justify-between gap-2">
                   <FormDescription>
-                    Exibido em cinza abaixo do corpo.
+                    {t("form.footer.description")}
                   </FormDescription>
                   <Muted className="tabular-nums">
                     {footer.length}/{TEMPLATE_FOOTER_MAX}

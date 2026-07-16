@@ -8,6 +8,7 @@ import {
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { AlertCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { PageHeader, Section } from "@/components/shared/layout/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -32,6 +33,7 @@ function stageOf(board: FunnelBoard, cardId: string): FunnelStage | null {
 }
 
 export function FunnelView() {
+  const t = useTranslations("funnel");
   const { data: board, isLoading, isError } = useFunnelBoard();
   const { mutate: moveCard } = useMoveFunnelCard();
 
@@ -55,16 +57,13 @@ export function FunnelView() {
 
   return (
     <Section>
-      <PageHeader
-        title="Funil de Pacientes"
-        description="Gerencie o progresso dos seus pacientes"
-      />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertTitle>Não foi possível carregar o funil</AlertTitle>
-          <AlertDescription>Tente novamente em instantes.</AlertDescription>
+          <AlertTitle>{t("error.title")}</AlertTitle>
+          <AlertDescription>{t("error.description")}</AlertDescription>
         </Alert>
       ) : isLoading || !board ? (
         <div className="flex flex-row gap-4 overflow-x-auto pb-4">

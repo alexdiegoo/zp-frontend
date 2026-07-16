@@ -8,6 +8,9 @@ import {
 
 import type { DashboardMetrics } from "@/types/api";
 
+/** The `dashboard` namespace translator. */
+type Translator = ReturnType<typeof import("next-intl").useTranslations<"dashboard">>;
+
 /** Quick-range presets plus a manual custom range. */
 export type PeriodPreset = "7d" | "30d" | "90d" | "custom";
 
@@ -33,37 +36,43 @@ export type MetricCardConfig = {
   description: string;
 };
 
-/** The dashboard's metric cards, in display order. */
-export const METRIC_CARDS_CONFIG: MetricCardConfig[] = [
-  {
-    key: "new_leads",
-    label: "Novos Leads",
-    format: "number",
-    icon: Users,
-    description: "Pacientes que entraram no funil no período",
-  },
-  {
-    key: "appointments",
-    label: "Agendamentos",
-    format: "number",
-    icon: CalendarCheck,
-    description: "Consultas agendadas no período",
-  },
-  {
-    key: "conversion_rate",
-    label: "Taxa de Conversão",
-    format: "percent",
-    icon: TrendingUp,
-    description: "Leads que realizaram procedimento",
-  },
-  {
-    key: "revenue",
-    label: "Receita",
-    format: "currency",
-    icon: DollarSign,
-    description: "Soma dos procedimentos concluídos no período",
-  },
-];
+/**
+ * The dashboard's metric cards, in display order. A factory so the localized
+ * labels/descriptions are resolved from the `dashboard` namespace translator.
+ * Adding a metric is still a single new entry here (plus its message keys).
+ */
+export function getMetricCardsConfig(t: Translator): MetricCardConfig[] {
+  return [
+    {
+      key: "new_leads",
+      label: t("metrics.newLeads.label"),
+      format: "number",
+      icon: Users,
+      description: t("metrics.newLeads.description"),
+    },
+    {
+      key: "appointments",
+      label: t("metrics.appointments.label"),
+      format: "number",
+      icon: CalendarCheck,
+      description: t("metrics.appointments.description"),
+    },
+    {
+      key: "conversion_rate",
+      label: t("metrics.conversionRate.label"),
+      format: "percent",
+      icon: TrendingUp,
+      description: t("metrics.conversionRate.description"),
+    },
+    {
+      key: "revenue",
+      label: t("metrics.revenue.label"),
+      format: "currency",
+      icon: DollarSign,
+      description: t("metrics.revenue.description"),
+    },
+  ];
+}
 
 const PRESET_DAYS: Record<Exclude<PeriodPreset, "custom">, number> = {
   "7d": 7,

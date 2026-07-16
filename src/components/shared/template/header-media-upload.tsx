@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import type { UseFormReturn } from "react-hook-form";
 import { useWatch } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { ImageUp, Loader2 } from "lucide-react";
 
 import { useUploadHeaderMedia } from "@/hooks/queries/use-templates";
@@ -39,6 +40,7 @@ export function HeaderMediaUpload({
   isUploading,
   onUploadingChange,
 }: HeaderMediaUploadProps) {
+  const t = useTranslations("templates");
   const inputRef = useRef<HTMLInputElement>(null);
   const [localError, setLocalError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -58,11 +60,11 @@ export function HeaderMediaUpload({
     setLocalError(null);
 
     if (!TEMPLATE_HEADER_IMAGE_TYPES.includes(file.type as never)) {
-      setLocalError("Envie uma imagem PNG ou JPEG.");
+      setLocalError(t("form.media.errorType"));
       return;
     }
     if (file.size > TEMPLATE_HEADER_IMAGE_MAX_BYTES) {
-      setLocalError("A imagem deve ter no máximo 5 MB.");
+      setLocalError(t("form.media.errorSize"));
       return;
     }
 
@@ -84,7 +86,7 @@ export function HeaderMediaUpload({
         setLocalError(
           error instanceof Error
             ? error.message
-            : "Não foi possível enviar a imagem.",
+            : t("form.media.errorUpload"),
         );
         setPreviewUrl((prev) => {
           if (prev) URL.revokeObjectURL(prev);
@@ -104,7 +106,7 @@ export function HeaderMediaUpload({
       name="headerMediaUrl"
       render={() => (
         <FormItem>
-          <FormLabel>Imagem do cabeçalho</FormLabel>
+          <FormLabel>{t("form.media.label")}</FormLabel>
 
           <div className="flex flex-col gap-3">
             {shownImage ? (
@@ -113,7 +115,7 @@ export function HeaderMediaUpload({
                     avoids per-host config while still using the component. */}
                 <Image
                   src={shownImage}
-                  alt="Pré-visualização do cabeçalho"
+                  alt={t("form.media.previewAlt")}
                   fill
                   unoptimized
                   className="object-contain"
@@ -143,16 +145,18 @@ export function HeaderMediaUpload({
                 {isUploading ? (
                   <>
                     <Loader2 className="animate-spin" />
-                    Enviando…
+                    {t("form.media.uploading")}
                   </>
                 ) : (
                   <>
                     <ImageUp />
-                    {shownImage ? "Trocar imagem" : "Selecionar imagem"}
+                    {shownImage
+                      ? t("form.media.change")
+                      : t("form.media.select")}
                   </>
                 )}
               </Button>
-              <Muted>PNG ou JPEG, máx 5 MB.</Muted>
+              <Muted>{t("form.media.hint")}</Muted>
             </div>
 
             {localError ? (

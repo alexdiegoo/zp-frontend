@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Check, CircleCheck, Copy, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ interface CampaignSuccessProps {
  * message (with the invisible tracking already embedded) and send it manually.
  */
 export function CampaignSuccess({ campaign }: CampaignSuccessProps) {
+  const t = useTranslations("campaigns");
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const message = campaign.trackedMessage ?? "";
@@ -44,25 +46,22 @@ export function CampaignSuccess({ campaign }: CampaignSuccessProps) {
         <div className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
           <CircleCheck className="size-6" />
         </div>
-        <CardTitle>Campanha criada! Copie a mensagem para disparar.</CardTitle>
+        <CardTitle>{t("success.title")}</CardTitle>
         <CardDescription>
-          A campanha “{campaign.name}” foi criada com rastreamento de respostas.
+          {t("success.description", { name: campaign.name })}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-700 dark:text-amber-400">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-          <p>
-            Esta campanha requer envio manual. Copie a mensagem abaixo e envie para os
-            contatos desejados.
-          </p>
+          <p>{t("success.warning")}</p>
         </div>
 
         <Textarea
           readOnly
           rows={6}
           value={message}
-          aria-label="Mensagem com rastreamento"
+          aria-label={t("trackedMessageLabel")}
           className="bg-muted/40"
         />
 
@@ -72,11 +71,11 @@ export function CampaignSuccess({ campaign }: CampaignSuccessProps) {
             variant="outline"
             onClick={() => router.push("/campaigns")}
           >
-            Ir para campanhas
+            {t("success.goToCampaigns")}
           </Button>
           <Button type="button" onClick={copyMessage}>
             {copied ? <Check /> : <Copy />}
-            {copied ? "Copiado!" : "Copiar mensagem"}
+            {copied ? t("copied") : t("copyMessage")}
           </Button>
         </div>
       </CardContent>

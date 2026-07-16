@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -46,13 +47,16 @@ export function Combobox({
   onClear,
   onSearchChange,
   isLoading,
-  placeholder = "Buscar…",
-  emptyMessage = "Nenhum resultado.",
+  placeholder,
+  emptyMessage,
   typeMoreMessage,
   invalid,
   disabled,
   onBlur,
 }: ComboboxProps) {
+  const t = useTranslations("schedule");
+  const resolvedPlaceholder = placeholder ?? t("combobox.searchPlaceholder");
+  const resolvedEmptyMessage = emptyMessage ?? t("combobox.empty");
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -149,7 +153,7 @@ export function Combobox({
         aria-controls={listId}
         autoComplete="off"
         value={query}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         disabled={disabled}
         aria-invalid={invalid}
         onChange={(e) => updateQuery(e.target.value)}
@@ -165,11 +169,11 @@ export function Combobox({
           {isLoading ? (
             <div className="flex items-center justify-center gap-2 px-2 py-3 text-sm text-muted-foreground">
               <Loader2 className="size-4 animate-spin" />
-              Buscando…
+              {t("combobox.loading")}
             </div>
           ) : options.length === 0 ? (
             <div className="px-2 py-3 text-center text-sm text-muted-foreground">
-              {typeMoreMessage ?? emptyMessage}
+              {typeMoreMessage ?? resolvedEmptyMessage}
             </div>
           ) : (
             options.map((option, index) => (

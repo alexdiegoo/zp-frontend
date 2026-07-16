@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 import { formatPhone } from "@/lib/format";
 import type { Conversation } from "@/types/chat";
@@ -16,16 +18,17 @@ export function ConversationItem({
   isActive: boolean;
   onSelect: () => void;
 }) {
+  const t = useTranslations("chat");
   const preview = conversation.lastMessagePreview?.trim();
   const hasMessage = conversation.lastMessageAt !== null;
   const previewText =
     preview && preview.length > 0
       ? preview
       : !hasMessage
-        ? "Sem conversa ainda"
+        ? t("conversation.noChatYet")
         : conversation.lastMessageType !== "conversation"
-          ? "Mídia"
-          : "Sem mensagens";
+          ? t("conversation.media")
+          : t("conversation.noMessages");
 
   return (
     <button
@@ -50,7 +53,7 @@ export function ConversationItem({
         </div>
         <p className="truncate text-sm text-muted-foreground">
           {conversation.lastMessageDirection === "OUTBOUND" && (
-            <span className="text-muted-foreground/80">Você: </span>
+            <span className="text-muted-foreground/80">{t("conversation.youPrefix")}</span>
           )}
           {previewText}
         </p>

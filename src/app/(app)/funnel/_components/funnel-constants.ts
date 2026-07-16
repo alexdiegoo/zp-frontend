@@ -2,13 +2,17 @@ import type { FunnelStage } from "@/types/api";
 
 import { FUNNEL_STAGES } from "@/lib/validations/funnel";
 
-/** Human labels for each stage, in pipeline order. */
-export const FUNNEL_STAGE_LABELS: Record<FunnelStage, string> = {
-  LEAD: "Entrada / Qualificação",
-  FOLLOW_UP: "Follow Up",
-  APPOINTMENT_SCHEDULED: "Reunião Agendada",
-  PROCEDURE_DONE: "Procedimento Realizado",
-};
+type Translator = ReturnType<typeof import("next-intl").useTranslations<"funnel">>;
+
+/** Human labels for each stage, in pipeline order. IDs stay stable; only labels are translated. */
+export function getFunnelStageLabels(t: Translator): Record<FunnelStage, string> {
+  return {
+    LEAD: t("stages.lead"),
+    FOLLOW_UP: t("stages.followUp"),
+    APPOINTMENT_SCHEDULED: t("stages.appointmentScheduled"),
+    PROCEDURE_DONE: t("stages.procedureDone"),
+  };
+}
 
 /** Stages rendered left-to-right on the board. */
 export const FUNNEL_STAGE_ORDER: readonly FunnelStage[] = FUNNEL_STAGES;

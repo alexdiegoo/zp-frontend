@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useRegister } from "@/hooks/queries/use-auth";
-import { registerSchema, type RegisterDto } from "@/lib/validations/auth";
+import { makeRegisterSchema, type RegisterDto } from "@/lib/validations/auth";
 import {
   Form,
   FormControl,
@@ -25,14 +26,14 @@ import { cn } from "@/lib/utils";
 
 type Strength = {
   score: 0 | 1 | 2 | 3;
-  label: string;
   barClass: string;
   widthClass: string;
 };
 
+// The score is mapped to a localized label in the component (auth.register.*).
 function getStrength(password: string): Strength {
   if (!password) {
-    return { score: 0, label: "", barClass: "bg-transparent", widthClass: "w-0" };
+    return { score: 0, barClass: "bg-transparent", widthClass: "w-0" };
   }
   let points = 0;
   if (password.length >= 8) points += 1;
@@ -41,20 +42,22 @@ function getStrength(password: string): Strength {
   if (/[^A-Za-z0-9]/.test(password)) points += 1;
 
   if (points <= 1) {
-    return { score: 1, label: "Fraca", barClass: "bg-destructive", widthClass: "w-1/3" };
+    return { score: 1, barClass: "bg-destructive", widthClass: "w-1/3" };
   }
   if (points <= 3) {
-    return { score: 2, label: "Média", barClass: "bg-brand", widthClass: "w-2/3" };
+    return { score: 2, barClass: "bg-brand", widthClass: "w-2/3" };
   }
-  return { score: 3, label: "Forte", barClass: "bg-primary", widthClass: "w-full" };
+  return { score: 3, barClass: "bg-primary", widthClass: "w-full" };
 }
 
 export function RegisterView() {
   const router = useRouter();
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<RegisterDto>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(useMemo(() => makeRegisterSchema(tv), [tv])),
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -69,6 +72,14 @@ export function RegisterView() {
 
   const password = useWatch({ control: form.control, name: "password" });
   const strength = useMemo(() => getStrength(password), [password]);
+  const strengthLabel =
+    strength.score === 1
+      ? t("register.strengthWeak")
+      : strength.score === 2
+        ? t("register.strengthMedium")
+        : strength.score === 3
+          ? t("register.strengthStrong")
+          : "";
 
   function onSubmit(values: RegisterDto) {
     // onSubmit only fires after Zod validation passes — safe to create the account.
@@ -77,7 +88,7 @@ export function RegisterView() {
       { name: values.name, email: values.email, password: values.password },
       {
         onSuccess: () => {
-          toast.success("Conta criada com sucesso!");
+          toast.success(t("register.created"));
           router.push("/dashboard");
           router.refresh();
         },
@@ -91,8 +102,8 @@ export function RegisterView() {
   return (
     <div className="space-y-6">
       <div className="space-y-1.5">
-        <H2>Criar conta</H2>
-        <Muted>Comece a disparar campanhas em poucos minutos.</Muted>
+        <H2>{t("register.title")}</H2>
+        <Muted>{t("register.subtitle")}</Muted>
       </div>
 
       <Form {...form}>
@@ -106,12 +117,12 @@ export function RegisterView() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome completo</FormLabel>
+                <FormLabel>{t("register.nameLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
                     autoComplete="name"
-                    placeholder="Maria Silva"
+                    placeholder={t("register.namePlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -125,12 +136,12 @@ export function RegisterView() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>E-mail</FormLabel>
+                <FormLabel>{t("fields.emailLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
                     autoComplete="email"
-                    placeholder="voce@clinica.com"
+                    placeholder={t("fields.emailPlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -144,7 +155,7 @@ export function RegisterView() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Senha</FormLabel>
+                <FormLabel>{t("fields.passwordLabel")}</FormLabel>
                 <div className="relative">
                   <FormControl>
                     <Input
@@ -158,7 +169,11 @@ export function RegisterView() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    aria-label={
+                      showPassword
+                        ? t("fields.hidePassword")
+                        : t("fields.showPassword")
+                    }
                     className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {showPassword ? (
@@ -181,8 +196,8 @@ export function RegisterView() {
                       />
                     </div>
                     <p className="text-[11px] font-medium text-muted-foreground">
-                      Força da senha:{" "}
-                      <span className="text-foreground">{strength.label}</span>
+                      {t("register.strength")}{" "}
+                      <span className="text-foreground">{strengthLabel}</span>
                     </p>
                   </div>
                 ) : null}
@@ -197,7 +212,7 @@ export function RegisterView() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirmar senha</FormLabel>
+                <FormLabel>{t("register.confirmPasswordLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -220,19 +235,19 @@ export function RegisterView() {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Criando conta…
+                {t("register.submitting")}
               </>
             ) : (
-              "Criar conta"
+              t("register.submit")
             )}
           </Button>
         </form>
       </Form>
 
       <Muted className="text-center">
-        Já tem uma conta?{" "}
+        {t("register.hasAccount")}{" "}
         <Link href="/login" className="font-medium text-brand hover:underline">
-          Entrar
+          {t("register.signIn")}
         </Link>
       </Muted>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Control } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import type { CreateTemplateForm } from "@/lib/validations/template";
 import {
@@ -33,13 +34,12 @@ export function VariableExamplesSection({
   control,
   variables,
 }: VariableExamplesSectionProps) {
+  const t = useTranslations("templates");
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Exemplos de variáveis</CardTitle>
-        <CardDescription>
-          Valores de exemplo usados na pré-visualização e na aprovação da Meta.
-        </CardDescription>
+        <CardTitle>{t("form.variables.title")}</CardTitle>
+        <CardDescription>{t("form.variables.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         {variables.map((variable) => (
@@ -53,7 +53,9 @@ export function VariableExamplesSection({
                 <FormLabel>{`{{${variable}}}`}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={`Valor de exemplo para {{${variable}}}`}
+                    placeholder={t("form.variables.examplePlaceholder", {
+                      variable: `{{${variable}}}`,
+                    })}
                     {...field}
                     value={field.value ?? ""}
                   />

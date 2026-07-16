@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, Copy, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
  * available from the campaign's detail page too.
  */
 export function CampaignMessageCard({ message }: { message: string }) {
+  const t = useTranslations("campaigns");
   const [copied, setCopied] = useState(false);
 
   const copyMessage = async () => {
@@ -33,29 +35,26 @@ export function CampaignMessageCard({ message }: { message: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Mensagem para disparar</CardTitle>
+        <CardTitle>{t("messageCard.title")}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-700 dark:text-amber-400">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-          <p>
-            Esta campanha usa a API não oficial e requer envio manual. Não
-            altere o texto para preservar o rastreamento.
-          </p>
+          <p>{t("messageCard.warning")}</p>
         </div>
 
         <Textarea
           readOnly
           rows={8}
           value={message}
-          aria-label="Mensagem com rastreamento"
+          aria-label={t("trackedMessageLabel")}
           className="bg-muted/40"
         />
 
         <div className="flex justify-end">
           <Button type="button" onClick={copyMessage}>
             {copied ? <Check /> : <Copy />}
-            {copied ? "Copiado!" : "Copiar mensagem"}
+            {copied ? t("copied") : t("copyMessage")}
           </Button>
         </div>
       </CardContent>

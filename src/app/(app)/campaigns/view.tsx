@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AlertCircle, Plus } from "lucide-react";
 
 import { DataTable } from "@/components/shared/data-table/data-table";
@@ -12,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useCampaigns, type CampaignsParams } from "@/hooks/queries/use-campaigns";
 import { useDebounce } from "@/hooks/ui/use-debounce";
 import type { CampaignApiType, CampaignPeriod, CampaignStatus } from "@/types/api";
-import { campaignColumns } from "./_components/columns";
+import { getCampaignColumns } from "./_components/columns";
 import {
   CampaignFilters,
   type ApiTypeFilter,
@@ -35,6 +36,7 @@ type ParamPatch = {
 };
 
 export function CampaignsView() {
+  const t = useTranslations("campaigns");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -62,7 +64,7 @@ export function CampaignsView() {
   const [searchInput, setSearchInput] = useState(activeSearch);
   const debouncedSearch = useDebounce(searchInput, 400);
   const trimmedSearch = debouncedSearch.trim();
-  const searchError = trimmedSearch.length === 1 ? "Digite ao menos 2 caracteres." : null;
+  const searchError = trimmedSearch.length === 1 ? t("search.minChars") : null;
 
   const replaceParams = useCallback(
     (next: ParamPatch) => {
@@ -117,18 +119,20 @@ export function CampaignsView() {
   const hasActiveFilters =
     Boolean(activeSearch) || status !== "all" || apiType !== "all";
   const emptyMessage = hasActiveFilters
-    ? "Nenhuma campanha encontrada com os filtros atuais."
-    : "Nenhuma campanha cadastrada ainda.";
+    ? t("empty.filtered")
+    : t("empty.none");
+
+  const columns = useMemo(() => getCampaignColumns(t), [t]);
 
   return (
     <Section>
       <PageHeader
-        title="Campanhas"
-        description="Gerencie e acompanhe o desempenho de suas campanhas de WhatsApp."
+        title={t("title")}
+        description={t("description")}
       >
         <Button onClick={() => router.push("/campaigns/new")}>
           <Plus />
-          Nova campanha
+          {t("newCampaign")}
         </Button>
       </PageHeader>
 
@@ -147,24 +151,24 @@ export function CampaignsView() {
       {isError ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar as campanhas.</AlertTitle>
+          <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Tente novamente em instantes."}
+              : t("error.retry")}
             <button
               type="button"
               onClick={() => refetch()}
               className="font-medium underline underline-offset-4"
             >
-              Tentar novamente
+              {t("error.retryAction")}
             </button>
           </AlertDescription>
         </Alert>
       ) : (
         <div className="flex flex-col gap-4">
           <DataTable
-            columns={campaignColumns}
+            columns={columns}
             data={rows}
             isLoading={isLoading}
             emptyMessage={emptyMessage}
@@ -181,7 +185,10 @@ export function CampaignsView() {
               limit={meta.limit}
               isFetching={isFetching}
               onPageChange={(next) => replaceParams({ page: next })}
-              noun={{ singular: "campanha", plural: "campanhas" }}
+              noun={{
+                singular: t("pagination.nounSingular"),
+                plural: t("pagination.nounPlural"),
+              }}
             />
           ) : null}
         </div>

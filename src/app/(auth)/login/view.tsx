@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useLogin } from "@/hooks/queries/use-auth";
-import { loginSchema, type LoginDto } from "@/lib/validations/auth";
+import { makeLoginSchema, type LoginDto } from "@/lib/validations/auth";
 import {
   Form,
   FormControl,
@@ -24,10 +25,12 @@ import { H2, Muted } from "@/components/ui/typography";
 
 export function LoginView() {
   const router = useRouter();
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginDto>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(useMemo(() => makeLoginSchema(tv), [tv])),
     mode: "onBlur",
     defaultValues: { email: "", password: "" },
   });
@@ -39,7 +42,7 @@ export function LoginView() {
     // onSubmit only fires after Zod validation passes — safe to authenticate.
     mutate(values, {
       onSuccess: () => {
-        toast.success("Bem-vindo de volta!");
+        toast.success(t("login.welcomeBack"));
         router.push("/dashboard");
         router.refresh();
       },
@@ -52,8 +55,8 @@ export function LoginView() {
   return (
     <div className="space-y-6">
       <div className="space-y-1.5">
-        <H2>Entrar</H2>
-        <Muted>Acesse sua conta para gerenciar suas campanhas.</Muted>
+        <H2>{t("login.title")}</H2>
+        <Muted>{t("login.subtitle")}</Muted>
       </div>
 
       <Form {...form}>
@@ -67,12 +70,12 @@ export function LoginView() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>E-mail</FormLabel>
+                <FormLabel>{t("fields.emailLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
                     autoComplete="email"
-                    placeholder="voce@clinica.com"
+                    placeholder={t("fields.emailPlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -87,12 +90,12 @@ export function LoginView() {
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center justify-between">
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel>{t("fields.passwordLabel")}</FormLabel>
                   <Link
                     href="/login"
                     className="text-[13px] font-medium text-brand hover:underline"
                   >
-                    Esqueci minha senha
+                    {t("login.forgotPassword")}
                   </Link>
                 </div>
                 <div className="relative">
@@ -108,7 +111,11 @@ export function LoginView() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    aria-label={
+                      showPassword
+                        ? t("fields.hidePassword")
+                        : t("fields.showPassword")
+                    }
                     className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {showPassword ? (
@@ -132,22 +139,22 @@ export function LoginView() {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Entrando…
+                {t("login.submitting")}
               </>
             ) : (
-              "Entrar"
+              t("login.submit")
             )}
           </Button>
         </form>
       </Form>
 
       <Muted className="text-center">
-        Não tem uma conta?{" "}
+        {t("login.noAccount")}{" "}
         <Link
           href="/register"
           className="font-medium text-brand hover:underline"
         >
-          Criar uma conta
+          {t("login.createAccount")}
         </Link>
       </Muted>
     </div>

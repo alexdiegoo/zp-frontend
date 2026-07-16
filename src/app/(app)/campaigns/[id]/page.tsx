@@ -1,9 +1,13 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
 import type { CampaignApiType } from "@/types/api";
 import { CampaignDetailView } from "./view";
 
-export const metadata = { title: "Campanha" };
+export async function generateMetadata() {
+  const t = await getTranslations("nav");
+  return { title: t("campaigns") };
+}
 
 export default async function CampaignDetailPage({
   params,

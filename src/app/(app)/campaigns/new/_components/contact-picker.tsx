@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ interface ContactPickerProps {
  * checkbox state is derived from that set, not from the current page's rows.
  */
 export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
+  const t = useTranslations("campaigns");
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 400);
@@ -85,15 +87,15 @@ export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
           type="search"
           value={searchInput}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Buscar por nome ou telefone…"
-          aria-label="Buscar contatos"
+          placeholder={t("contactPicker.searchPlaceholder")}
+          aria-label={t("contactPicker.searchAria")}
           className="px-8"
         />
         {searchInput ? (
           <button
             type="button"
             onClick={() => onSearchChange("")}
-            aria-label="Limpar busca"
+            aria-label={t("clearSearch")}
             className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-0.5 text-muted-foreground transition-colors hover:text-foreground"
           >
             <X className="size-4" />
@@ -121,26 +123,26 @@ export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
                   }
                   onCheckedChange={toggleAllOnPage}
                   disabled={pageIds.length === 0}
-                  aria-label="Selecionar todos os contatos da página"
+                  aria-label={t("contactPicker.selectAll")}
                 />
               </TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Telefone</TableHead>
+              <TableHead>{t("contactPicker.columns.name")}</TableHead>
+              <TableHead>{t("contactPicker.columns.phone")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
-                  Carregando contatos…
+                  {t("contactPicker.loading")}
                 </TableCell>
               </TableRow>
             ) : rows.length === 0 ? (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
                   {trimmed
-                    ? `Nenhum contato encontrado para "${trimmed}".`
-                    : "Nenhum contato cadastrado ainda."}
+                    ? t("contactPicker.emptySearch", { query: trimmed })
+                    : t("contactPicker.empty")}
                 </TableCell>
               </TableRow>
             ) : (
@@ -157,7 +159,7 @@ export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
                       <Checkbox
                         checked={isSelected}
                         onCheckedChange={() => toggleOne(contact.id)}
-                        aria-label={`Selecionar ${contact.name}`}
+                        aria-label={t("contactPicker.selectOne", { name: contact.name })}
                       />
                     </TableCell>
                     <TableCell className="font-medium text-foreground">
@@ -176,18 +178,21 @@ export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
 
       <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
         <Muted aria-live="polite">
-          {value.length} {value.length === 1 ? "contato selecionado" : "contatos selecionados"}
+          {t("contactPicker.selectedCount", { count: value.length })}
         </Muted>
         {meta && meta.total > 0 ? (
           <div className="flex items-center gap-2">
             <Muted>
-              Página {meta.page} de {Math.max(meta.totalPages, 1)}
+              {t("contactPicker.pageOf", {
+                page: meta.page,
+                total: Math.max(meta.totalPages, 1),
+              })}
             </Muted>
             <Button
               type="button"
               variant="outline"
               size="icon-sm"
-              aria-label="Página anterior"
+              aria-label={t("contactPicker.prevPage")}
               onClick={() => setPage((current) => Math.max(1, current - 1))}
               disabled={page <= 1 || isFetching}
             >
@@ -197,7 +202,7 @@ export function ContactPicker({ value, onChange, error }: ContactPickerProps) {
               type="button"
               variant="outline"
               size="icon-sm"
-              aria-label="Próxima página"
+              aria-label={t("contactPicker.nextPage")}
               onClick={() => setPage((current) => current + 1)}
               disabled={page >= meta.totalPages || isFetching}
             >

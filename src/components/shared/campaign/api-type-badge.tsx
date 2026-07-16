@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import { Badge } from "@/components/ui/badge";
 import type { CampaignApiType } from "@/types/api";
 
@@ -6,13 +10,15 @@ import type { CampaignApiType } from "@/types/api";
  * (manual) channel. Shared between the campaigns listing and the detail page.
  */
 export function ApiTypeBadge({ apiType }: { apiType: CampaignApiType }) {
+  const t = useTranslations("campaigns");
+
   if (apiType === "OFFICIAL") {
     return (
       <Badge
         variant="outline"
         className="border-transparent bg-orange-500/12 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400"
       >
-        API OFICIAL
+        {t("channel.officialBadge")}
       </Badge>
     );
   }
@@ -21,7 +27,7 @@ export function ApiTypeBadge({ apiType }: { apiType: CampaignApiType }) {
       variant="outline"
       className="border-transparent bg-amber-400/15 text-amber-700 dark:bg-amber-400/15 dark:text-amber-400"
     >
-      API NÃO OFICIAL
+      {t("channel.unofficialBadge")}
     </Badge>
   );
 }

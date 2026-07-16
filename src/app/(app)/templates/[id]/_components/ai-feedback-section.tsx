@@ -2,6 +2,7 @@
 
 import type { VariantProps } from "class-variance-authority";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AlertCircle, Pencil, Sparkles } from "lucide-react";
 
 import { useTemplateAiFeedback } from "@/hooks/queries/use-templates";
@@ -21,11 +22,6 @@ import type { AiFeedbackSeverity } from "@/types/api";
 
 type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
 
-const SEVERITY_LABELS: Record<AiFeedbackSeverity, string> = {
-  alerta: "Alerta",
-  bloqueante: "Bloqueante",
-};
-
 const SEVERITY_VARIANTS: Record<AiFeedbackSeverity, BadgeVariant> = {
   alerta: "secondary",
   bloqueante: "destructive",
@@ -33,10 +29,11 @@ const SEVERITY_VARIANTS: Record<AiFeedbackSeverity, BadgeVariant> = {
 
 /** Card title shared across every state of the section. */
 function FeedbackTitle() {
+  const t = useTranslations("templates");
   return (
     <CardTitle className="flex items-center gap-2">
       <Sparkles className="size-4 text-primary" />
-      Feedback IA
+      {t("aiFeedback.title")}
     </CardTitle>
   );
 }
@@ -48,6 +45,7 @@ function FeedbackTitle() {
  * template fetch.
  */
 export function AiFeedbackSection({ templateId }: { templateId: string }) {
+  const t = useTranslations("templates");
   const { data: feedback, isLoading, isError } = useTemplateAiFeedback(templateId);
 
   if (isLoading) {
@@ -73,8 +71,10 @@ export function AiFeedbackSection({ templateId }: { templateId: string }) {
         <CardContent>
           <Alert variant="destructive">
             <AlertCircle />
-            <AlertTitle>Não foi possível carregar o feedback da IA.</AlertTitle>
-            <AlertDescription>Tente novamente mais tarde.</AlertDescription>
+            <AlertTitle>{t("aiFeedback.error.title")}</AlertTitle>
+            <AlertDescription>
+              {t("aiFeedback.error.description")}
+            </AlertDescription>
           </Alert>
         </CardContent>
       </Card>
@@ -90,7 +90,7 @@ export function AiFeedbackSection({ templateId }: { templateId: string }) {
         </CardHeader>
         <CardContent>
           <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center">
-            <Muted>Este template ainda não foi analisado pela IA.</Muted>
+            <Muted>{t("aiFeedback.empty")}</Muted>
           </div>
         </CardContent>
       </Card>
@@ -107,23 +107,20 @@ export function AiFeedbackSection({ templateId }: { templateId: string }) {
 
       <CardContent className="space-y-5">
         {isProcessing ? (
-          <Muted>
-            A análise da IA está em andamento. O resultado aparecerá aqui assim
-            que terminar.
-          </Muted>
+          <Muted>{t("aiFeedback.processing")}</Muted>
         ) : null}
 
         {feedback.summary ? (
           <div className="space-y-1">
-            <Label>Resumo</Label>
+            <Label>{t("aiFeedback.summary")}</Label>
             <P className="whitespace-pre-wrap">{feedback.summary}</P>
           </div>
         ) : null}
 
         <div className="space-y-3">
-          <Label>Problemas identificados</Label>
+          <Label>{t("aiFeedback.issues")}</Label>
           {feedback.issues.length === 0 ? (
-            <Muted>Nenhum problema identificado pela IA.</Muted>
+            <Muted>{t("aiFeedback.noIssues")}</Muted>
           ) : (
             <ul className="space-y-3">
               {feedback.issues.map((issue, index) => (
@@ -133,16 +130,18 @@ export function AiFeedbackSection({ templateId }: { templateId: string }) {
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <Label className="normal-case tracking-normal">
-                      {issue.campo || "Geral"}
+                      {issue.campo || t("aiFeedback.general")}
                     </Label>
                     <Badge variant={SEVERITY_VARIANTS[issue.severidade]}>
-                      {SEVERITY_LABELS[issue.severidade]}
+                      {issue.severidade === "bloqueante"
+                        ? t("aiFeedback.severity.bloqueante")
+                        : t("aiFeedback.severity.alerta")}
                     </Badge>
                   </div>
                   <P>{issue.descricao}</P>
                   {issue.sugestao ? (
                     <div className="space-y-1">
-                      <Label>Sugestão</Label>
+                      <Label>{t("aiFeedback.suggestion")}</Label>
                       <Muted>{issue.sugestao}</Muted>
                     </div>
                   ) : null}
@@ -155,11 +154,15 @@ export function AiFeedbackSection({ templateId }: { templateId: string }) {
         <Button asChild className="w-full">
           <Link href={`/templates/${templateId}/edit`}>
             <Pencil />
-            Editar template
+            {t("aiFeedback.edit")}
           </Link>
         </Button>
 
-        <Muted>Analisado em {formatDateTime(feedback.createdAt)}</Muted>
+        <Muted>
+          {t("aiFeedback.analyzedOn", {
+            date: formatDateTime(feedback.createdAt),
+          })}
+        </Muted>
       </CardContent>
     </Card>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -47,6 +48,7 @@ export function CampaignFilters({
   period,
   onPeriodChange,
 }: CampaignFiltersProps) {
+  const t = useTranslations("campaigns");
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -57,8 +59,8 @@ export function CampaignFilters({
               type="search"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Buscar campanhas…"
-              aria-label="Buscar campanhas"
+              placeholder={t("filters.searchPlaceholder")}
+              aria-label={t("filters.searchAria")}
               aria-invalid={Boolean(searchError)}
               className={cn("px-8", searchError && "border-destructive")}
             />
@@ -66,7 +68,7 @@ export function CampaignFilters({
               <button
                 type="button"
                 onClick={() => onSearchChange("")}
-                aria-label="Limpar busca"
+                aria-label={t("clearSearch")}
                 className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-0.5 text-muted-foreground transition-colors hover:text-foreground"
               >
                 <X className="size-4" />
@@ -83,13 +85,13 @@ export function CampaignFilters({
             value={status}
             onValueChange={(value) => onStatusChange(value as StatusFilter)}
           >
-            <SelectTrigger aria-label="Filtrar por status" className="min-w-32">
-              <SelectValue placeholder="Status" />
+            <SelectTrigger aria-label={t("filters.statusAria")} className="min-w-32">
+              <SelectValue placeholder={t("filters.statusPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="ACTIVE">Ativo</SelectItem>
-              <SelectItem value="PAUSED">Pausado</SelectItem>
+              <SelectItem value="all">{t("filters.all")}</SelectItem>
+              <SelectItem value="ACTIVE">{t("status.active")}</SelectItem>
+              <SelectItem value="PAUSED">{t("status.paused")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -97,13 +99,13 @@ export function CampaignFilters({
             value={apiType}
             onValueChange={(value) => onApiTypeChange(value as ApiTypeFilter)}
           >
-            <SelectTrigger aria-label="Filtrar por tipo" className="min-w-36">
-              <SelectValue placeholder="Tipo" />
+            <SelectTrigger aria-label={t("filters.typeAria")} className="min-w-36">
+              <SelectValue placeholder={t("filters.typePlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="OFFICIAL">API Oficial</SelectItem>
-              <SelectItem value="UNOFFICIAL">API Não Oficial</SelectItem>
+              <SelectItem value="all">{t("filters.all")}</SelectItem>
+              <SelectItem value="OFFICIAL">{t("channel.official")}</SelectItem>
+              <SelectItem value="UNOFFICIAL">{t("channel.unofficial")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -111,13 +113,13 @@ export function CampaignFilters({
             value={period}
             onValueChange={(value) => onPeriodChange(value as CampaignPeriod)}
           >
-            <SelectTrigger aria-label="Filtrar por período" className="min-w-40">
-              <SelectValue placeholder="Período" />
+            <SelectTrigger aria-label={t("filters.periodAria")} className="min-w-40">
+              <SelectValue placeholder={t("filters.periodPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="30d">Últimos 30 dias</SelectItem>
-              <SelectItem value="7d">Últimos 7 dias</SelectItem>
-              <SelectItem value="this_month">Este mês</SelectItem>
+              <SelectItem value="30d">{t("filters.periodLast30")}</SelectItem>
+              <SelectItem value="7d">{t("filters.periodLast7")}</SelectItem>
+              <SelectItem value="this_month">{t("filters.periodThisMonth")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -18,17 +19,18 @@ import { ConversationItem } from "./conversation-item";
 /** Visual tag distinguishing the official (Meta) vs unofficial (Evolution) API. */
 const PROVIDER_TAG: Record<
   ChannelProvider,
-  { label: string; variant: "default" | "secondary" }
+  { labelKey: "channel.official" | "channel.unofficial"; variant: "default" | "secondary" }
 > = {
-  META_OFFICIAL: { label: "Oficial", variant: "default" },
-  EVOLUTION_UNOFFICIAL: { label: "Não oficial", variant: "secondary" },
+  META_OFFICIAL: { labelKey: "channel.official", variant: "default" },
+  EVOLUTION_UNOFFICIAL: { labelKey: "channel.unofficial", variant: "secondary" },
 };
 
 function ChannelProviderBadge({ provider }: { provider: ChannelProvider }) {
+  const t = useTranslations("chat");
   const tag = PROVIDER_TAG[provider];
   return (
     <Badge variant={tag.variant} className="ml-auto shrink-0">
-      {tag.label}
+      {t(tag.labelKey)}
     </Badge>
   );
 }
@@ -57,6 +59,7 @@ export function ConversationSidebar({
   selectedPatientId: string | null;
   onSelectConversation: (patientId: string) => void;
 }) {
+  const t = useTranslations("chat");
   return (
     <aside className="flex h-full w-full shrink-0 flex-col bg-card lg:max-w-[320px] lg:border-r lg:border-border">
       <div className="space-y-3 border-b border-border p-3">
@@ -66,7 +69,7 @@ export function ConversationSidebar({
             onValueChange={onSelectChannel}
           >
             <SelectTrigger className="w-full" size="sm">
-              <SelectValue placeholder="Selecione um canal" />
+              <SelectValue placeholder={t("channel.selectPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
               {channels.map((channel) => (
@@ -86,9 +89,9 @@ export function ConversationSidebar({
           <Input
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Buscar paciente"
+            placeholder={t("search.placeholder")}
             className="pl-9"
-            aria-label="Buscar paciente"
+            aria-label={t("search.placeholder")}
           />
         </div>
       </div>
@@ -98,13 +101,13 @@ export function ConversationSidebar({
           <SidebarSkeleton />
         ) : isError ? (
           <p className="p-4 text-sm text-muted-foreground">
-            Não foi possível carregar as conversas.
+            {t("errors.loadConversations")}
           </p>
         ) : conversations.length === 0 ? (
           <p className="p-4 text-sm text-muted-foreground">
             {searchQuery.trim().length > 0
-              ? "Nenhum paciente encontrado."
-              : "Nenhum paciente cadastrado."}
+              ? t("search.noResults")
+              : t("sidebar.noPatients")}
           </p>
         ) : (
           conversations.map((conversation) => (

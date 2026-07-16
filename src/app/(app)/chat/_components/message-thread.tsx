@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useServiceWindow } from "@/hooks/ui/use-service-window";
@@ -11,9 +12,6 @@ import { ContactAvatar } from "@/components/shared/contact-avatar";
 import { formatDayLabel } from "./chat-ui";
 import { MessageBubble } from "./message-bubble";
 import { MessageComposer } from "./message-composer";
-
-const WINDOW_CLOSED_NOTICE =
-  "A janela de atendimento está fechada. Aguarde o paciente responder.";
 
 /** Right pane: conversation header, message list (auto-scroll) and composer. */
 export function MessageThread({
@@ -38,16 +36,17 @@ export function MessageThread({
   /** When provided, shows a back control (mobile single-pane) to return to the list. */
   onBack?: () => void;
 }) {
+  const t = useTranslations("chat");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // The 24h service window only gates the official Meta channel; Evolution
   // (unofficial) sends are unconstrained.
   const isWindowGated = channel.provider === "META_OFFICIAL";
   const serviceWindow = useServiceWindow(isWindowGated ? windowStatus : undefined);
-  const lockedReason = isWindowGated && !serviceWindow.isOpen ? WINDOW_CLOSED_NOTICE : null;
+  const lockedReason = isWindowGated && !serviceWindow.isOpen ? t("window.closed") : null;
   const hint =
     isWindowGated && serviceWindow.isOpen && serviceWindow.remainingLabel
-      ? `Janela fecha em ${serviceWindow.remainingLabel}`
+      ? t("window.closesIn", { time: serviceWindow.remainingLabel })
       : null;
 
   // Auto-scroll to the newest message on open, on new messages and on send.
@@ -62,7 +61,7 @@ export function MessageThread({
           <button
             type="button"
             onClick={onBack}
-            aria-label="Voltar para a lista de conversas"
+            aria-label={t("thread.back")}
             className="-ml-2 flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted lg:hidden"
           >
             <ArrowLeft className="size-5" />
@@ -84,11 +83,11 @@ export function MessageThread({
           <ThreadSkeleton />
         ) : isError ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Não foi possível carregar as mensagens.
+            {t("errors.loadMessages")}
           </p>
         ) : messages.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Nenhuma mensagem nesta conversa ainda.
+            {t("thread.empty")}
           </p>
         ) : (
           <MessageList messages={messages} />

@@ -1,58 +1,30 @@
-import {
-  BarChart3,
-  CalendarClock,
-  KanbanSquare,
-  Send,
-  type LucideIcon,
-} from "lucide-react";
+import { BarChart3, CalendarClock, KanbanSquare, Send } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-type Feature = {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-};
-
-const FEATURES: Feature[] = [
-  {
-    icon: Send,
-    title: "Disparos em massa pelo WhatsApp",
-    description:
-      "Envie campanhas para milhares de pacientes com templates aprovados pela Meta (API oficial) ou pelo canal não oficial. Respeitando a janela de 24h e as regras de opt-in.",
-  },
-  {
-    icon: KanbanSquare,
-    title: "CRM de pacientes com funil Kanban",
-    description:
-      "Arraste cada lead pelos estágios — da captação ao procedimento. Nada se perde e a equipe sabe exatamente quem trabalhar primeiro.",
-  },
-  {
-    icon: CalendarClock,
-    title: "Agendamentos e lembretes automáticos",
-    description:
-      "Agende procedimentos e dispare lembretes automáticos no WhatsApp para reduzir faltas e manter a agenda cheia.",
-  },
-  {
-    icon: BarChart3,
-    title: "Dashboard de métricas de campanhas",
-    description:
-      "Acompanhe conversão por estágio, taxa de no-show, tempo até o agendamento e a performance de cada campanha em um só lugar.",
-  },
-];
+// `as const` keeps `key` a literal union so the `features.items.<key>.*`
+// message lookups stay type-checked (FR-013).
+const FEATURES = [
+  { icon: Send, key: "whatsappBlast" },
+  { icon: KanbanSquare, key: "crm" },
+  { icon: CalendarClock, key: "scheduling" },
+  { icon: BarChart3, key: "dashboard" },
+] as const;
 
 /** The four core capabilities, one card each. */
-export function Features() {
+export async function Features() {
+  const t = await getTranslations("public");
+
   return (
     <section id="recursos" className="scroll-mt-20">
       <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Tudo o que a clínica precisa, sem mais uma aba aberta
+            {t("features.title")}
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Da primeira mensagem ao pós-procedimento — uma plataforma única para
-            captar, converter e reter pacientes.
+            {t("features.subtitle")}
           </p>
         </div>
 
@@ -60,14 +32,16 @@ export function Features() {
           {FEATURES.map((feature) => {
             const Icon = feature.icon;
             return (
-              <Card key={feature.title} className="transition-shadow hover:shadow-md">
+              <Card key={feature.key} className="transition-shadow hover:shadow-md">
                 <CardHeader>
                   <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-brand">
                     <Icon className="size-5" />
                   </span>
-                  <CardTitle className="mt-4 text-lg">{feature.title}</CardTitle>
+                  <CardTitle className="mt-4 text-lg">
+                    {t(`features.items.${feature.key}.title`)}
+                  </CardTitle>
                   <CardDescription className="mt-1.5 leading-relaxed">
-                    {feature.description}
+                    {t(`features.items.${feature.key}.description`)}
                   </CardDescription>
                 </CardHeader>
                 <CardContent />

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { ApiTypeBadge } from "@/components/shared/campaign/api-type-badge";
@@ -16,11 +17,12 @@ import { CampaignMessageCard } from "./_components/campaign-message-card";
 import { CampaignTemplateCard } from "./_components/campaign-template-card";
 
 function BackLink() {
+  const t = useTranslations("campaigns");
   return (
     <Button variant="ghost" size="sm" asChild className="-ml-2 w-fit">
       <Link href="/campaigns">
         <ArrowLeft />
-        Campanhas
+        {t("title")}
       </Link>
     </Button>
   );
@@ -39,6 +41,7 @@ export function CampaignDetailView({
   campaignId: string;
   apiType: CampaignApiType;
 }) {
+  const t = useTranslations("campaigns");
   const {
     data: campaign,
     isLoading,
@@ -63,11 +66,11 @@ export function CampaignDetailView({
         <BackLink />
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar a campanha.</AlertTitle>
+          <AlertTitle>{t("detail.error.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "A campanha não foi encontrada ou ocorreu um erro."}
+              : t("detail.error.description")}
           </AlertDescription>
         </Alert>
       </Section>
@@ -80,7 +83,7 @@ export function CampaignDetailView({
 
       <PageHeader
         title={campaign.name}
-        description={`Criada em ${formatDate(campaign.createdAt)}`}
+        description={t("detail.createdOn", { date: formatDate(campaign.createdAt) })}
       >
         <div className="flex items-center gap-2">
           <ApiTypeBadge apiType={campaign.apiType} />

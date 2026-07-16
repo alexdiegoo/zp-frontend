@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import {
@@ -185,6 +186,7 @@ function DayColumn({
   draggingId,
   preview,
 }: DayColumnProps) {
+  const t = useTranslations("schedule");
   const today = isToday(day);
   const positioned = layoutDayAppointments(appointments);
 
@@ -202,7 +204,9 @@ function DayColumn({
         <button
           key={slotIndex}
           type="button"
-          aria-label={`Novo agendamento às ${formatHourLabel(slotIndex)}`}
+          aria-label={t("slot.newAppointmentAt", {
+            time: formatHourLabel(slotIndex),
+          })}
           onClick={() => onSlotClick(day, slotIndex)}
           className={cn(
             "block w-full cursor-pointer hover:bg-primary/10",

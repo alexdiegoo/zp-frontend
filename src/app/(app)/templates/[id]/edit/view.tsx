@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,17 +19,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TemplateEditor } from "@/components/shared/template/template-editor";
 
 function BackLink({ href }: { href: string }) {
+  const t = useTranslations("templates");
   return (
     <Button variant="ghost" size="sm" asChild className="-ml-2 w-fit">
       <Link href={href}>
         <ArrowLeft />
-        Voltar
+        {t("back")}
       </Link>
     </Button>
   );
 }
 
 export function EditTemplateView({ templateId }: { templateId: string }) {
+  const t = useTranslations("templates");
   const router = useRouter();
   const { data: template, isLoading, isError, error } = useTemplate(templateId);
   const updateTemplate = useUpdateTemplate(templateId);
@@ -50,11 +53,11 @@ export function EditTemplateView({ templateId }: { templateId: string }) {
         <BackLink href={`/templates/${templateId}`} />
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>Não foi possível carregar o template.</AlertTitle>
+          <AlertTitle>{t("error.load.title")}</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "O template não foi encontrado ou ocorreu um erro."}
+              : t("error.load.description")}
           </AlertDescription>
         </Alert>
       </Section>
@@ -65,14 +68,14 @@ export function EditTemplateView({ templateId }: { templateId: string }) {
     setSubmitError(null);
     updateTemplate.mutate(payload, {
       onSuccess: () => {
-        toast.success("Template atualizado e enviado para nova validação!");
+        toast.success(t("toast.updated"));
         router.push(`/templates/${templateId}`);
       },
       onError: (mutationError) =>
         setSubmitError(
           mutationError instanceof Error
             ? mutationError.message
-            : "Não foi possível atualizar o template.",
+            : t("error.update"),
         ),
     });
   }
@@ -80,8 +83,8 @@ export function EditTemplateView({ templateId }: { templateId: string }) {
   return (
     <TemplateEditor
       defaultValues={toTemplateFormValues(template)}
-      title="Editar template"
-      description="Atualize a mensagem e envie para uma nova validação por IA."
+      title={t("edit.title")}
+      description={t("edit.description")}
       backHref={`/templates/${templateId}`}
       isSubmitting={updateTemplate.isPending}
       submitError={submitError}

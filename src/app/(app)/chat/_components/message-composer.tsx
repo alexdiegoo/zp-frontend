@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { Clock, Lock, SendHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +32,7 @@ export function MessageComposer({
   lockedReason?: string | null;
   hint?: string | null;
 }) {
+  const t = useTranslations("chat");
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLocked = Boolean(lockedReason);
@@ -72,17 +74,17 @@ export function MessageComposer({
             }
           }}
           rows={1}
-          placeholder={isLocked ? "Envio indisponível" : "Digite uma mensagem..."}
+          placeholder={isLocked ? t("composer.unavailable") : t("composer.placeholder")}
           disabled={isDisabled}
           className="max-h-40 min-h-10 resize-none"
-          aria-label="Mensagem"
+          aria-label={t("composer.ariaLabel")}
         />
         <Button
           type="button"
           size="icon"
           onClick={submit}
           disabled={isDisabled || value.trim().length === 0}
-          aria-label="Enviar mensagem"
+          aria-label={t("composer.send")}
         >
           <SendHorizontal className="size-4" />
         </Button>

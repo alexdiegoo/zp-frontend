@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useCreateTemplate } from "@/hooks/queries/use-templates";
@@ -25,6 +26,7 @@ const EMPTY_TEMPLATE: CreateTemplateForm = {
 };
 
 export function NewTemplateView() {
+  const t = useTranslations("templates");
   const router = useRouter();
   const createTemplate = useCreateTemplate();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -33,14 +35,12 @@ export function NewTemplateView() {
     setSubmitError(null);
     createTemplate.mutate(payload, {
       onSuccess: () => {
-        toast.success("Template enviado para aprovação!");
+        toast.success(t("toast.created"));
         router.push("/templates");
       },
       onError: (error) =>
         setSubmitError(
-          error instanceof Error
-            ? error.message
-            : "Não foi possível criar o template.",
+          error instanceof Error ? error.message : t("error.create"),
         ),
     });
   }
@@ -48,8 +48,8 @@ export function NewTemplateView() {
   return (
     <TemplateEditor
       defaultValues={EMPTY_TEMPLATE}
-      title="Novo template"
-      description="Monte a mensagem e envie para aprovação da Meta."
+      title={t("new.title")}
+      description={t("new.description")}
       backHref="/templates"
       isSubmitting={createTemplate.isPending}
       submitError={submitError}

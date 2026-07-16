@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Check, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import type { IntegrationStatus } from "@/types/api";
 import {
@@ -32,6 +33,7 @@ export function IntegrationCard({
   onDisconnect,
   isBusy,
 }: IntegrationCardProps) {
+  const t = useTranslations("settings");
   const { connected, detail } = status;
 
   return (
@@ -52,7 +54,7 @@ export function IntegrationCard({
             {connected ? (
               <Badge variant="secondary" className="gap-1">
                 <Check className="size-3" />
-                Conectado
+                {t("integration.connected")}
               </Badge>
             ) : null}
           </div>
@@ -75,12 +77,12 @@ export function IntegrationCard({
             disabled={isBusy}
           >
             {isBusy ? <Loader2 className="animate-spin" /> : null}
-            Desconectar
+            {t("integration.disconnect")}
           </Button>
         ) : (
           <Button className="w-full" onClick={onConnect} disabled={isBusy}>
             {isBusy ? <Loader2 className="animate-spin" /> : null}
-            Conectar
+            {t("integration.connect")}
           </Button>
         )}
       </CardFooter>

@@ -2,6 +2,7 @@
 
 import { Fragment } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { ExternalLink, Reply } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -35,13 +36,10 @@ export interface TemplateMessagePreviewProps {
 function renderBody(
   text: string,
   examples: Record<string, string> | undefined,
+  emptyLabel: string,
 ) {
   if (!text) {
-    return (
-      <span className="text-muted-foreground">
-        Sua mensagem aparecerá aqui…
-      </span>
-    );
+    return <span className="text-muted-foreground">{emptyLabel}</span>;
   }
 
   const segments = text.split(/(\{\{[a-zA-Z0-9_]+\}\})/g);
@@ -76,6 +74,7 @@ export function TemplateMessagePreview({
   buttons,
   className,
 }: TemplateMessagePreviewProps) {
+  const t = useTranslations("templates");
   const showImage = headerType === "IMAGE" && Boolean(headerMediaUrl);
   // Any non-image header with text (the editor's `NONE` + text, or a `TEXT` header).
   const showHeaderText = headerType !== "IMAGE" && Boolean(headerText?.trim());
@@ -91,7 +90,7 @@ export function TemplateMessagePreview({
             {/* Dynamic remote source — `unoptimized` skips per-host config. */}
             <Image
               src={headerMediaUrl as string}
-              alt="Cabeçalho do template"
+              alt={t("preview.headerAlt")}
               fill
               unoptimized
               className="object-cover"
@@ -107,7 +106,7 @@ export function TemplateMessagePreview({
           ) : null}
 
           <p className="text-sm whitespace-pre-wrap break-words text-foreground">
-            {renderBody(bodyText ?? "", variableExamples)}
+            {renderBody(bodyText ?? "", variableExamples, t("preview.empty"))}
           </p>
 
           {footer?.trim() ? (

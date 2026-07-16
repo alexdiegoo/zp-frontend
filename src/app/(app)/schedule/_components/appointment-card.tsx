@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import {
@@ -19,10 +20,9 @@ import type { CardDragProps } from "./use-appointment-drag";
  */
 export const APPOINTMENT_TYPE_META: Record<
   AppointmentType,
-  { label: string; code: string; accent: string; tint: string; text: string; badge: string }
+  { code: string; accent: string; tint: string; text: string; badge: string }
 > = {
   CONSULTATION: {
-    label: "Consulta",
     code: "C",
     accent: "border-l-appt-consultation",
     tint: "bg-appt-consultation/10 hover:bg-appt-consultation/15",
@@ -30,7 +30,6 @@ export const APPOINTMENT_TYPE_META: Record<
     badge: "bg-appt-consultation/15 text-appt-consultation",
   },
   PROCEDURE: {
-    label: "Procedimento",
     code: "P",
     accent: "border-l-appt-procedure",
     tint: "bg-appt-procedure/10 hover:bg-appt-procedure/15",
@@ -38,7 +37,6 @@ export const APPOINTMENT_TYPE_META: Record<
     badge: "bg-appt-procedure/15 text-appt-procedure",
   },
   RETURN: {
-    label: "Retorno",
     code: "R",
     accent: "border-l-appt-return",
     tint: "bg-appt-return/10 hover:bg-appt-return/15",
@@ -66,8 +64,16 @@ export function AppointmentCard({
   shouldIgnoreClick,
   isDragging,
 }: AppointmentCardProps) {
+  const t = useTranslations("schedule");
   const { appt, top, height, lane, lanes } = positioned;
   const meta = APPOINTMENT_TYPE_META[appt.type];
+  const typeLabel =
+    appt.type === "CONSULTATION"
+      ? t("type.consultation")
+      : appt.type === "PROCEDURE"
+        ? t("type.procedure")
+        : t("type.return");
+  const doneLabel = t("status.done");
   const compact = height < 44;
   // Completed appointments read as "done": muted surface, green success accent,
   // a check badge in place of the type code, and a struck-through name.
@@ -82,9 +88,9 @@ export function AppointmentCard({
         if (shouldIgnoreClick?.()) return;
         onClick(appt.id);
       }}
-      title={`${meta.label}: ${appt.patient.name} · ${formatTime(
+      title={`${typeLabel}: ${appt.patient.name} · ${formatTime(
         new Date(appt.startAt),
-      )}${isDone ? " · Realizado" : ""}`}
+      )}${isDone ? ` · ${doneLabel}` : ""}`}
       style={{
         top,
         height,
@@ -104,8 +110,8 @@ export function AppointmentCard({
     >
       <div className="flex items-center gap-1">
         <span
-          aria-label={isDone ? "Realizado" : meta.label}
-          title={isDone ? "Realizado" : meta.label}
+          aria-label={isDone ? doneLabel : typeLabel}
+          title={isDone ? doneLabel : typeLabel}
           className={cn(
             "flex size-4 shrink-0 items-center justify-center rounded-sm text-[10px] font-bold",
             isDone ? "bg-primary text-primary-foreground" : meta.badge,
@@ -125,7 +131,7 @@ export function AppointmentCard({
       {!compact ? (
         <>
           <p className="truncate text-[11px] text-muted-foreground">
-            {isDone ? "Realizado" : meta.label}
+            {isDone ? doneLabel : typeLabel}
           </p>
           <p className="text-[11px] text-muted-foreground/80">
             {formatTime(new Date(appt.startAt))}

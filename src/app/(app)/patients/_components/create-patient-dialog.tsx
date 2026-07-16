@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useCreatePatient } from "@/hooks/queries/use-patients";
@@ -43,6 +44,7 @@ const DEFAULT_VALUES: CreatePatientDto = {
 
 /** "Cadastrar paciente" action + dialog form, validated client-side with Zod. */
 export function CreatePatientDialog() {
+  const t = useTranslations("leads");
   const [open, setOpen] = useState(false);
 
   const form = useForm<CreatePatientDto>({
@@ -62,7 +64,7 @@ export function CreatePatientDialog() {
     // Only fires after Zod validation passes — safe to forward to the backend.
     mutate(cleanPatientPayload(values), {
       onSuccess: (patient) => {
-        toast.success(`${patient.name} cadastrado com sucesso.`);
+        toast.success(t("dialog.create.toast.created", { name: patient.name }));
         handleOpenChange(false);
       },
       onError: (error) => toast.error(error.message),
@@ -74,15 +76,13 @@ export function CreatePatientDialog() {
       <DialogTrigger asChild>
         <Button>
           <Plus />
-          Cadastrar paciente
+          {t("newPatient")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Cadastrar paciente</DialogTitle>
-          <DialogDescription>
-            Adicione um novo paciente à clínica ativa.
-          </DialogDescription>
+          <DialogTitle>{t("dialog.create.title")}</DialogTitle>
+          <DialogDescription>{t("dialog.create.description")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -97,7 +97,7 @@ export function CreatePatientDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel>{t("fields.name")}</FormLabel>
                   <FormControl>
                     <Input placeholder="Maria Silva" autoFocus {...field} />
                   </FormControl>
@@ -111,7 +111,7 @@ export function CreatePatientDialog() {
               name="whatsappNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>WhatsApp</FormLabel>
+                  <FormLabel>{t("fields.whatsapp")}</FormLabel>
                   <FormControl>
                     <Input
                       type="tel"
@@ -131,9 +131,9 @@ export function CreatePatientDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    E-mail{" "}
+                    {t("fields.email")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
@@ -155,9 +155,9 @@ export function CreatePatientDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Data de nascimento{" "}
+                    {t("fields.birthDate")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
@@ -174,13 +174,16 @@ export function CreatePatientDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Origem{" "}
+                    {t("fields.source")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Indicação, Instagram…" {...field} />
+                    <Input
+                      placeholder={t("fields.sourcePlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,13 +196,16 @@ export function CreatePatientDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Endereço{" "}
+                    {t("fields.address")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      (opcional)
+                      {t("fields.optional")}
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Rua, número, cidade" {...field} />
+                    <Input
+                      placeholder={t("fields.addressPlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,10 +223,10 @@ export function CreatePatientDialog() {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin" />
-                Cadastrando…
+                {t("dialog.create.submitting")}
               </>
             ) : (
-              "Cadastrar"
+              t("dialog.create.submit")
             )}
           </Button>
         </DialogFooter>

@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Muted } from "@/components/ui/typography";
@@ -27,8 +28,13 @@ export function DataTablePagination({
   limit,
   onPageChange,
   isFetching,
-  noun = { singular: "paciente", plural: "pacientes" },
+  noun,
 }: DataTablePaginationProps) {
+  const t = useTranslations("common");
+  const resolvedNoun = noun ?? {
+    singular: t("patientSingular"),
+    plural: t("patientPlural"),
+  };
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = total === 0 ? 0 : from + pageCount - 1;
 
@@ -36,18 +42,21 @@ export function DataTablePagination({
     <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
       <Muted aria-live="polite">
         {total === 0
-          ? `Nenhum ${noun.singular}`
-          : `${from}–${to} de ${total} ${total === 1 ? noun.singular : noun.plural}`}
+          ? t("noneOf", { noun: resolvedNoun.singular })
+          : t("rangeOf", {
+              from,
+              to,
+              total,
+              noun: total === 1 ? resolvedNoun.singular : resolvedNoun.plural,
+            })}
       </Muted>
 
       <div className="flex items-center gap-2">
-        <Muted>
-          Página {page} de {Math.max(totalPages, 1)}
-        </Muted>
+        <Muted>{t("pageOf", { page, total: Math.max(totalPages, 1) })}</Muted>
         <Button
           variant="outline"
           size="icon-sm"
-          aria-label="Página anterior"
+          aria-label={t("previousPage")}
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1 || isFetching}
         >
@@ -56,7 +65,7 @@ export function DataTablePagination({
         <Button
           variant="outline"
           size="icon-sm"
-          aria-label="Próxima página"
+          aria-label={t("nextPage")}
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages || isFetching}
         >

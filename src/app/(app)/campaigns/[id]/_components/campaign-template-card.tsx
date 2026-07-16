@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
 
 import {
@@ -32,12 +33,23 @@ function Field({ label, value }: { label: string; value: string }) {
   );
 }
 
-const HEADER_LABELS: Record<string, string> = {
-  TEXT: "Texto",
-  IMAGE: "Imagem",
-  VIDEO: "Vídeo",
-  DOCUMENT: "Documento",
-};
+type CampaignsT = ReturnType<typeof useTranslations<"campaigns">>;
+
+/** Resolves the header-type label via literal keys so they stay type-checked. */
+function headerTypeLabel(t: CampaignsT, headerType: string | null | undefined) {
+  switch (headerType) {
+    case "TEXT":
+      return t("templateCard.headerType.text");
+    case "IMAGE":
+      return t("templateCard.headerType.image");
+    case "VIDEO":
+      return t("templateCard.headerType.video");
+    case "DOCUMENT":
+      return t("templateCard.headerType.document");
+    default:
+      return t("templateCard.headerType.none");
+  }
+}
 
 /**
  * Official-campaign template panel: the approved template the campaign sends.
@@ -49,71 +61,71 @@ export function CampaignTemplateCard({
 }: {
   template: TemplateDetail | null;
 }) {
+  const t = useTranslations("campaigns");
+
   if (!template) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Template</CardTitle>
+          <CardTitle>{t("templateCard.title")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Muted>
-            Não foi possível carregar o template desta campanha.
-          </Muted>
+          <Muted>{t("templateCard.empty")}</Muted>
         </CardContent>
       </Card>
     );
   }
 
-  const headerLabel = HEADER_LABELS[template.headerType] ?? "Nenhum";
+  const headerLabel = headerTypeLabel(t, template.headerType);
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-5">
       <div className="flex flex-col gap-6 lg:col-span-3">
         <Card>
           <CardHeader>
-            <CardTitle>Template</CardTitle>
+            <CardTitle>{t("templateCard.title")}</CardTitle>
             <CardAction className="flex items-center gap-2">
               <Badge variant={templateStatusVariant(template.status)}>
                 {templateStatusLabel(template.status)}
               </Badge>
               <Button variant="ghost" size="sm" asChild>
                 <Link href={`/templates/${template.id}`}>
-                  Abrir
+                  {t("templateCard.open")}
                   <ArrowUpRight />
                 </Link>
               </Button>
             </CardAction>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
-            <Field label="Nome" value={template.name} />
+            <Field label={t("templateCard.fields.name")} value={template.name} />
             <Field
-              label="Categoria"
+              label={t("templateCard.fields.category")}
               value={templateCategoryLabel(template.category)}
             />
             <Field
-              label="Idioma"
+              label={t("templateCard.fields.language")}
               value={formatTemplateLanguage(template.language)}
             />
-            <Field label="Cabeçalho" value={headerLabel} />
+            <Field label={t("templateCard.fields.header")} value={headerLabel} />
             <div className="space-y-1 sm:col-span-2">
-              <Label>Corpo</Label>
+              <Label>{t("templateCard.fields.body")}</Label>
               {template.bodyPreview || template.bodyText ? (
                 <P className="whitespace-pre-wrap">
                   {template.bodyPreview ?? template.bodyText}
                 </P>
               ) : (
-                <Muted>Sem corpo definido.</Muted>
+                <Muted>{t("templateCard.noBody")}</Muted>
               )}
             </div>
             {template.footer ? (
               <div className="space-y-1 sm:col-span-2">
-                <Label>Rodapé</Label>
+                <Label>{t("templateCard.fields.footer")}</Label>
                 <P className="text-muted-foreground">{template.footer}</P>
               </div>
             ) : null}
             {template.buttons && template.buttons.length > 0 ? (
               <div className="space-y-2 sm:col-span-2">
-                <Label>Botões</Label>
+                <Label>{t("templateCard.fields.buttons")}</Label>
                 <div className="flex flex-wrap gap-2">
                   {template.buttons.map((button, index) => (
                     <Badge key={`${button.text}-${index}`} variant="outline">
@@ -130,7 +142,7 @@ export function CampaignTemplateCard({
       <div className="lg:col-span-2">
         <Card className="lg:sticky lg:top-6">
           <CardHeader>
-            <CardTitle>Pré-visualização</CardTitle>
+            <CardTitle>{t("templateCard.preview")}</CardTitle>
           </CardHeader>
           <CardContent>
             <TemplateMessagePreview

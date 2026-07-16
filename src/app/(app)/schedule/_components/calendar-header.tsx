@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ export function CalendarHeader({
   onToday,
   onViewModeChange,
 }: CalendarHeaderProps) {
+  const t = useTranslations("schedule");
   const rangeLabel =
     viewMode === "week"
       ? formatWeekRange(getWeekDays(currentDate))
@@ -38,13 +40,15 @@ export function CalendarHeader({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
         <Button variant="outline" size="sm" onClick={onToday}>
-          Hoje
+          {t("today")}
         </Button>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
-            aria-label={viewMode === "week" ? "Semana anterior" : "Dia anterior"}
+            aria-label={
+              viewMode === "week" ? t("nav.prevWeek") : t("nav.prevDay")
+            }
             onClick={onPrev}
           >
             <ChevronLeft className="size-5" />
@@ -52,7 +56,9 @@ export function CalendarHeader({
           <Button
             variant="ghost"
             size="icon"
-            aria-label={viewMode === "week" ? "Próxima semana" : "Próximo dia"}
+            aria-label={
+              viewMode === "week" ? t("nav.nextWeek") : t("nav.nextDay")
+            }
             onClick={onNext}
           >
             <ChevronRight className="size-5" />
@@ -63,7 +69,7 @@ export function CalendarHeader({
 
       <div
         role="tablist"
-        aria-label="Modo de visualização"
+        aria-label={t("viewMode.label")}
         className="flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1"
       >
         {(["week", "day"] as const).map((mode) => (
@@ -80,7 +86,7 @@ export function CalendarHeader({
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
-            {mode === "week" ? "Semana" : "Dia"}
+            {mode === "week" ? t("viewMode.week") : t("viewMode.day")}
           </button>
         ))}
       </div>
