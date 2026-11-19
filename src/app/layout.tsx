@@ -48,6 +48,18 @@ export default async function RootLayout({
       lang={locale}
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-KRQ42T4Q"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         {/* Rendered in a Server Component, the provider inherits the request's
             locale, messages, and formats — Client Components resolve keys
